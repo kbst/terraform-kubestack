@@ -12,10 +12,6 @@ locals {
 
   base_domain = "${lookup(local.cfg, "base_domain")}"
 
-  organization = "${lookup(local.cfg, "organization")}"
-
-  region = "${lookup(local.cfg, "region")}"
-
   cluster_availability_zones_lookup = "${lookup(local.cfg, "cluster_availability_zones", "")}"
   cluster_availability_zones        = "${split(",", local.cluster_availability_zones_lookup)}"
 

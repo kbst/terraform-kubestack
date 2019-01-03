@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 module "cluster_metadata" {
   source = "../../common/metadata"
 
@@ -5,14 +7,11 @@ module "cluster_metadata" {
   base_domain = "${local.base_domain}"
 
   provider_name   = "aws"
-  provider_region = "${local.region}"
+  provider_region = "${data.aws_region.current.name}"
 }
 
 module "cluster" {
   source = "../_modules/eks"
-
-  organization = "${local.organization}"
-  region       = "${local.region}"
 
   metadata_name   = "${module.cluster_metadata.name}"
   metadata_fqdn   = "${module.cluster_metadata.fqdn}"

@@ -1,8 +1,3 @@
-variable "organization" {
-  type        = "string"
-  description = "Organization the cluster belongs to."
-}
-
 variable "metadata_name" {
   type        = "string"
   description = "Metadata name to use."
@@ -16,11 +11,6 @@ variable "metadata_fqdn" {
 variable "metadata_labels" {
   type        = "map"
   description = "Metadata labels to use."
-}
-
-variable "region" {
-  type        = "string"
-  description = "AWS region to start the cluster in."
 }
 
 variable "availability_zones" {

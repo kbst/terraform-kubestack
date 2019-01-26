@@ -74,6 +74,8 @@ resource "google_container_cluster" "current" {
       node_metadata = "SECURE"
     }
 
+    service_account = "${google_service_account.current.email}"
+
     oauth_scopes = "${local.oauth_scopes}"
 
     disk_size_gb = "${var.disk_size_gb}"

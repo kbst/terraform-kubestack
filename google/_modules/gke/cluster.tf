@@ -33,6 +33,8 @@ resource "google_container_cluster" "current" {
     }
   }
 
+  network = "${google_compute_network.current.self_link}"
+
   #
   #
   # Addon config

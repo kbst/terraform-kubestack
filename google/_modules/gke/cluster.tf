@@ -22,6 +22,17 @@ resource "google_container_cluster" "current" {
 
   additional_zones = ["${var.additional_zones}"]
 
+  # Disable basic and client certificate auth
+  # https://cloud.google.com/kubernetes-engine/docs/concepts/security-overview#control_plane_security
+  master_auth {
+    username = ""
+    password = ""
+
+    client_certificate_config {
+      issue_client_certificate = false
+    }
+  }
+
   #
   #
   # Addon config

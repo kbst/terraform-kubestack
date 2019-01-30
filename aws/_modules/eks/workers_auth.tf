@@ -15,4 +15,6 @@ resource "kubernetes_config_map" "current" {
     - system:nodes
 MAPROLES
   }
+
+  depends_on = ["aws_eks_cluster.current"]
 }

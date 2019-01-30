@@ -1,4 +1,4 @@
-resource "kubernetes_config_map" "example" {
+resource "kubernetes_config_map" "current" {
   provider = "kubernetes.eks"
 
   metadata {
@@ -15,4 +15,6 @@ resource "kubernetes_config_map" "example" {
     - system:nodes
 MAPROLES
   }
+
+  depends_on = ["aws_eks_cluster.current"]
 }

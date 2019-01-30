@@ -4,6 +4,8 @@ resource "kubernetes_namespace" "current" {
   metadata {
     name = "ingress-nginx"
   }
+
+  depends_on = ["aws_eks_cluster.current"]
 }
 
 resource "kubernetes_service" "current" {
@@ -11,7 +13,7 @@ resource "kubernetes_service" "current" {
 
   metadata {
     name      = "ingress-nginx"
-    namespace = "ingress-nginx"
+    namespace = "${kubernetes_namespace.current.metadata.0.name}"
 
     #labels = {
     #  "app.kubernetes.io/name"    = "ingress-nginx"

@@ -1,7 +1,9 @@
-module "kubeconfig" {
-  source = "../../../common/kubeconfig"
+module "cluster_services" {
+  source = "../../../common/cluster_services"
 
-  metadata_fqdn = "${var.metadata_fqdn}"
+  cluster_type = "eks"
+
+  metadata_labels = "${var.metadata_labels}"
 
   template_string = "${file("${path.module}/templates/kubeconfig.tpl")}"
 

@@ -1,6 +1,11 @@
-variable "metadata_fqdn" {
+variable "metadata_labels" {
+  type        = "map"
+  description = "Cluster metadata."
+}
+
+variable "cluster_type" {
   type        = "string"
-  description = "DNS name of the zone. Requires dot at the end. E.g. example.com"
+  description = "Type of cluster to run kustomize build for."
 }
 
 variable "template_string" {

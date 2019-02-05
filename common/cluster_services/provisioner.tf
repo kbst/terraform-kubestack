@@ -1,4 +1,4 @@
-data "external" "current" {
+data "external" "kustomize_build" {
   program = ["sh", "${path.module}/kustomize_build.sh"]
 
   query = {
@@ -14,9 +14,9 @@ data "template_file" "kubeconfig" {
   vars = "${var.template_vars}"
 }
 
-resource "null_resource" "current" {
+resource "null_resource" "cluster_services" {
   triggers {
-    checksum = "${data.external.current.result["checksum"]}"
+    checksum = "${data.external.kustomize_build.result["checksum"]}"
   }
 
   provisioner "local-exec" {

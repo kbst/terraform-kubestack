@@ -1,5 +1,5 @@
 data "external" "gcloud_account" {
-  program = ["sh", "${path.module}/gcloud_config_account.sh"]
+  program = ["sh", "${path.module}/cluster_role_binding_get_user.sh"]
 }
 
 resource "kubernetes_cluster_role_binding" "current" {

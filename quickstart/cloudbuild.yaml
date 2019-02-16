@@ -4,7 +4,13 @@ steps:
 #
 - name: 'python:3-slim'
   dir: quickstart
-  args: ['bash', '-c', './dist.py']
+  args:
+  - 'bash'
+  - '-c'
+  - |
+    pip install pipenv
+    pipenv install
+    pipenv run ./dist.py
   env:
   - 'PYTHONUNBUFFERED=1'
   - 'TAG_NAME=$TAG_NAME'

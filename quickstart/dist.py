@@ -4,6 +4,8 @@ from os import environ, listdir, mkdir
 from os.path import isdir
 from shutil import copytree, make_archive, rmtree
 
+from jinja2 import Environment, FileSystemLoader
+
 SRCDIR = 'src'
 DISTDIR = '_dist'
 
@@ -34,5 +36,13 @@ for configuration in configurations:
     copytree(configuration_src, configuration_dist)
     copytree(manifests_src, manifests_dist)
     copytree(cicd_src, cicd_dist)
+
+    # Replace templated variable with version in clusters.tf
+    jinja = Environment(loader=FileSystemLoader(configuration_dist))
+    template = jinja.get_template('clusters.tf')
+    data = template.render(version=version)
+
+    with open(f'{configuration_dist}/clusters.tf', 'w') as f:
+        f.write(data)
 
     make_archive(archive_name, 'zip', f'{DISTDIR}', configuration_name)

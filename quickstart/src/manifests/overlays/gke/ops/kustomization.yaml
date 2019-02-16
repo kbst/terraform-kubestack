@@ -1,0 +1,2 @@
+bases:
+- ../both              # inherit configuration specifc to GKE

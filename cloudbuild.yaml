@@ -50,7 +50,11 @@ steps:
     current=`pwd`
     for name in `ls _tests/`; do
         cd ${current}/_tests/${name}
+
+        # adapt configuration to test env
         rm state.tf
+        sed -i 's/name_prefix = ""/name_prefix = "test"/g' config.auto.tfvars
+
         terraform init
         terraform workspace new ops
         terraform validate

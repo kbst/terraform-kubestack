@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+mkdir -p /infra/.user
+
+echo "kbst:x:$(id -u):$(id -g):Kubestack User:/infra/.user:/bin/sh" > /tmp/passwd
+
+export LD_PRELOAD=libnss_wrapper.so
+export NSS_WRAPPER_PASSWD=/tmp/passwd
+export NSS_WRAPPER_GROUP=/etc/group
+
+exec "$@"

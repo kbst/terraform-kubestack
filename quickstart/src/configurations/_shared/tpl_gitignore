@@ -5,6 +5,8 @@
 *.tfstate
 *.tfstate.*
 
-# Ignore build and dist
-_build/
-_dist/
+# .user home directory
+.user/
+
+# terraform generated clusters directory
+clusters/

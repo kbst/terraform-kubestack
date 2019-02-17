@@ -60,6 +60,9 @@ steps:
         terraform validate
     done
 
+substitutions:
+    _QUICKSTART_BUCKET_NAME: dev.quickstart.kubestack.com
+
 #
 # Copy from dist to bucket
 #

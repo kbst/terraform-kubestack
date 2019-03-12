@@ -6,7 +6,8 @@ FROM python:2.7-slim AS builder
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
-    unzip
+    unzip \
+    python-virtualenv
 
 RUN mkdir -p /opt/bin
 
@@ -47,6 +48,13 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && tar zxvf google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz google-cloud-sdk \
     && mv google-cloud-sdk /opt/google-cloud-sdk
 
+# Azure specific dependencies
+RUN virtualenv /opt/azure/ \
+    && /opt/azure/bin/pip install --no-cache-dir \
+        azure-cli \
+        azure-nspkg \
+        azure-mgmt-nspkg
+
 COPY nss-wrapper /opt/bin/nss-wrapper
 
 
@@ -65,7 +73,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt /opt
-ENV PATH=/opt/bin:/opt/google-cloud-sdk/bin:$PATH \
+ENV PATH=/opt/bin:/opt/google-cloud-sdk/bin:/opt/azure/bin:$PATH \
     HOME=/infra/.user
 
 WORKDIR /infra

@@ -1,2 +1,2 @@
 bases:
-- ../both               # inherit configuration specifc to EKS
+- ../both               # inherit configuration specifc to DO_KS

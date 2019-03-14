@@ -28,7 +28,8 @@ clusters = {
     # Settings for Ops-cluster
     # configuration here overwrites the values from apps
     ops = {
-
+      # Initial number of desired nodes per zone (set smaller than apps cluster)
+      cluster_initial_node_count = 1
     }
   }
 }

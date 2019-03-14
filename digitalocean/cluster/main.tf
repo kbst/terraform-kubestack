@@ -5,18 +5,18 @@ module "cluster_metadata" {
   base_domain = "${local.base_domain}"
 
   provider_name   = "digitalocean"
-  provider_region =  "${local.region}"
+  provider_region = "${local.region}"
 }
 
 module "cluster" {
   source = "../_modules/do_ks"
 
-  metadata_name   = "${module.cluster_metadata.name}"
-  metadata_fqdn   = "${module.cluster_metadata.fqdn}"
-  metadata_labels = "${module.cluster_metadata.labels}"
-  metadata_tags = "${module.cluster_metadata.tags}"
-  cluster_machine_type = "${local.cluster_machine_type}"
-  initial_node_count = "${local.cluster_initial_node_count}"
+  metadata_name              = "${module.cluster_metadata.name}"
+  metadata_fqdn              = "${module.cluster_metadata.fqdn}"
+  metadata_labels            = "${module.cluster_metadata.labels}"
+  metadata_tags              = "${module.cluster_metadata.tags}"
+  cluster_machine_type       = "${local.cluster_machine_type}"
+  initial_node_count         = "${local.cluster_initial_node_count}"
   cluster_min_master_version = "${local.cluster_min_master_version}"
-  region = "${local.region}"
+  region                     = "${local.region}"
 }

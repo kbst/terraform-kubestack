@@ -30,11 +30,10 @@ variable "initial_node_count" {
 
 variable "cluster_machine_type" {
   type        = "string"
-  description =  "Machine type to use for workers."
+  description = "Machine type to use for workers."
 }
 
 variable "cluster_min_master_version" {
   type        = "string"
-  description =  "Machine type to use for workers."
+  description = "Machine type to use for workers."
 }
-

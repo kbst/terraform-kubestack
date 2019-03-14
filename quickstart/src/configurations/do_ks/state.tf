@@ -5,8 +5,8 @@ terraform {
     skip_get_ec2_platforms      = true
     skip_metadata_api_check     = true
     endpoint                    = ""
-    region                      = "us-east-1" # Requires any valid AWS region
-    bucket                      = "" # Space name
+    region                      = "us-east-1"         # Requires any valid AWS region
+    bucket                      = ""                  # Space name
     key                         = "terraform.tfstate"
   }
 }

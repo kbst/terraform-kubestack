@@ -17,7 +17,7 @@ resource "kubernetes_service" "current" {
   }
 
   spec {
-    type             = "LoadBalancer"
+    type = "LoadBalancer"
 
     selector {
       "app.kubernetes.io/name"    = "ingress-nginx"

@@ -5,7 +5,7 @@ resource "digitalocean_kubernetes_cluster" "current" {
 
   node_pool {
     name       = "worker-pool"
-    size       = "${var.node_type}"
+    size       = "${var.cluster_machine_type}"
     node_count = "${var.initial_node_count}"
     tags = "${var.metadata_tags}"
   }

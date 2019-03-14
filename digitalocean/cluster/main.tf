@@ -15,7 +15,8 @@ module "cluster" {
   metadata_fqdn   = "${module.cluster_metadata.fqdn}"
   metadata_labels = "${module.cluster_metadata.labels}"
   metadata_tags = "${module.cluster_metadata.tags}"
-  node_type = "${local.cluster_machine_type}"
+  cluster_machine_type = "${local.cluster_machine_type}"
   initial_node_count = "${local.cluster_initial_node_count}"
+  cluster_min_master_version = "${local.cluster_min_master_version}"
   region = "${local.region}"
 }

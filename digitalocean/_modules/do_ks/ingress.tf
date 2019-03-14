@@ -1,7 +1,3 @@
-resource "digitalocean_floating_ip" "current" {
- region  = "${var.region}"
-}
-
 resource "kubernetes_namespace" "current" {
   provider = "kubernetes.do_ks"
 
@@ -22,7 +18,6 @@ resource "kubernetes_service" "current" {
 
   spec {
     type             = "LoadBalancer"
-    load_balancer_ip = "${digitalocean_floating_ip.current.ip_address}"
 
     selector {
       "app.kubernetes.io/name"    = "ingress-nginx"

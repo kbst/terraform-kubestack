@@ -28,7 +28,7 @@ variable "initial_node_count" {
   description = "Initial number of worker nodes in the cluster."
 }
 
-variable "node_type" {
+variable "cluster_machine_type" {
   type        = "string"
   description =  "Machine type to use for workers."
 }

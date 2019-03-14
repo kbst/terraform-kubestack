@@ -7,12 +7,12 @@ clusters = {
       # e.g. name_prefix = kbst becomes: `kbst-apps-europe-west3`
       # for small orgs the name works well,
       # for bigger orgs consider department or team names
-      name_prefix = "kbst"
+      name_prefix = ""
 
       # Set the base_domain used to generate the FQDN of the cluster
       # [cluster_name].[provider_name].[base_domain]
       # e.g. kbst-ops-europe-west3.gcp.infra.example.com
-      base_domain = "infra.spazzy.com"
+      base_domain = ""
 
       # Initial desired K8s version, will be upgraded automatically
       cluster_min_master_version = "1.13.0-do.1"

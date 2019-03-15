@@ -3,6 +3,12 @@ variable "metadata_labels" {
   description = "Cluster metadata."
 }
 
+variable "label_namespace" {
+  type        = "string"
+  description = "Prefix labels are namespaced with."
+  default     = "kubestack.com/"
+}
+
 variable "cluster_type" {
   type        = "string"
   description = "Type of cluster to run kustomize build for."

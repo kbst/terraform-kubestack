@@ -13,7 +13,13 @@ resource "kubernetes_namespace" "current" {
   provider = "kubernetes.aks"
 
   metadata {
-    name = "ingress-nginx"
+    name = "ingress-kbst-default"
+  }
+
+  # namespace metadata may change through the manifests
+  # hence ignoring this for the terraform lifecycle
+  lifecycle {
+    ignore_changes = ["metadata"]
   }
 
   depends_on = ["azurerm_kubernetes_cluster.current"]
@@ -23,7 +29,7 @@ resource "kubernetes_service" "current" {
   provider = "kubernetes.aks"
 
   metadata {
-    name      = "ingress-nginx"
+    name      = "ingress-kbst-default"
     namespace = "${kubernetes_namespace.current.metadata.0.name}"
   }
 
@@ -32,8 +38,7 @@ resource "kubernetes_service" "current" {
     load_balancer_ip = "${azurerm_public_ip.current.ip_address}"
 
     selector {
-      "app.kubernetes.io/name"    = "ingress-nginx"
-      "app.kubernetes.io/part-of" = "ingress-nginx"
+      "kubestack.com/ingress-default" = "true"
     }
 
     port {

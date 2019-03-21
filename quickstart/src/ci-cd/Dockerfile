@@ -53,7 +53,10 @@ RUN virtualenv /opt/azure/ \
     && /opt/azure/bin/pip install --no-cache-dir \
         azure-cli \
         azure-nspkg \
-        azure-mgmt-nspkg
+        azure-mgmt-nspkg \
+    && echo '#!/usr/bin/env bash\n/opt/azure/bin/python -m azure.cli "$@"' \
+        > /opt/bin/az \
+    && chmod +x /opt/bin/az
 
 COPY nss-wrapper /opt/bin/nss-wrapper
 
@@ -73,7 +76,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt /opt
-ENV PATH=/opt/bin:/opt/google-cloud-sdk/bin:/opt/azure/bin:$PATH \
+ENV PATH=/opt/bin:/opt/google-cloud-sdk/bin:$PATH \
     HOME=/infra/.user
 
 WORKDIR /infra

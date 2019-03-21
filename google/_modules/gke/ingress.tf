@@ -9,7 +9,13 @@ resource "kubernetes_namespace" "current" {
   provider = "kubernetes.gke"
 
   metadata {
-    name = "ingress-nginx"
+    name = "ingress-kbst-default"
+  }
+
+  # namespace metadata may change through the manifests
+  # hence ignoring this for the terraform lifecycle
+  lifecycle {
+    ignore_changes = ["metadata"]
   }
 
   depends_on = ["google_container_cluster.current"]
@@ -19,13 +25,8 @@ resource "kubernetes_service" "current" {
   provider = "kubernetes.gke"
 
   metadata {
-    name      = "ingress-nginx"
+    name      = "ingress-kbst-default"
     namespace = "${kubernetes_namespace.current.metadata.0.name}"
-
-    #labels = {
-    #  "app.kubernetes.io/name"    = "ingress-nginx"
-    #  "app.kubernetes.io/part-of" = "ingress-nginx"
-    #}
   }
 
   spec {
@@ -33,8 +34,7 @@ resource "kubernetes_service" "current" {
     load_balancer_ip = "${google_compute_address.current.address}"
 
     selector {
-      "app.kubernetes.io/name"    = "ingress-nginx"
-      "app.kubernetes.io/part-of" = "ingress-nginx"
+      "kubestack.com/ingress-default" = "true"
     }
 
     port {

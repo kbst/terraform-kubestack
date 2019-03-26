@@ -52,7 +52,7 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
     && tar zxvf google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz google-cloud-sdk \
     && mv google-cloud-sdk /opt/google-cloud-sdk \
-    /opt/google-cloud-sdk/bin/gcloud --version
+    && /opt/google-cloud-sdk/bin/gcloud --version
 
 # Azure specific dependencies
 RUN virtualenv /opt/azure/ \

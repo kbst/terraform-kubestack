@@ -1,0 +1,48 @@
+substitutions:
+    _HOME: /workspace/tests/.user
+    _TF_IN_AUTOMATION: "1"
+
+steps:
+- id: docker build
+  name: 'gcr.io/cloud-builders/docker'
+  dir: tests
+  args:
+  - build
+  - -t
+  - kbst-infra-automation:bootstrap
+  - ci-cd/
+
+- id: terraform init
+  name: 'kbst-infra-automation:bootstrap'
+  dir: tests
+  env:
+  - HOME=$_HOME
+  - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
+  args:
+  - terraform
+  - init
+  - --input=false
+
+- id: terraform workspace
+  name: 'kbst-infra-automation:bootstrap'
+  dir: tests
+  env:
+  - HOME=$_HOME
+  - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
+  args:
+  - terraform
+  - workspace
+  - select
+  - ops
+
+- id: terraform destroy
+  name: 'kbst-infra-automation:bootstrap'
+  dir: tests
+  env:
+  - HOME=$_HOME
+  - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
+  args:
+  - terraform
+  - destroy
+  - --input=false
+  - --auto-approve

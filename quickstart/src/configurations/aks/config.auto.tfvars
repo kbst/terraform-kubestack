@@ -14,8 +14,8 @@ clusters = {
       # e.g. kbst-ops-eu-west-1.aws.infra.example.com
       base_domain = ""
 
-      # The Azure location to deploy the clusters in
-      location = ""
+      # The Azure resource group to use
+      resource_group = ""
     }
 
     # Settings for Ops-cluster

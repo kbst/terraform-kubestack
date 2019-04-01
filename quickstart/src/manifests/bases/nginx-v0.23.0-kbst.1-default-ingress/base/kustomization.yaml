@@ -1,0 +1,13 @@
+commonAnnotations:
+  catalog.kubestack.com/heritage: kubestack.com/catalog/nginx
+  catalog.kubestack.com/variant: base
+commonLabels:
+  app.kubernetes.io/component: ingress-controller
+  app.kubernetes.io/managed-by: kubestack
+  app.kubernetes.io/name: nginx
+  app.kubernetes.io/version: v0.23.0
+namespace: ingress-nginx
+patches:
+- patch-replicas.yaml
+resources:
+- mandatory.yaml

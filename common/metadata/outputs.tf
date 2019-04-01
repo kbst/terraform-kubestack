@@ -14,6 +14,10 @@ output "labels" {
   value = "${local.labels}"
 }
 
+output "label_namespace" {
+  value = "${var.label_namespace}"
+}
+
 output "tags" {
   value = "${local.tags}"
 }

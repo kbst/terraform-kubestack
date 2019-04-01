@@ -20,10 +20,11 @@ resource "null_resource" "cluster_services" {
   }
 
   provisioner "local-exec" {
-    command = "echo \"${data.template_file.kubeconfig.rendered}\" > ${local.kubeconfig_path} && ${path.module}/kubectl_apply.sh ${local.cluster_dir}/${local.output_file}"
+    command = "${path.module}/kubectl_apply.sh ${local.cluster_dir}/${local.output_file}"
 
     environment {
-      KUBECONFIG = "${local.kubeconfig_path}"
+      KUBECONFIG_DATA = "${base64encode(data.template_file.kubeconfig.rendered)}"
+      KUBECONFIG      = "${local.kubeconfig_path}"
     }
   }
 }

@@ -29,3 +29,9 @@ variable "delimiter" {
   description = "Delimiter used between parts."
   default     = "-"
 }
+
+variable "label_namespace" {
+  type        = "string"
+  description = "Prefix labels are namespaced with."
+  default     = "kubestack.com/"
+}

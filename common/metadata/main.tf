@@ -29,12 +29,12 @@ locals {
   fqdn = "${join(local.dns_delimiter, local.fqdn_parts)}"
 
   labels = {
-    "kubestack.com/cluster_name"            = "${local.name}"
-    "kubestack.com/cluster_domain"          = "${local.domain}"
-    "kubestack.com/cluster_fqdn"            = "${local.fqdn}"
-    "kubestack.com/cluster_workspace"       = "${local.workspace}"
-    "kubestack.com/cluster_provider_name"   = "${local.provider_name}"
-    "kubestack.com/cluster_provider_region" = "${local.provider_region}"
+    "${var.label_namespace}cluster_name"            = "${local.name}"
+    "${var.label_namespace}cluster_domain"          = "${local.domain}"
+    "${var.label_namespace}cluster_fqdn"            = "${local.fqdn}"
+    "${var.label_namespace}cluster_workspace"       = "${local.workspace}"
+    "${var.label_namespace}cluster_provider_name"   = "${local.provider_name}"
+    "${var.label_namespace}cluster_provider_region" = "${local.provider_region}"
   }
 
   tags = "${list(

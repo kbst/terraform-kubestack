@@ -44,5 +44,7 @@ for configuration in configurations:
 
     with open(f'{configuration_dist}/clusters.tf', 'w') as f:
         f.write(data)
+        # always include newline at end of file
+        f.write('\n')
 
     make_archive(archive_name, 'zip', f'{DISTDIR}', configuration_name)

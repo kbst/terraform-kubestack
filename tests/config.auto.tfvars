@@ -42,6 +42,12 @@ clusters = {
       resource_group = "terraform-kubestack-testing"
       name_prefix    = "testing"
       base_domain    = "infra.serverwolken.de"
+
+      worker_nodes_name            = "default"
+      worker_nodes_count           = "1"
+      worker_nodes_vm_size         = "Standard_D1_v2"
+      worker_nodes_os_type         = "Linux"
+      worker_nodes_os_disk_size_gb = "30"
     }
 
     # Settings for Ops-cluster

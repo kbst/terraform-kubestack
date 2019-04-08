@@ -77,6 +77,7 @@ RUN apt-get update && apt-get install -y \
       ca-certificates \
       git \
       jq \
+      wget \
       openssh-client \
       dnsutils \
       libnss-wrapper \

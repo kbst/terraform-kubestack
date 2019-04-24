@@ -6,6 +6,7 @@ FROM python:2.7-slim AS builder
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
+    gcc \
     unzip \
     python-virtualenv
 
@@ -77,6 +78,7 @@ RUN apt-get update && apt-get install -y \
       ca-certificates \
       git \
       jq \
+      wget \
       openssh-client \
       dnsutils \
       libnss-wrapper \

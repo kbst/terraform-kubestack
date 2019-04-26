@@ -18,6 +18,7 @@ ARG KUSTOMIZE_VERSION=2.0.3
 ARG TERRAFORM_VERSION=0.11.13
 ARG AWS_IAM_AUTHENTICATOR_VERSION=0.3.0
 ARG GOOGLE_CLOUD_SDK_VERSION=239.0.0
+ARG AZURE_CLI_VERSION=2.0.63
 
 # Common dependencies
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
@@ -56,9 +57,11 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && /opt/google-cloud-sdk/bin/gcloud --version
 
 # Azure specific dependencies
-RUN virtualenv /opt/azure/ \
+RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
+    && virtualenv /opt/azure/ \
     && /opt/azure/bin/pip install --no-cache-dir \
-        azure-cli \
+        "urllib3<1.25,>=1.21.1" \
+        azure-cli==${AZURE_CLI_VERSION} \
         azure-nspkg \
         azure-mgmt-nspkg \
     && echo '#!/usr/bin/env bash\n/opt/azure/bin/python -m azure.cli "$@"' \

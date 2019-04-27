@@ -11,11 +11,6 @@ module "cluster_metadata" {
 module "cluster" {
   source = "../_modules/gke"
 
-  providers = {
-    google      = "google"
-    google-beta = "google-beta"
-  }
-
   project = "${local.project_id}"
   region  = "${local.region}"
 

@@ -12,8 +12,6 @@ locals {
 }
 
 resource "google_container_cluster" "current" {
-  provider = "google-beta"
-
   project = "${var.project}"
   name    = "${var.metadata_name}"
   region  = "${var.region}"
@@ -72,10 +70,6 @@ resource "google_container_cluster" "current" {
   #
   # Node config
   node_config {
-    workload_metadata_config {
-      node_metadata = "SECURE"
-    }
-
     service_account = "${google_service_account.current.email}"
 
     oauth_scopes = "${local.oauth_scopes}"

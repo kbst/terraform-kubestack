@@ -23,29 +23,14 @@ variable "metadata_labels" {
   description = "Metadata labels to use."
 }
 
+variable "pool_name" {
+  description = "Name of the node pool."
+  type        = "string"
+}
+
 variable "location" {
   type        = "string"
-  description = "Location accepts a region or zone and starts a regional or zonal cluster respectively. Kubestack is only supported for regional clusters."
-}
-
-variable "node_locations" {
-  type        = "list"
-  description = "List of zones in the cluster's region to start worker nodes in."
-}
-
-variable "min_master_version" {
-  type        = "string"
-  description = "Minimum GKE master version."
-}
-
-variable "daily_maintenance_window_start_time" {
-  type        = "string"
-  description = "Start time of the daily maintenance window."
-}
-
-variable "remove_default_node_pool" {
-  type        = "string"
-  description = "Whether to remove the default node pool. Leave true, except for upgrading from Kubestack v0.2.0-beta.0."
+  description = "location of the cluster this node pool belongs to."
 }
 
 variable "initial_node_count" {
@@ -60,6 +45,11 @@ variable "min_node_count" {
 
 variable "max_node_count" {
   description = "Max number of nodes for this node pool."
+  type        = "string"
+}
+
+variable "service_account_email" {
+  description = "The service account email to use for this node pool."
   type        = "string"
 }
 
@@ -92,14 +82,17 @@ variable "machine_type" {
 variable "preemptible" {
   description = "Whether to use preemptible nodes for this node pool."
   type        = "string"
+  default     = false
 }
 
 variable "auto_repair" {
   description = "Whether the nodes will be automatically repaired."
   type        = "string"
+  default     = true
 }
 
 variable "auto_upgrade" {
   description = "Whether the nodes will be automatically upgraded."
   type        = "string"
+  default     = true
 }

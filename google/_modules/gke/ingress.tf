@@ -18,7 +18,7 @@ resource "kubernetes_namespace" "current" {
     ignore_changes = ["metadata"]
   }
 
-  depends_on = ["google_container_cluster.current"]
+  depends_on = ["module.node_pool"]
 }
 
 resource "kubernetes_service" "current" {

@@ -14,7 +14,9 @@ locals {
 resource "google_container_cluster" "current" {
   project = "${var.project}"
   name    = "${var.metadata_name}"
-  region  = "${var.region}"
+
+  location       = "${var.location}"
+  node_locations = "${var.node_locations}"
 
   min_master_version = "${var.min_master_version}"
 

@@ -23,9 +23,14 @@ variable "metadata_labels" {
   description = "Metadata labels to use."
 }
 
-variable "region" {
+variable "location" {
   type        = "string"
-  description = "Google cloud region to start the cluster in."
+  description = "Location accepts a region or zone and starts a regional or zonal cluster respectively. Kubestack is only supported for regional clusters."
+}
+
+variable "node_locations" {
+  type        = "list"
+  description = "List of zones in the cluster's region to start worker nodes in."
 }
 
 variable "min_master_version" {

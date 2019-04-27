@@ -1,5 +1,5 @@
 resource "google_compute_address" "current" {
-  region  = "${var.region}"
+  region  = "${google_container_cluster.current.region}"
   project = "${var.project}"
 
   name = "${var.metadata_name}"

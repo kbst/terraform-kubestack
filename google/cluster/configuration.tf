@@ -16,6 +16,9 @@ locals {
 
   region = "${lookup(local.cfg, "region")}"
 
+  cluster_node_locations_lookup = "${lookup(local.cfg, "cluster_node_locations", "")}"
+  cluster_node_locations        = "${split(",", local.cluster_node_locations_lookup)}"
+
   cluster_min_master_version = "${lookup(local.cfg, "cluster_min_master_version")}"
 
   cluster_initial_node_count = "${lookup(local.cfg, "cluster_initial_node_count")}"

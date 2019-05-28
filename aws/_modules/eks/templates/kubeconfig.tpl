@@ -22,3 +22,5 @@ users:
         - "token"
         - "-i"
         - "${cluster_name}"
+        - "--role"
+        - "arn:aws:iam::322021904188:role/Administrator"

@@ -3,7 +3,12 @@ data "external" "aws_iam_authenticator" {
 
   query {
     cluster_name = "${aws_eks_cluster.current.name}"
+    role_arn = "${data.aws_iam_role.kubestack_administrator.arn}"
   }
+}
+
+data "aws_iam_role" "kubestack_administrator" {
+  name = "KubestackAdministrator"
 }
 
 provider "kubernetes" {

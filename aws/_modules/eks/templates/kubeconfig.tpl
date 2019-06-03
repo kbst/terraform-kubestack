@@ -22,3 +22,5 @@ users:
         - "token"
         - "-i"
         - "${cluster_name}"
+        - "--role"
+        - "${role_arn}"

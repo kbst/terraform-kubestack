@@ -22,5 +22,7 @@ users:
         - "token"
         - "-i"
         - "${cluster_name}"
+        %{ if caller_id_arn_type == "role" }
         - "--role"
-        - "${role_arn}"
+        - "${caller_id_arn}"
+        %{ endif }

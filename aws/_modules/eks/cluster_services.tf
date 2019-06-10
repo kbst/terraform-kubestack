@@ -8,10 +8,11 @@ module "cluster_services" {
   template_string = "${file("${path.module}/templates/kubeconfig.tpl")}"
 
   template_vars = {
-    cluster_name     = "${aws_eks_cluster.current.name}"
-    cluster_endpoint = "${aws_eks_cluster.current.endpoint}"
-    cluster_ca       = "${aws_eks_cluster.current.certificate_authority.0.data}"
-    role_arn         = "${data.aws_iam_role.kubestack_administrator.arn}"
+    cluster_name       = "${aws_eks_cluster.current.name}"
+    cluster_endpoint   = "${aws_eks_cluster.current.endpoint}"
+    cluster_ca         = "${aws_eks_cluster.current.certificate_authority.0.data}"
+    caller_id_arn      = "${local.caller_id_arn}"
+    caller_id_arn_type = "${local.caller_id_arn_type}"
 
     # hack, because modules can't have depends_on
     # prevent a race between kubernetes provider and cluster services/kustomize

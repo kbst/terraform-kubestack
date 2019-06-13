@@ -2,11 +2,7 @@
 
 set -e
 
-if [ "$(uname -s)" == "Darwin" ]; then
-    echo "${KUBECONFIG_DATA}" | base64 -D > $KUBECONFIG
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    echo "${KUBECONFIG_DATA}" | base64 -d > $KUBECONFIG
-fi
+echo "${KUBECONFIG_DATA}" | base64 --decode > $KUBECONFIG
 
 if [ -s $1 ]
 then

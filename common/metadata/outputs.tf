@@ -1,23 +1,24 @@
 output "name" {
-  value = "${local.name}"
+  value = local.name
 }
 
 output "domain" {
-  value = "${local.domain}"
+  value = local.domain
 }
 
 output "fqdn" {
-  value = "${local.fqdn}"
+  value = local.fqdn
 }
 
 output "labels" {
-  value = "${local.labels}"
+  value = local.labels
 }
 
 output "label_namespace" {
-  value = "${var.label_namespace}"
+  value = var.label_namespace
 }
 
 output "tags" {
-  value = "${local.tags}"
+  value = local.tags
 }
+

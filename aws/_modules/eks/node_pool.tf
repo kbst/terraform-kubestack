@@ -17,6 +17,5 @@ module "node_pool" {
   max_size         = var.max_size
   min_size         = var.min_size
 
-  vpc_zone_identifiers = [aws_subnet.current.*.id]
+  vpc_zone_identifiers = aws_subnet.current.*.id
 }
-

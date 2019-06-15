@@ -23,4 +23,3 @@ variable "template_vars" {
   type        = map(string)
   description = "Variables the kubeconfig template requires."
 }
-

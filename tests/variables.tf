@@ -1,4 +1,4 @@
 variable "clusters" {
   description = "Map, holding configuration of all clusters."
-  type        = "map"
+  type        = map(map(map(string)))
 }

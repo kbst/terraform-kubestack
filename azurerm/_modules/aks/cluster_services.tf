@@ -3,22 +3,22 @@ module "cluster_services" {
 
   cluster_type = "aks"
 
-  metadata_labels = "${var.metadata_labels}"
-  label_namespace = "${var.metadata_label_namespace}"
+  metadata_labels = var.metadata_labels
+  label_namespace = var.metadata_label_namespace
 
-  template_string = "${file("${path.module}/templates/kubeconfig.tpl")}"
+  template_string = file("${path.module}/templates/kubeconfig.tpl")
 
   template_vars = {
-    cluster_name     = "${azurerm_kubernetes_cluster.current.name}"
-    cluster_endpoint = "${azurerm_kubernetes_cluster.current.kube_config.0.host}"
-    cluster_ca       = "${azurerm_kubernetes_cluster.current.kube_config.0.cluster_ca_certificate}"
-    client_cert      = "${azurerm_kubernetes_cluster.current.kube_config.0.client_certificate}"
-    client_key       = "${azurerm_kubernetes_cluster.current.kube_config.0.client_key}"
-    path_cwd         = "${path.cwd}"
-
+    cluster_name     = azurerm_kubernetes_cluster.current.name
+    cluster_endpoint = azurerm_kubernetes_cluster.current.kube_config[0].host
+    cluster_ca       = azurerm_kubernetes_cluster.current.kube_config[0].cluster_ca_certificate
+    client_cert      = azurerm_kubernetes_cluster.current.kube_config[0].client_certificate
+    client_key       = azurerm_kubernetes_cluster.current.kube_config[0].client_key
+    path_cwd         = path.cwd
     # hack, because modules can't have depends_on
     # prevent a race between kubernetes provider and cluster services/kustomize
     # creating the namespace and the provider erroring out during apply
-    not_used = "${kubernetes_namespace.current.metadata.0.name}"
+    not_used = kubernetes_namespace.current.metadata[0].name
   }
 }
+

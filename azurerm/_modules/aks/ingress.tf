@@ -1,16 +1,16 @@
 resource "azurerm_public_ip" "current" {
-  name                = "${var.metadata_name}"
-  location            = "${azurerm_kubernetes_cluster.current.location}"
-  resource_group_name = "${azurerm_kubernetes_cluster.current.node_resource_group}"
+  name                = var.metadata_name
+  location            = azurerm_kubernetes_cluster.current.location
+  resource_group_name = azurerm_kubernetes_cluster.current.node_resource_group
   allocation_method   = "Static"
 
-  tags = "${var.metadata_labels}"
+  tags = var.metadata_labels
 
-  depends_on = ["azurerm_kubernetes_cluster.current"]
+  depends_on = [azurerm_kubernetes_cluster.current]
 }
 
 resource "kubernetes_namespace" "current" {
-  provider = "kubernetes.aks"
+  provider = kubernetes.aks
 
   metadata {
     name = "ingress-kbst-default"
@@ -19,25 +19,25 @@ resource "kubernetes_namespace" "current" {
   # namespace metadata may change through the manifests
   # hence ignoring this for the terraform lifecycle
   lifecycle {
-    ignore_changes = ["metadata"]
+    ignore_changes = [metadata]
   }
 
-  depends_on = ["azurerm_kubernetes_cluster.current"]
+  depends_on = [azurerm_kubernetes_cluster.current]
 }
 
 resource "kubernetes_service" "current" {
-  provider = "kubernetes.aks"
+  provider = kubernetes.aks
 
   metadata {
     name      = "ingress-kbst-default"
-    namespace = "${kubernetes_namespace.current.metadata.0.name}"
+    namespace = kubernetes_namespace.current.metadata[0].name
   }
 
   spec {
     type             = "LoadBalancer"
-    load_balancer_ip = "${azurerm_public_ip.current.ip_address}"
+    load_balancer_ip = azurerm_public_ip.current.ip_address
 
-    selector {
+    selector = {
       "kubestack.com/ingress-default" = "true"
     }
 
@@ -56,29 +56,30 @@ resource "kubernetes_service" "current" {
 }
 
 resource "azurerm_dns_zone" "current" {
-  name                = "${var.metadata_fqdn}"
-  resource_group_name = "${data.azurerm_resource_group.current.name}"
+  name                = var.metadata_fqdn
+  resource_group_name = data.azurerm_resource_group.current.name
   zone_type           = "Public"
 
-  tags = "${var.metadata_labels}"
+  tags = var.metadata_labels
 }
 
 resource "azurerm_dns_a_record" "host" {
   name                = "@"
-  zone_name           = "${azurerm_dns_zone.current.name}"
-  resource_group_name = "${data.azurerm_resource_group.current.name}"
+  zone_name           = azurerm_dns_zone.current.name
+  resource_group_name = data.azurerm_resource_group.current.name
   ttl                 = 300
-  records             = ["${azurerm_public_ip.current.ip_address}"]
+  records             = [azurerm_public_ip.current.ip_address]
 
-  tags = "${var.metadata_labels}"
+  tags = var.metadata_labels
 }
 
 resource "azurerm_dns_a_record" "wildcard" {
   name                = "*"
-  zone_name           = "${azurerm_dns_zone.current.name}"
-  resource_group_name = "${data.azurerm_resource_group.current.name}"
+  zone_name           = azurerm_dns_zone.current.name
+  resource_group_name = data.azurerm_resource_group.current.name
   ttl                 = 300
-  records             = ["${azurerm_public_ip.current.ip_address}"]
+  records             = [azurerm_public_ip.current.ip_address]
 
-  tags = "${var.metadata_labels}"
+  tags = var.metadata_labels
 }
+

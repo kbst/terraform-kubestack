@@ -5,6 +5,4 @@ provider "aws" {
 
 provider "google" {}
 
-provider "google-beta" {}
-
 provider "azurerm" {}

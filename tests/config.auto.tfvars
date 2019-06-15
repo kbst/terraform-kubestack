@@ -27,12 +27,12 @@ clusters = {
       cluster_min_master_version = "1.13.6"
       cluster_initial_node_count = 1
       region                     = "europe-west1"
-      cluster_additional_zones   = "europe-west1-b,europe-west1-c,europe-west1-d"
+      cluster_node_locations     = "europe-west1-b,europe-west1-c,europe-west1-d"
     }
 
     # Settings for Ops-cluster
     ops = {
-      cluster_additional_zones = "europe-west1-b"
+      cluster_node_locations = "europe-west1-b"
     }
   }
 

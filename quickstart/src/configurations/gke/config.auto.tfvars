@@ -28,18 +28,18 @@ clusters = {
 
       # Comma seperated list of zone names to deploy worker nodes in.
       # Must match region above.
-      # e.g. cluster_additional_zones = "europe-west3-a,europe-west3-b,europe-west3-c"
+      # e.g. cluster_node_locations = "europe-west3-a,europe-west3-b,europe-west3-c"
       # FIXME: Use actual list when TF 0.12 finally supports heterogeneous maps
-      cluster_additional_zones = ""
+      cluster_node_locations = ""
     }
 
     # Settings for Ops-cluster
     # configuration here overwrites the values from apps
     ops = {
-      # Overwrite apps["cluster_additional_zones"] to have a smaller
+      # Overwrite apps["cluster_node_locations"] to have a smaller
       # ops cluster
-      # e.g. cluster_additional_zones = "europe-west3-a"
-      cluster_additional_zones = ""
+      # e.g. cluster_node_locations = "europe-west3-a"
+      cluster_node_locations = ""
     }
   }
 }

@@ -1,7 +1,7 @@
 data "aws_ami" "eks_node" {
   filter {
     name   = "name"
-    values = ["amazon-eks-node-${aws_eks_cluster.current.version}-v*"]
+    values = ["amazon-eks-node-${var.cluster_version}-v*"]
   }
 
   most_recent = true
@@ -12,17 +12,17 @@ locals {
   node_userdata = <<USERDATA
 #!/bin/bash
 set -o xtrace
-/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.current.endpoint}' --b64-cluster-ca '${aws_eks_cluster.current.certificate_authority.0.data}' '${aws_eks_cluster.current.name}'
+/etc/eks/bootstrap.sh --apiserver-endpoint '${var.cluster_endpoint}' --b64-cluster-ca '${var.cluster_ca}' '${var.cluster_name}'
 USERDATA
 }
 
 resource "aws_launch_configuration" "nodes" {
   associate_public_ip_address = true
-  iam_instance_profile        = "${aws_iam_instance_profile.nodes.name}"
+  iam_instance_profile        = "${var.iam_instance_profile_name}"
   image_id                    = "${data.aws_ami.eks_node.id}"
   instance_type               = "${var.instance_type}"
   name_prefix                 = "${var.metadata_name}"
-  security_groups             = ["${aws_security_group.nodes.id}"]
+  security_groups             = ["${var.security_groups}"]
   user_data_base64            = "${base64encode(local.node_userdata)}"
 
   lifecycle {
@@ -36,7 +36,7 @@ resource "aws_autoscaling_group" "nodes" {
   max_size             = "${var.max_size}"
   min_size             = "${var.min_size}"
   name                 = "${var.metadata_name}"
-  vpc_zone_identifier  = ["${aws_subnet.current.*.id}"]
+  vpc_zone_identifier  = ["${var.vpc_zone_identifiers}"]
 
   tag {
     key                 = "Name"

@@ -1,14 +1,14 @@
 resource "google_container_cluster" "current" {
-  project = "${var.project}"
-  name    = "${var.metadata_name}"
+  project = var.project
+  name    = var.metadata_name
 
-  location       = "${var.location}"
-  node_locations = "${var.node_locations}"
+  location       = var.location
+  node_locations = var.node_locations
 
-  min_master_version = "${var.min_master_version}"
+  min_master_version = var.min_master_version
 
-  remove_default_node_pool = "${var.remove_default_node_pool}"
-  initial_node_count       = "${var.initial_node_count}"
+  remove_default_node_pool = var.remove_default_node_pool
+  initial_node_count       = var.initial_node_count
 
   # Disable basic and client certificate auth
   # https://cloud.google.com/kubernetes-engine/docs/concepts/security-overview#control_plane_security
@@ -21,7 +21,7 @@ resource "google_container_cluster" "current" {
     }
   }
 
-  network = "${google_compute_network.current.self_link}"
+  network = google_compute_network.current.self_link
 
   #
   #
@@ -50,7 +50,8 @@ resource "google_container_cluster" "current" {
 
   maintenance_policy {
     daily_maintenance_window {
-      start_time = "${var.daily_maintenance_window_start_time}"
+      start_time = var.daily_maintenance_window_start_time
     }
   }
 }
+

@@ -7,5 +7,6 @@ locals {
     "kubernetes.io/cluster/${var.metadata_name}" = "shared"
   }
 
-  eks_metadata_tags = "${merge(var.metadata_labels, local.eks_tags)}"
+  eks_metadata_tags = merge(var.metadata_labels, local.eks_tags)
 }
+

@@ -1,39 +1,40 @@
 variable "metadata_name" {
-  type        = "string"
+  type        = string
   description = "Metadata name to use."
 }
 
 variable "metadata_fqdn" {
-  type        = "string"
+  type        = string
   description = "DNS name of the zone. Requires dot at the end. E.g. example.com"
 }
 
 variable "metadata_labels" {
-  type        = "map"
+  type        = map(string)
   description = "Metadata labels to use."
 }
 
 variable "availability_zones" {
   description = "List of availability_zones for workers."
-  type        = "list"
+  type        = list(string)
 }
 
 variable "instance_type" {
   description = "AWS instance type to use for worker nodes."
-  type        = "string"
+  type        = string
 }
 
 variable "desired_capacity" {
   description = "Desired number of worker nodes."
-  type        = "string"
+  type        = string
 }
 
 variable "max_size" {
   description = "Maximum number of worker nodes."
-  type        = "string"
+  type        = string
 }
 
 variable "min_size" {
   description = "Minimum number of worker nodes."
-  type        = "string"
+  type        = string
 }
+

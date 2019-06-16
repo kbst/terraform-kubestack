@@ -1,8 +1,8 @@
 data "template_file" "config" {
-  template = "${file("${path.module}/templates/kind_config.yaml")}"
+  template = file("${path.module}/templates/kind_config.yaml")
 
   vars = {
-    node_roles = "${var.node_roles}"
+    node_roles = var.node_roles
   }
 }
 
@@ -11,13 +11,13 @@ locals {
 }
 
 resource "local_file" "config" {
-  content  = "${data.template_file.config.rendered}"
-  filename = "${local.kind_config_path}"
+  content  = data.template_file.config.rendered
+  filename = local.kind_config_path
 }
 
 resource "null_resource" "cluster" {
   triggers = {
-    node_roles = "${base64sha256(data.template_file.config.rendered)}"
+    node_roles = base64sha256(data.template_file.config.rendered)
   }
 
   provisioner "local-exec" {
@@ -25,9 +25,10 @@ resource "null_resource" "cluster" {
   }
 
   provisioner "local-exec" {
-    when    = "destroy"
+    when    = destroy
     command = "kind delete cluster --name ${var.metadata_name}"
   }
 
-  depends_on = ["local_file.config"]
+  depends_on = [local_file.config]
 }
+

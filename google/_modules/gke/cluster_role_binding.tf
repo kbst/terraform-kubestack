@@ -3,7 +3,7 @@ data "external" "gcloud_account" {
 }
 
 resource "kubernetes_cluster_role_binding" "current" {
-  provider = "kubernetes.gke"
+  provider = kubernetes.gke
 
   metadata {
     name = "cluster-admin-kubestack"
@@ -17,9 +17,10 @@ resource "kubernetes_cluster_role_binding" "current" {
 
   subject {
     kind      = "User"
-    name      = "${data.external.gcloud_account.result["user"]}"
+    name      = data.external.gcloud_account.result["user"]
     api_group = "rbac.authorization.k8s.io"
   }
 
-  depends_on = ["google_container_cluster.current"]
+  depends_on = [google_container_cluster.current]
 }
+

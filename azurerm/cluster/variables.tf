@@ -1,4 +1,4 @@
 variable "configuration" {
-  type        = "map"
+  type        = map(map(string))
   description = "Map with per workspace cluster configuration."
 }

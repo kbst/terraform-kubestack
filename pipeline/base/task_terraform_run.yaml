@@ -1,0 +1,64 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: terraform-run
+spec:
+  inputs:
+    resources:
+    - name: workspace
+      type: git
+      targetPath: infra
+    params:
+    - name: ops_or_apps
+      descriptions: Use ops- or apps terraform workspace.
+  steps:
+  - name: init
+    image: kubestack/cd:dev-1
+    command:
+    - terraform
+    args:
+    - init
+    envFrom:
+    - configMapRef:
+        name: env
+    workingDir: /workspace/infra
+    serviceAccountName: kbst-pipeline
+  - name: workspace
+    image: kubestack/cd:dev-1
+    command:
+    - terraform
+    args:
+    - workspace
+    - select
+    - "${inputs.params.ops_or_apps}"
+    envFrom:
+    - configMapRef:
+        name: env
+    workingDir: /workspace/infra
+    serviceAccountName: kbst-pipeline
+  - name: plan
+    image: kubestack/cd:dev-1
+    command:
+    - terraform
+    args:
+    - plan
+    - --input=false
+    - --out=tfplan
+    envFrom:
+    - configMapRef:
+        name: env
+    workingDir: /workspace/infra
+    serviceAccountName: kbst-pipeline
+  - name: apply
+    image: kubestack/cd:dev-1
+    command:
+    - terraform
+    args:
+    - apply
+    - --input=false
+    - tfplan
+    envFrom:
+    - configMapRef:
+        name: env
+    workingDir: /workspace/infra
+    serviceAccountName: kbst-pipeline

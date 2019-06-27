@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  catalog.kubestack.com/variant: base
+  app.kubernetes.io/version: v0.1.0
+
+commonLabels:
+  app.kubernetes.io/component: tektoncd
+  app.kubernetes.io/managed-by: kubestack
+  app.kubernetes.io/name: pipeline
+
+namespace: kbst-pipeline
+
+resources:
+- namespace.yaml
+- cm_env.yaml
+- pipeline.yaml
+- task_terraform_run.yaml

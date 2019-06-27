@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: kubestack-cd
+spec:
+  params:
+  - name: ops_or_apps
+    default: ops
+  resources:
+    - name: source_repo
+      type: git
+  tasks:
+  - name: terraform-run
+    taskRef:
+      name: terraform-run
+    resources:
+      inputs:
+      - name: workspace
+        resource: source_repo
+    params:
+    - name: ops_or_apps
+      value: "${params.ops_or_apps}"

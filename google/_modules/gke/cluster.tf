@@ -1,4 +1,6 @@
 resource "google_container_cluster" "current" {
+  provider = "google-beta"
+
   project = var.project
   name    = var.metadata_name
 
@@ -19,6 +21,10 @@ resource "google_container_cluster" "current" {
     client_certificate_config {
       issue_client_certificate = false
     }
+  }
+
+  workload_identity_config {
+    identity_namespace = "${var.project}.svc.id.goog"
   }
 
   network = google_compute_network.current.self_link
@@ -54,4 +60,3 @@ resource "google_container_cluster" "current" {
     }
   }
 }
-

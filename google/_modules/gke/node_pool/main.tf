@@ -1,4 +1,6 @@
 resource "google_container_node_pool" "current" {
+  provider = "google-beta"
+
   name     = var.pool_name
   project  = var.project
   cluster  = var.metadata_name
@@ -29,6 +31,10 @@ resource "google_container_node_pool" "current" {
     labels = var.metadata_labels
 
     tags = var.metadata_tags
+
+    workload_metadata_config {
+      node_metadata = "GKE_METADATA_SERVER"
+    }
   }
 
   management {
@@ -36,4 +42,3 @@ resource "google_container_node_pool" "current" {
     auto_upgrade = var.auto_upgrade
   }
 }
-

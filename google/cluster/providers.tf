@@ -3,7 +3,11 @@ provider "external" {
 }
 
 provider "google" {
-  version = "~> 2.8"
+  version = "~> 2.9"
+}
+
+provider "google-beta" {
+  version = "~> 2.9"
 }
 
 provider "kubernetes" {
@@ -17,4 +21,3 @@ provider "null" {
 provider "template" {
   version = "~> 2.1"
 }
-

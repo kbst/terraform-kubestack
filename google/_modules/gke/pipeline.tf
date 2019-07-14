@@ -42,6 +42,8 @@ resource "kubernetes_namespace" "pipeline" {
 }
 
 resource "kubernetes_service_account" "pipeline" {
+  provider = kubernetes.gke
+
   metadata {
     name      = "kbst-pipeline"
     namespace = kubernetes_namespace.pipeline.metadata[0].name

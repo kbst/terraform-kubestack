@@ -33,6 +33,11 @@ resource "aws_iam_role_policy_attachment" "node_container_registry_ro" {
   role = aws_iam_role.node.name
 }
 
+resource "aws_iam_role_policy_attachment" "node_autoscale_cluster" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole"
+  role = aws_iam_role.node.name
+}
+
 resource "aws_iam_instance_profile" "nodes" {
   name = var.metadata_name
   role = aws_iam_role.node.name

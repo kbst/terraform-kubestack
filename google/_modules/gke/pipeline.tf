@@ -51,4 +51,8 @@ resource "kubernetes_service_account" "pipeline" {
       "iam.gke.io/gcp-service-account" = google_service_account.pipeline.email
     }
   }
+
+  secret {
+    name = "ssh-auth"
+  }
 }

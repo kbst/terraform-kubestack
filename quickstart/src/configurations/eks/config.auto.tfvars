@@ -4,17 +4,17 @@ clusters = {
     apps = {
       # Set name_prefix used to generate the cluster_name
       # [name_prefix]-[workspace]-[region]
-      # e.g. name_prefix = kbst becomes: `kbst-ops-eu-west-1`
+      # e.g. name_prefix = kbst becomes: `kbst-apps-eu-west-1`
       # for small orgs the name works well
       # for bigger orgs consider department or team names
       name_prefix = ""
 
       # Set the base_domain used to generate the FQDN of the cluster
       # [cluster_name].[provider_name].[base_domain]
-      # e.g. kbst-ops-eu-west-1.aws.infra.example.com
+      # e.g. kbst-apps-eu-west-1.aws.infra.example.com
       base_domain = ""
 
-      cluster_instance_type    = "t2.small"
+      cluster_instance_type    = "t3.small"
       cluster_desired_capacity = "1"
       cluster_min_size         = "1"
       cluster_max_size         = "3"

@@ -38,3 +38,17 @@ variable "min_size" {
   type        = string
 }
 
+variable "aws_auth_map_roles" {
+  description = "mapRoles entries added to aws-auth configmap"
+  type        = string
+}
+
+variable "aws_auth_map_users" {
+  description = "mapUsers entries added to aws-auth configmap"
+  type        = string
+}
+
+variable "aws_auth_map_accounts" {
+  description = "mapAccounts entries added to aws-auth configmap"
+  type        = string
+}

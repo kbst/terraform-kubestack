@@ -23,5 +23,8 @@ module "cluster" {
   desired_capacity   = local.cluster_desired_capacity
   max_size           = local.cluster_max_size
   min_size           = local.cluster_min_size
-}
 
+  aws_auth_map_roles    = local.cluster_aws_auth_map_roles
+  aws_auth_map_users    = local.cluster_aws_auth_map_users
+  aws_auth_map_accounts = local.cluster_aws_auth_map_accounts
+}

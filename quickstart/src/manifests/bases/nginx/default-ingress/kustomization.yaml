@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../base/
+namespace: ingress-kbst-default
+commonAnnotations:
+  catalog.kubestack.com/heritage: kubestack.com/catalog/nginx
+  catalog.kubestack.com/variant: default-ingress
+  app.kubernetes.io/version: v0.25.1
+commonLabels:
+  app.kubernetes.io/component: ingress-controller
+  app.kubernetes.io/managed-by: kubestack
+  app.kubernetes.io/name: nginx
+  kubestack.com/ingress-default: 'true'
+patchesJson6902:
+- path: patch-namespace.yaml
+  target:
+    kind: Namespace
+    name: ingress-nginx
+    version: v1
+- path: patch-deployment-publish-service.yaml
+  target:
+    kind: Deployment
+    name: nginx-ingress-controller
+    group: apps
+    version: v1

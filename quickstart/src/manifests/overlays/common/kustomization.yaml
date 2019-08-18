@@ -1,2 +1,2 @@
 bases:
-- ../../bases/nginx-v0.23.0-kbst.1-default-ingress
+- ../../bases/nginx/default-ingress

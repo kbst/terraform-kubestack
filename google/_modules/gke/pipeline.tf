@@ -3,7 +3,7 @@ locals {
 }
 
 resource "google_service_account" "pipeline" {
-  account_id = "${var.metadata_name}-pipeline"
+  account_id = "${var.metadata_name}-pl"
   project    = var.project
 }
 

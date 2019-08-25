@@ -5,6 +5,7 @@ metadata:
 spec:
   params:
   - name: ops_or_apps
+    type: string
     default: ops
   resources:
     - name: source_repo
@@ -19,4 +20,4 @@ spec:
         resource: source_repo
     params:
     - name: ops_or_apps
-      value: "${params.ops_or_apps}"
+      value: "$(params.ops_or_apps)"

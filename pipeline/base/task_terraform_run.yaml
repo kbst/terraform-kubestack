@@ -10,7 +10,13 @@ spec:
       targetPath: infra
     params:
     - name: ops_or_apps
-      descriptions: Use ops- or apps terraform workspace.
+      type: string
+      description: Use ops- or apps terraform workspace.
+  stepTemplate:
+    workingDir: /workspace/infra
+    envFrom:
+    - configMapRef:
+        name: env
   steps:
   - name: init
     image: kubestack/cd:dev-1
@@ -18,11 +24,6 @@ spec:
     - terraform
     args:
     - init
-    envFrom:
-    - configMapRef:
-        name: env
-    workingDir: /workspace/infra
-    serviceAccountName: kbst-pipeline
   - name: workspace
     image: kubestack/cd:dev-1
     command:
@@ -30,12 +31,7 @@ spec:
     args:
     - workspace
     - select
-    - "${inputs.params.ops_or_apps}"
-    envFrom:
-    - configMapRef:
-        name: env
-    workingDir: /workspace/infra
-    serviceAccountName: kbst-pipeline
+    - "$(inputs.params.ops_or_apps)"
   - name: plan
     image: kubestack/cd:dev-1
     command:
@@ -44,11 +40,6 @@ spec:
     - plan
     - --input=false
     - --out=tfplan
-    envFrom:
-    - configMapRef:
-        name: env
-    workingDir: /workspace/infra
-    serviceAccountName: kbst-pipeline
   - name: apply
     image: kubestack/cd:dev-1
     command:
@@ -57,8 +48,3 @@ spec:
     - apply
     - --input=false
     - tfplan
-    envFrom:
-    - configMapRef:
-        name: env
-    workingDir: /workspace/infra
-    serviceAccountName: kbst-pipeline

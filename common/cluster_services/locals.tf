@@ -5,10 +5,9 @@ locals {
 
   workspace_label = "${var.label_namespace}cluster_workspace"
   workspace       = var.metadata_labels[local.workspace_label]
-  build_path      = "manifests/overlays/${var.cluster_type}/${local.workspace}"
+  build_path      = "../manifests/overlays/${var.cluster_type}/${local.workspace}"
 
   output_file = "cluster_services.yaml"
 
   kubeconfig_path = "${local.cluster_dir}/kubeconfig"
 }
-

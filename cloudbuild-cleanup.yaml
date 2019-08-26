@@ -1,6 +1,7 @@
 substitutions:
     _HOME: /workspace/tests/.user
     _TF_IN_AUTOMATION: "1"
+    _CLUSTER_PAIR: cp_eks_zero
 
 steps:
 - id: docker build
@@ -14,7 +15,7 @@ steps:
 
 - id: terraform init
   name: 'kbst-infra-automation:bootstrap'
-  dir: tests
+  dir: tests/$_CLUSTER_PAIR
   env:
   - HOME=$_HOME
   - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
@@ -25,7 +26,7 @@ steps:
 
 - id: terraform workspace
   name: 'kbst-infra-automation:bootstrap'
-  dir: tests
+  dir: tests/$_CLUSTER_PAIR
   env:
   - HOME=$_HOME
   - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
@@ -37,7 +38,7 @@ steps:
 
 - id: terraform destroy
   name: 'kbst-infra-automation:bootstrap'
-  dir: tests
+  dir: tests/$_CLUSTER_PAIR
   env:
   - HOME=$_HOME
   - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION

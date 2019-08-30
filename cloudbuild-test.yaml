@@ -13,6 +13,9 @@ steps:
   - kbst-infra-automation:bootstrap
   - ci-cd/
 
+#
+#
+# Bootstrap cluster
 - id: terraform init
   name: 'kbst-infra-automation:bootstrap'
   dir: tests/$_CLUSTER_PAIR
@@ -48,15 +51,53 @@ steps:
   - --input=false
   - --out=tfplan
 
-#- id: terraform apply
-#  name: 'kbst-infra-automation:bootstrap'
-#  dir: tests/$_CLUSTER_PAIR
-#  env:
-#  - HOME=$_HOME
-#  - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
-#  args:
-#  - terraform
-#  - apply
-#  - --input=false
-#  - tfplan
+- id: terraform apply
+  name: 'kbst-infra-automation:bootstrap'
+  dir: tests/$_CLUSTER_PAIR
+  env:
+  - HOME=$_HOME
+  - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
+  args:
+  - terraform
+  - apply
+  - --input=false
+  - tfplan
+
 #
+#
+# Bootstrap pipeline
+- id: add pipeline base
+  name: 'kbst-infra-automation:bootstrap'
+  dir: tests/manifests/overlays/common
+  env:
+  - HOME=$_HOME
+  args:
+  - kustomize
+  - edit
+  - add
+  - base
+  - ../../bases/pipeline/base
+
+- id: terraform plan pipeline
+  name: 'kbst-infra-automation:bootstrap'
+  dir: tests/$_CLUSTER_PAIR
+  env:
+  - HOME=$_HOME
+  - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
+  args:
+  - terraform
+  - plan
+  - --input=false
+  - --out=tfplan
+
+- id: terraform apply pipeline
+  name: 'kbst-infra-automation:bootstrap'
+  dir: tests/$_CLUSTER_PAIR
+  env:
+  - HOME=$_HOME
+  - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
+  args:
+  - terraform
+  - apply
+  - --input=false
+  - tfplan

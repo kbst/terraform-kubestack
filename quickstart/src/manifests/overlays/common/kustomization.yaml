@@ -1,4 +1,3 @@
 bases:
 - ../../bases/nginx/default-ingress
 - ../../bases/tektoncd/base
-- ../../bases/pipeline/base

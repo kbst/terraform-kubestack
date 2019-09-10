@@ -22,5 +22,8 @@ locals {
   cluster_max_size = local.cfg["cluster_max_size"]
 
   cluster_min_size = local.cfg["cluster_min_size"]
-}
 
+  cluster_aws_auth_map_roles    = lookup(local.cfg, "cluster_aws_auth_map_roles", "")
+  cluster_aws_auth_map_users    = lookup(local.cfg, "cluster_aws_auth_map_users", "")
+  cluster_aws_auth_map_accounts = lookup(local.cfg, "cluster_aws_auth_map_accounts", "")
+}

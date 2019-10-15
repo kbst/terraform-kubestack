@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     gcc \
     unzip \
-    python-virtualenv
+    python-virtualenv \
+    libffi-dev 
 
 RUN mkdir -p /opt/bin
 

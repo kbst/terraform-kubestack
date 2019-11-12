@@ -33,3 +33,12 @@ resource "aws_security_group_rule" "nodes_ingress_masters" {
   type                     = "ingress"
 }
 
+resource "aws_security_group_rule" "nodes_ingress_webhook" {
+  description              = "Allow API server to reach injector endpoint"
+  from_port                = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.nodes.id
+  source_security_group_id = aws_security_group.masters.id
+  to_port                  = 443
+  type                     = "ingress"
+}

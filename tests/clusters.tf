@@ -1,6 +1,6 @@
 module "eks_zero" {
   providers = {
-    aws = "aws.eks_zero"
+    aws = aws.eks_zero
   }
 
   source = "../aws/cluster"

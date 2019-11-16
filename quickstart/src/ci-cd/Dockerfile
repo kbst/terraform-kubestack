@@ -9,14 +9,14 @@ RUN apt-get update && apt-get install -y \
     gcc \
     unzip \
     python-virtualenv \
-    libffi-dev 
+    libffi-dev
 
 RUN mkdir -p /opt/bin
 
 # Default versions
 ARG KUBECTL_VERSION=v1.14.0
 ARG KUSTOMIZE_VERSION=2.0.3
-ARG TERRAFORM_VERSION=0.12.2
+ARG TERRAFORM_VERSION=0.12.17
 ARG AWS_IAM_AUTHENTICATOR_VERSION=0.3.0
 ARG GOOGLE_CLOUD_SDK_VERSION=239.0.0
 ARG AZURE_CLI_VERSION=2.0.63

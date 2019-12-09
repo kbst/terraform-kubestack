@@ -2,7 +2,7 @@ clusters = {
   eks_zero = {
     # Settings for Apps-cluster
     apps = {
-      name_prefix                = "testing"
+      name_prefix                = "kbstacctest"
       base_domain                = "infra.serverwolken.de"
       cluster_instance_type      = "t2.small"
       cluster_desired_capacity   = "1"
@@ -22,9 +22,9 @@ clusters = {
     # Settings for Apps-cluster
     apps = {
       project_id                 = "terraform-kubestack-testing"
-      name_prefix                = "testing"
+      name_prefix                = "kbstacctest"
       base_domain                = "infra.serverwolken.de"
-      cluster_min_master_version = "1.13.6"
+      cluster_min_master_version = "1.13.11"
       cluster_min_node_count     = 1
       cluster_max_node_count     = 1
       region                     = "europe-west1"
@@ -41,7 +41,7 @@ clusters = {
     # Settings for Apps-cluster
     apps = {
       resource_group = "terraform-kubestack-testing"
-      name_prefix    = "testing"
+      name_prefix    = "kbstacctest"
       base_domain    = "infra.serverwolken.de"
     }
 

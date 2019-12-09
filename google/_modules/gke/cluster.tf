@@ -35,10 +35,6 @@ resource "google_container_cluster" "current" {
       disabled = false
     }
 
-    kubernetes_dashboard {
-      disabled = true
-    }
-
     network_policy_config {
       disabled = false
     }
@@ -54,4 +50,3 @@ resource "google_container_cluster" "current" {
     }
   }
 }
-

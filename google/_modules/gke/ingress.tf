@@ -1,5 +1,5 @@
 resource "google_compute_address" "current" {
-  region  = google_container_cluster.current.region
+  region  = google_container_cluster.current.location
   project = var.project
 
   name = var.metadata_name
@@ -81,4 +81,3 @@ resource "google_dns_record_set" "wildcard" {
 
   rrdatas = [google_compute_address.current.address]
 }
-

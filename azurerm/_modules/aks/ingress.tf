@@ -58,7 +58,6 @@ resource "kubernetes_service" "current" {
 resource "azurerm_dns_zone" "current" {
   name                = var.metadata_fqdn
   resource_group_name = data.azurerm_resource_group.current.name
-  zone_type           = "Public"
 
   tags = var.metadata_labels
 }
@@ -82,4 +81,3 @@ resource "azurerm_dns_a_record" "wildcard" {
 
   tags = var.metadata_labels
 }
-

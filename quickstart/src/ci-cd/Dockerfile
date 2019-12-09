@@ -9,17 +9,17 @@ RUN apt-get update && apt-get install -y \
     gcc \
     unzip \
     python-virtualenv \
-    libffi-dev 
+    libffi-dev
 
 RUN mkdir -p /opt/bin
 
 # Default versions
-ARG KUBECTL_VERSION=v1.14.0
-ARG KUSTOMIZE_VERSION=2.0.3
-ARG TERRAFORM_VERSION=0.12.2
-ARG AWS_IAM_AUTHENTICATOR_VERSION=0.3.0
-ARG GOOGLE_CLOUD_SDK_VERSION=239.0.0
-ARG AZURE_CLI_VERSION=2.0.63
+ARG KUBECTL_VERSION=v1.16.3
+ARG KUSTOMIZE_VERSION=v3.4.0
+ARG TERRAFORM_VERSION=0.12.17
+ARG AWS_IAM_AUTHENTICATOR_VERSION=0.4.0
+ARG GOOGLE_CLOUD_SDK_VERSION=272.0.0
+ARG AZURE_CLI_VERSION=2.0.77
 
 # Common dependencies
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
@@ -28,8 +28,9 @@ RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && /opt/bin/kubectl version --client=true
 
 RUN echo "KUSTOMIZE_VERSION: ${KUSTOMIZE_VERSION}" \
-    && curl -Lo /opt/bin/kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64 \
-    && chmod +x /opt/bin/kustomize \
+    && curl -LO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz \
+    && tar -xf kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz \
+    && mv kustomize /opt/bin/kustomize \
     && /opt/bin/kustomize version
 
 RUN echo "TERRAFORM_VERSION: ${TERRAFORM_VERSION}" \
@@ -40,7 +41,7 @@ RUN echo "TERRAFORM_VERSION: ${TERRAFORM_VERSION}" \
 
 # AWS specific dependencies
 RUN echo "AWS_IAM_AUTHENTICATOR_VERSION: ${AWS_IAM_AUTHENTICATOR_VERSION}" \
-    && curl -Lo /opt/bin/aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${AWS_IAM_AUTHENTICATOR_VERSION}/heptio-authenticator-aws_${AWS_IAM_AUTHENTICATOR_VERSION}_linux_amd64 \
+    && curl -Lo /opt/bin/aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${AWS_IAM_AUTHENTICATOR_VERSION}/aws-iam-authenticator_${AWS_IAM_AUTHENTICATOR_VERSION}_linux_amd64 \
     && chmod +x /opt/bin/aws-iam-authenticator \
     && /opt/bin/aws-iam-authenticator
 

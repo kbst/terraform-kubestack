@@ -29,33 +29,50 @@ variable "dns_prefix" {
   default     = "api"
 }
 
-variable "agent_pool_profile_name" {
+variable "default_node_pool_name" {
   type        = string
-  description = "Name of agent pool profile."
+  description = "Name of default node pool."
   default     = "default"
 }
 
-variable "agent_pool_profile_count" {
+variable "default_node_pool_type" {
   type        = string
-  description = "Number of worker nodes"
+  description = "Type of default node pool. Defaults to VirtualMachineScaleSets, use AvailabilitySet for backwards compatibility with older clusters."
+  default     = "VirtualMachineScaleSets"
+}
+
+variable "default_node_pool_enable_auto_scaling" {
+  type        = bool
+  description = "Wether to enable auto scaling for the default node pool. Defaults to true."
+  default     = true
+}
+
+variable "default_node_pool_min_count" {
+  type        = string
+  description = "Min number of worker nodes"
   default     = "1"
 }
 
-variable "agent_pool_profile_vm_size" {
+variable "default_node_pool_max_count" {
+  type        = string
+  description = "Max number of worker nodes"
+  default     = "1"
+}
+
+variable "default_node_pool_node_count" {
+  type        = string
+  description = "Static number of worker nodes"
+  default     = "1"
+}
+
+variable "default_node_pool_vm_size" {
   type        = string
   description = "VM size of worker nodes"
   default     = "Standard_D1_v2"
 }
 
-variable "agent_pool_profile_os_type" {
-  type        = string
-  description = "OS type of worker nodes"
-  default     = "Linux"
-}
-
-variable "agent_pool_profile_os_disk_size_gb" {
+variable "default_node_pool_os_disk_size_gb" {
   type        = string
   description = "Disk size of worker nodes (in GB)"
   default     = "30"
 }
-

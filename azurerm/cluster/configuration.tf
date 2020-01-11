@@ -16,14 +16,15 @@ locals {
 
   dns_prefix = lookup(local.cfg, "dns_prefix", "api")
 
-  agent_pool_profile_name = lookup(local.cfg, "agent_pool_profile_name", "default")
+  default_node_pool_name = lookup(local.cfg, "default_node_pool_name", "default")
+  default_node_pool_type = lookup(local.cfg, "default_node_pool_type", "VirtualMachineScaleSets")
 
-  agent_pool_profile_count = lookup(local.cfg, "agent_pool_profile_count", "1")
+  default_node_pool_enable_auto_scaling = lookup(local.cfg, "default_node_pool_enable_auto_scaling", true)
+  default_node_pool_min_count           = lookup(local.cfg, "default_node_pool_min_count", "1")
+  default_node_pool_max_count           = lookup(local.cfg, "default_node_pool_max_count", "1")
+  default_node_pool_node_count          = lookup(local.cfg, "default_node_pool_node_count", "1")
 
-  agent_pool_profile_vm_size = lookup(local.cfg, "agent_pool_profile_vm_size", "Standard_D1_v2")
+  default_node_pool_vm_size = lookup(local.cfg, "default_node_pool_vm_size", "Standard_D1_v2")
 
-  agent_pool_profile_os_type = lookup(local.cfg, "agent_pool_profile_os_type", "Linux")
-
-  agent_pool_profile_os_disk_size_gb = lookup(local.cfg, "agent_pool_profile_os_disk_size_gb", "30")
+  default_node_pool_os_disk_size_gb = lookup(local.cfg, "default_node_pool_os_disk_size_gb", "30")
 }
-

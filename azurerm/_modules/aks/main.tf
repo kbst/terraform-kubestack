@@ -12,12 +12,21 @@ resource "azurerm_kubernetes_cluster" "current" {
     enabled = true
   }
 
-  agent_pool_profile {
-    name            = var.agent_pool_profile_name
-    count           = var.agent_pool_profile_count
-    vm_size         = var.agent_pool_profile_vm_size
-    os_type         = var.agent_pool_profile_os_type
-    os_disk_size_gb = var.agent_pool_profile_os_disk_size_gb
+  default_node_pool {
+    name = var.default_node_pool_name
+    type = var.default_node_pool_type
+
+    enable_auto_scaling = var.default_node_pool_enable_auto_scaling
+
+    # set min and max count only if autoscaling is _enabled_
+    min_count = var.default_node_pool_enable_auto_scaling ? var.default_node_pool_min_count : null
+    max_count = var.default_node_pool_enable_auto_scaling ? var.default_node_pool_max_count : null
+
+    # set node count only if auto scaling is _disabled_
+    node_count = var.default_node_pool_enable_auto_scaling ? null : var.default_node_pool_node_count
+
+    vm_size         = var.default_node_pool_vm_size
+    os_disk_size_gb = var.default_node_pool_os_disk_size_gb
   }
 
   service_principal {
@@ -34,4 +43,3 @@ resource "azurerm_kubernetes_cluster" "current" {
 
   tags = var.metadata_labels
 }
-

@@ -27,10 +27,14 @@ module "cluster" {
 
   dns_prefix = local.dns_prefix
 
-  agent_pool_profile_name            = local.agent_pool_profile_name
-  agent_pool_profile_count           = local.agent_pool_profile_count
-  agent_pool_profile_vm_size         = local.agent_pool_profile_vm_size
-  agent_pool_profile_os_type         = local.agent_pool_profile_os_type
-  agent_pool_profile_os_disk_size_gb = local.agent_pool_profile_os_disk_size_gb
-}
+  default_node_pool_name = local.default_node_pool_name
+  default_node_pool_type = local.default_node_pool_type
 
+  default_node_pool_enable_auto_scaling = local.default_node_pool_enable_auto_scaling
+  default_node_pool_min_count           = local.default_node_pool_min_count
+  default_node_pool_max_count           = local.default_node_pool_max_count
+  default_node_pool_node_count          = local.default_node_pool_node_count
+
+  default_node_pool_vm_size         = local.default_node_pool_vm_size
+  default_node_pool_os_disk_size_gb = local.default_node_pool_os_disk_size_gb
+}

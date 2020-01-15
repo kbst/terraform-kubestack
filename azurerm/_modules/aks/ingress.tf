@@ -9,28 +9,12 @@ resource "azurerm_public_ip" "current" {
   depends_on = [azurerm_kubernetes_cluster.current]
 }
 
-resource "kubernetes_namespace" "current" {
-  provider = kubernetes.aks
-
-  metadata {
-    name = "ingress-kbst-default"
-  }
-
-  # namespace metadata may change through the manifests
-  # hence ignoring this for the terraform lifecycle
-  lifecycle {
-    ignore_changes = [metadata]
-  }
-
-  depends_on = [azurerm_kubernetes_cluster.current]
-}
-
 resource "kubernetes_service" "current" {
   provider = kubernetes.aks
 
   metadata {
     name      = "ingress-kbst-default"
-    namespace = kubernetes_namespace.current.metadata[0].name
+    namespace = "ingress-kbst-default"
   }
 
   spec {
@@ -53,6 +37,8 @@ resource "kubernetes_service" "current" {
       target_port = "https"
     }
   }
+
+  depends_on = [module.cluster_services]
 }
 
 resource "azurerm_dns_zone" "current" {

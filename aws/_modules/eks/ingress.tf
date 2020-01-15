@@ -1,25 +1,9 @@
-resource "kubernetes_namespace" "current" {
-  provider = kubernetes.eks
-
-  metadata {
-    name = "ingress-kbst-default"
-  }
-
-  # namespace metadata may change through the manifests
-  # hence ignoring this for the terraform lifecycle
-  lifecycle {
-    ignore_changes = [metadata]
-  }
-
-  depends_on = [aws_eks_cluster.current]
-}
-
 resource "kubernetes_service" "current" {
   provider = kubernetes.eks
 
   metadata {
     name      = "ingress-kbst-default"
-    namespace = kubernetes_namespace.current.metadata[0].name
+    namespace = "ingress-kbst-default"
   }
 
   spec {
@@ -41,6 +25,8 @@ resource "kubernetes_service" "current" {
       target_port = "https"
     }
   }
+
+  depends_on = [module.cluster_services]
 }
 
 resource "aws_route53_zone" "current" {
@@ -77,4 +63,3 @@ resource "aws_route53_record" "wildcard" {
     evaluate_target_health = true
   }
 }
-

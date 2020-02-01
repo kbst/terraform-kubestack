@@ -13,10 +13,5 @@ module "cluster_services" {
     cluster_ca         = aws_eks_cluster.current.certificate_authority[0].data
     caller_id_arn      = local.caller_id_arn
     caller_id_arn_type = local.caller_id_arn_type
-    # hack, because modules can't have depends_on
-    # prevent a race between kubernetes provider and cluster services/kustomize
-    # creating the namespace and the provider erroring out during apply
-    not_used = kubernetes_namespace.current.metadata[0].name
   }
 }
-

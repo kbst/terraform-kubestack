@@ -13,9 +13,10 @@ module "cluster_services" {
     cluster_ca       = google_container_cluster.current.master_auth[0].cluster_ca_certificate
     path_cwd         = path.cwd
     # hack, because modules can't have depends_on
-    # prevent a race between kubernetes provider and cluster services/kustomize
-    # creating the namespace and the provider erroring out during apply
-    not_used = kubernetes_namespace.current.metadata[0].name
+    # enforcing node pools to be _created before_
+    # and _destroyed after_ the cluster services
+    # to prevent namespace getting stuck in terminating
+    # during destroy
+    not_used = module.node_pool.id
   }
 }
-

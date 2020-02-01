@@ -15,10 +15,5 @@ module "cluster_services" {
     client_cert      = azurerm_kubernetes_cluster.current.kube_config[0].client_certificate
     client_key       = azurerm_kubernetes_cluster.current.kube_config[0].client_key
     path_cwd         = path.cwd
-    # hack, because modules can't have depends_on
-    # prevent a race between kubernetes provider and cluster services/kustomize
-    # creating the namespace and the provider erroring out during apply
-    not_used = kubernetes_namespace.current.metadata[0].name
   }
 }
-

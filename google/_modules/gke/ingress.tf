@@ -5,28 +5,12 @@ resource "google_compute_address" "current" {
   name = var.metadata_name
 }
 
-resource "kubernetes_namespace" "current" {
-  provider = kubernetes.gke
-
-  metadata {
-    name = "ingress-kbst-default"
-  }
-
-  # namespace metadata may change through the manifests
-  # hence ignoring this for the terraform lifecycle
-  lifecycle {
-    ignore_changes = [metadata]
-  }
-
-  depends_on = [module.node_pool]
-}
-
 resource "kubernetes_service" "current" {
   provider = kubernetes.gke
 
   metadata {
     name      = "ingress-kbst-default"
-    namespace = kubernetes_namespace.current.metadata[0].name
+    namespace = "ingress-kbst-default"
   }
 
   spec {
@@ -49,6 +33,9 @@ resource "kubernetes_service" "current" {
       target_port = "https"
     }
   }
+
+  # the cluster_services module creates the ingress-kbst-default namespace
+  depends_on = [module.cluster_services]
 }
 
 resource "google_dns_managed_zone" "current" {

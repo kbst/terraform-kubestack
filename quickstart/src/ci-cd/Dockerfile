@@ -17,7 +17,7 @@ RUN mkdir -p /opt/bin
 ARG KUBECTL_VERSION=v1.16.3
 ARG KUSTOMIZE_VERSION=v3.4.0
 ARG TERRAFORM_VERSION=0.12.19
-ARG TERRAFORM_PROVIDER_KUSTOMIZE_VERSION=v0.1.0-beta.0
+ARG TERRAFORM_PROVIDER_KUSTOMIZE_VERSION=v0.1.0-beta.1
 ARG AWS_IAM_AUTHENTICATOR_VERSION=0.4.0
 ARG GOOGLE_CLOUD_SDK_VERSION=272.0.0
 ARG AZURE_CLI_VERSION=2.0.77
@@ -41,7 +41,7 @@ RUN echo "TERRAFORM_VERSION: ${TERRAFORM_VERSION}" \
     && /opt/bin/terraform version
 
 RUN echo "TERRAFORM_PROVIDER_KUSTOMIZE_VERSION: ${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}" \
-    && curl -LO https://github.com/kbst/terraform-provider-kustomize/releases/download/v0.1.0-beta.0/terraform-provider-kustomization-${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}-linux-amd64 \
+    && curl -LO https://github.com/kbst/terraform-provider-kustomize/releases/download/${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}/terraform-provider-kustomization-${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}-linux-amd64 \
     && mv terraform-provider-kustomization-${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}-linux-amd64 /opt/bin/terraform-provider-kustomization \
     && chmod +x /opt/bin/terraform-provider-kustomization
 

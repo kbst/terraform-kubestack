@@ -1,4 +1,4 @@
-name: Run Tests
+name: Build Test Publish
 
 on: push
 
@@ -34,7 +34,7 @@ jobs:
 
     - name: 'Unzip ${{ matrix.test-for }} quickstart'
       run: |
-        unzip quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-master.zip
+        unzip quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-${{ github.sha }}.zip
 
     - name: 'Docker build'
       env:
@@ -78,3 +78,21 @@ jobs:
           -u `id -u`:`id -g` \
           kbst-infra-automation:test \
           terraform validate
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [build, test]
+
+    steps:
+    - name: 'Download artifacts'
+      uses: actions/download-artifact@v1
+      with:
+        name: quickstart-artifacts
+
+    - name: 'Setup gcloud'
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+    - name: 'Publish archives'
+      run: gsutil -m cp quickstart-artifacts/*.zip gs://dev.quickstart.kubestack.com

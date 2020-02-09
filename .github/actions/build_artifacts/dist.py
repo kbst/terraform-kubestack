@@ -9,10 +9,8 @@ from jinja2 import Environment, FileSystemLoader
 SRCDIR = 'quickstart/src'
 DISTDIR = 'quickstart/_dist'
 
-# Get name and version
-version = environ.get('TAG_NAME', None)
-if not version:
-    version = environ.get('BRANCH_NAME', 'master')
+# Use GITHUB_SHA as version
+version = environ.get('GITHUB_SHA')
 
 # Clean DISTDIR
 if isdir(DISTDIR):

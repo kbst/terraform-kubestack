@@ -6,8 +6,8 @@ from shutil import copytree, make_archive, rmtree
 
 from jinja2 import Environment, FileSystemLoader
 
-SRCDIR = 'src'
-DISTDIR = '_dist'
+SRCDIR = 'quickstart/src'
+DISTDIR = 'quickstart/_dist'
 
 # Get name and version
 version = environ.get('TAG_NAME', None)

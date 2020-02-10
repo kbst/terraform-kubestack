@@ -121,6 +121,7 @@ RUN apt-get update && apt-get install -y \
       openssh-client \
       dnsutils \
       libnss-wrapper \
+      unzip \
     && rm -rf /var/lib/apt/lists/*
 
 ENV HOME=/infra/.user

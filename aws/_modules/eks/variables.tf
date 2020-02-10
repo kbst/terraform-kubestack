@@ -38,6 +38,18 @@ variable "min_size" {
   type        = string
 }
 
+variable "root_device_encrypted" {
+  type = bool
+  default = true
+  description = "Will encrypted the root device."
+}
+
+variable "root_device_volume_size" {
+  type = string
+  default = "20"
+  description = "Will set the volume size of the root device"
+}
+
 variable "aws_auth_map_roles" {
   description = "mapRoles entries added to aws-auth configmap"
   type        = string

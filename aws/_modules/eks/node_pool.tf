@@ -17,5 +17,8 @@ module "node_pool" {
   max_size         = var.max_size
   min_size         = var.min_size
 
+  root_device_volume_size = var.root_device_volume_size
+  root_device_encrypted = var.root_device_encrypted
+
   vpc_zone_identifiers = aws_subnet.current.*.id
 }

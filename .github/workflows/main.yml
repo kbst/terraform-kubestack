@@ -1,6 +1,11 @@
 name: Build Test Publish
 
-on: push
+on:
+  push:
+    branches:
+    - "*"  # run for branches
+    tags:
+    - "*"  # run for tags
 
 jobs:
   build:
@@ -34,7 +39,7 @@ jobs:
 
     - name: 'Unzip ${{ matrix.test-for }} quickstart'
       run: |
-        unzip quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-${{ github.sha }}.zip
+        unzip quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-*.zip
 
     - name: 'Docker build'
       env:

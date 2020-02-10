@@ -9,8 +9,11 @@ from jinja2 import Environment, FileSystemLoader
 SRCDIR = 'quickstart/src'
 DISTDIR = 'quickstart/_dist'
 
-# Use GITHUB_SHA as version
+# Use tag as version, fallback to commit sha
 version = environ.get('GITHUB_SHA')
+gitref = environ.get('GITHUB_REF')
+if gitref.startswith('refs/tags/'):
+    version = gitref.replace('refs/tags/', '')
 
 # Clean DISTDIR
 if isdir(DISTDIR):

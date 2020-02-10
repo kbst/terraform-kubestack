@@ -18,20 +18,3 @@ Each cloud provider specific module directory always has a `cluster` and a `_mod
 The `quickstart` directory is home to the source for the zip files that are used to bootstrap the user repositories when following the quickstart documentation.
 
 `tests` holds a set of happy path tests that also act as a example of how to do multiple cluster pairs across multiple clouds from one repository.
-
-## Development Workflow
-
-To build a set of quickstart zip files push your branch to trigger CI/CD or install `cloud-build-local` using e.g. `gcloud components install cloud-build-local` and run:
-
-    ```
-    rm -rf _build && cloud-build-local \
-        --substitutions=_QUICKSTART_BUCKET_NAME=,TAG_NAME=,BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD) \
-        --dryrun=false \
-        --write-workspace=_build \
-        .
-    ```
-
-## Making a Release
-
-1. Create a Git tag following semver, prefixed with `v`. E.g. `v0.1.0`
-1. Push the tag to trigger CI/CD

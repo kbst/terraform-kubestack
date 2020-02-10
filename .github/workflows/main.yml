@@ -1,0 +1,103 @@
+name: Build Test Publish
+
+on:
+  push:
+    branches:
+    - "*"  # run for branches
+    tags:
+    - "*"  # run for tags
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v1
+
+    - name: Build artifacts
+      uses: ./.github/actions/build_artifacts
+
+    - name: 'Upload artifacts'
+      uses: actions/upload-artifact@v1
+      with:
+        name: quickstart-artifacts
+        path: ./quickstart/_dist
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [build]
+    strategy:
+      matrix:
+        test-for: ["aks", "eks", "gke"]
+
+    steps:
+    - name: 'Download artifacts'
+      uses: actions/download-artifact@v1
+      with:
+        name: quickstart-artifacts
+
+    - name: 'Unzip ${{ matrix.test-for }} quickstart'
+      run: |
+        unzip quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-*.zip
+
+    - name: 'Docker build'
+      env:
+        DOCKER_BUILDKIT: 1
+      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      run: |
+        docker build -t kbst-infra-automation:test ci-cd/
+
+    - name: 'Configure Kubestack'
+      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      run: |
+        # disable remote state for tests
+        rm state.tf
+
+        # set name prefix
+        sed -i 's/name_prefix = ""/name_prefix = "test"/g' config.auto.tfvars
+
+    - name: 'Terraform init'
+      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      run: |
+        docker run --rm \
+          -v `pwd`:/infra \
+          -u `id -u`:`id -g` \
+          kbst-infra-automation:test \
+          terraform init
+
+    - name: 'Terraform workspace new ops'
+      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      run: |
+        docker run --rm \
+          -v `pwd`:/infra \
+          -u `id -u`:`id -g` \
+          kbst-infra-automation:test \
+          terraform workspace new ops
+
+    - name: 'Terraform validate'
+      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      run: |
+        docker run --rm \
+          -v `pwd`:/infra \
+          -u `id -u`:`id -g` \
+          kbst-infra-automation:test \
+          terraform validate
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [build, test]
+
+    steps:
+    - name: 'Download artifacts'
+      uses: actions/download-artifact@v1
+      with:
+        name: quickstart-artifacts
+
+    - name: 'Setup gcloud'
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+    - name: 'Publish archives'
+      run: gsutil -m cp quickstart-artifacts/*.zip gs://dev.quickstart.kubestack.com

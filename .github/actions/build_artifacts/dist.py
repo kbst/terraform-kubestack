@@ -6,13 +6,14 @@ from shutil import copytree, make_archive, rmtree
 
 from jinja2 import Environment, FileSystemLoader
 
-SRCDIR = 'src'
-DISTDIR = '_dist'
+SRCDIR = 'quickstart/src'
+DISTDIR = 'quickstart/_dist'
 
-# Get name and version
-version = environ.get('TAG_NAME', None)
-if not version:
-    version = environ.get('BRANCH_NAME', 'master')
+# Use tag as version, fallback to commit sha
+version = environ.get('GITHUB_SHA')
+gitref = environ.get('GITHUB_REF')
+if gitref.startswith('refs/tags/'):
+    version = gitref.replace('refs/tags/', '')
 
 # Clean DISTDIR
 if isdir(DISTDIR):

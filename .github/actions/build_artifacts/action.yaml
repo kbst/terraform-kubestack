@@ -1,0 +1,5 @@
+name: "Build Artifacts"
+description: "Build the artifacts for the quickstart."
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

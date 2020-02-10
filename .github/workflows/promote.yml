@@ -1,0 +1,46 @@
+name: Promote
+
+on:
+  push:
+    branches:
+    - "!*"  # do not run on any branches
+    tags:
+    - "v*"  # only run for tags
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        test-for: ["aks", "eks", "gke"]
+
+    steps:
+    #
+    #
+    # Setup gcloud CLI
+    - name: Setup gcloud
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+    #
+    #
+    # Promote archive
+    - name: Promote ${{ matrix.test-for }}
+      run: |
+            export VERSION=$(echo $GITHUB_REF | sed -e "s#^refs/tags/##")
+            set +e
+            while true
+            do
+                gsutil cp gs://dev.quickstart.kubestack.com/infra-quickstart-${{ matrix.test-for }}-${VERSION}.zip gs://quickstart.kubestack.com/ && break
+                sleep 15
+            done
+
+    #
+    #
+    # Check promotion
+    - name: Check ${{ matrix.test-for }}
+      run: |
+            export VERSION=$(echo $GITHUB_REF | sed -e "s#^refs/tags/##")
+            wget https://storage.googleapis.com/quickstart.kubestack.com/infra-quickstart-${{ matrix.test-for }}-${VERSION}.zip

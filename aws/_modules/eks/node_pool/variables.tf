@@ -53,6 +53,18 @@ variable "min_size" {
   description = "Minimum number of worker nodes."
 }
 
+variable "root_device_encrypted" {
+  type = bool
+  default = true
+  description = "Will encrypted the root device."
+}
+
+variable "root_device_volume_size" {
+  type = string
+  default = "20"
+  description = "Will set the volume size of the root device"
+}
+
 variable "vpc_zone_identifiers" {
   type        = list(string)
   description = "List of VPC subnet IDs to use for nodes."

@@ -26,6 +26,11 @@ resource "aws_launch_configuration" "nodes" {
   security_groups = var.security_groups
   user_data_base64 = base64encode(local.node_userdata)
 
+  root_block_device {
+    volume_size = var.root_device_volume_size
+    encrypted = var.root_device_encrypted
+  }
+
   lifecycle {
     create_before_destroy = true
   }

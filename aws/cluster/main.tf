@@ -24,6 +24,9 @@ module "cluster" {
   max_size           = local.cluster_max_size
   min_size           = local.cluster_min_size
 
+  root_device_encrypted = local.worker_root_device_encrypted
+  root_device_volume_size = local.worker_root_device_volume_size
+
   aws_auth_map_roles    = local.cluster_aws_auth_map_roles
   aws_auth_map_users    = local.cluster_aws_auth_map_users
   aws_auth_map_accounts = local.cluster_aws_auth_map_accounts

@@ -23,14 +23,18 @@ data "external" "aws_iam_authenticator" {
   }
 }
 
+data "aws_eks_cluster_auth" "current" {
+  name = aws_eks_cluster.current.name
+}
+
 provider "kubernetes" {
   alias = "eks"
 
   load_config_file = false
 
-  host                   = aws_eks_cluster.current.endpoint
-  cluster_ca_certificate = base64decode(aws_eks_cluster.current.certificate_authority[0].data)
+  host                    = aws_eks_cluster.current.endpoint
+  cluster_ca_certificate  = base64decode(aws_eks_cluster.current.certificate_authority[0].data)
 
-  token = data.external.aws_iam_authenticator.result["token"]
+  token                   = data.aws_eks_cluster_auth.current.token
 }
 

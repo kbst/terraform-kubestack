@@ -26,7 +26,7 @@ FROM builder AS common
 ARG KUBECTL_VERSION=v1.17.2
 ARG KUSTOMIZE_VERSION=v3.5.4
 ARG TERRAFORM_VERSION=0.12.20
-ARG TERRAFORM_PROVIDER_KUSTOMIZE_VERSION=v0.1.0-beta.1
+ARG TERRAFORM_PROVIDER_KUSTOMIZE_VERSION=v0.1.0-beta.3
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && curl -Lo /opt/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \

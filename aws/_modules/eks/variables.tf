@@ -39,15 +39,15 @@ variable "min_size" {
 }
 
 variable "root_device_encrypted" {
-  type = bool
-  default = true
-  description = "Will encrypted the root device."
+  type        = bool
+  default     = true
+  description = "Whether to encrypt root device volumes of worker nodes."
 }
 
 variable "root_device_volume_size" {
-  type = string
-  default = "20"
-  description = "Will set the volume size of the root device"
+  type        = number
+  default     = 20
+  description = "Size in GB for root device volumes of worker nodes."
 }
 
 variable "aws_auth_map_roles" {

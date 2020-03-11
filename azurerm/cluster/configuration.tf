@@ -27,4 +27,7 @@ locals {
   default_node_pool_vm_size = lookup(local.cfg, "default_node_pool_vm_size", "Standard_D1_v2")
 
   default_node_pool_os_disk_size_gb = lookup(local.cfg, "default_node_pool_os_disk_size_gb", "30")
+
+  manifest_path_default = "manifests/overlays/${terraform.workspace}"
+  manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
 }

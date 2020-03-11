@@ -1,9 +1,7 @@
 module "cluster_services" {
   source = "../../../common/cluster_services"
 
-  cluster_type = "gke"
-
-  metadata_labels = var.metadata_labels
+  manifest_path = var.manifest_path
 
   template_string = file("${path.module}/templates/kubeconfig.tpl")
 

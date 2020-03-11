@@ -50,5 +50,7 @@ locals {
   cluster_auto_repair = lookup(local.cfg, "cluster_auto_repair", true)
 
   cluster_auto_upgrade = lookup(local.cfg, "cluster_auto_upgrade", true)
-}
 
+  manifest_path_default = "manifests/overlays/${terraform.workspace}"
+  manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
+}

@@ -1,10 +1,7 @@
 module "cluster_services" {
   source = "../../../common/cluster_services"
 
-  cluster_type = "aks"
-
-  metadata_labels = var.metadata_labels
-  label_namespace = var.metadata_label_namespace
+  manifest_path = var.manifest_path
 
   template_string = file("${path.module}/templates/kubeconfig.tpl")
 

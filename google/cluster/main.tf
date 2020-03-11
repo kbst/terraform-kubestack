@@ -43,5 +43,6 @@ module "cluster" {
   auto_repair = local.cluster_auto_repair
 
   auto_upgrade = local.cluster_auto_upgrade
-}
 
+  manifest_path = local.manifest_path
+}

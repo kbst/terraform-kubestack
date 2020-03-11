@@ -8,7 +8,7 @@ variable "template_vars" {
   description = "Variables the kubeconfig template requires."
 }
 
-variable "kustomize_build_path" {
+variable "manifest_path" {
   type        = string
   description = "Path to Kustomize overlay to build."
 }

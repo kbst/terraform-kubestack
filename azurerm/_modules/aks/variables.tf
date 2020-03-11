@@ -77,7 +77,7 @@ variable "default_node_pool_os_disk_size_gb" {
   default     = "30"
 }
 
-variable "kustomize_build_path" {
+variable "manifest_path" {
   type        = string
   description = "Path to Kustomize overlay to build."
 }

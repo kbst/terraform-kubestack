@@ -65,7 +65,7 @@ variable "aws_auth_map_accounts" {
   type        = string
 }
 
-variable "kustomize_build_path" {
+variable "manifest_path" {
   type        = string
   description = "Path to Kustomize overlay to build."
 }

@@ -10,7 +10,7 @@ provider "kustomization" {
 
 data "kustomization" "current" {
   # path to kustomization directory
-  path = var.kustomize_build_path
+  path = var.manifest_path
 }
 
 resource "kustomization_resource" "current" {

@@ -104,7 +104,7 @@ variable "auto_upgrade" {
   type        = string
 }
 
-variable "kustomize_build_path" {
+variable "manifest_path" {
   type        = string
   description = "Path to Kustomize overlay to build."
 }

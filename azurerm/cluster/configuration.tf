@@ -28,6 +28,6 @@ locals {
 
   default_node_pool_os_disk_size_gb = lookup(local.cfg, "default_node_pool_os_disk_size_gb", "30")
 
-  kbp_default          = "manifests/overlays/${terraform.workspace}"
-  kustomize_build_path = lookup(local.cfg, "kustomize_build_path", local.kbp_default)
+  manifest_path_default = "manifests/overlays/${terraform.workspace}"
+  manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
 }

@@ -30,6 +30,6 @@ locals {
   cluster_aws_auth_map_users    = lookup(local.cfg, "cluster_aws_auth_map_users", "")
   cluster_aws_auth_map_accounts = lookup(local.cfg, "cluster_aws_auth_map_accounts", "")
 
-  kbp_default          = "manifests/overlays/${terraform.workspace}"
-  kustomize_build_path = lookup(local.cfg, "kustomize_build_path", local.kbp_default)
+  manifest_path_default = "manifests/overlays/${terraform.workspace}"
+  manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
 }

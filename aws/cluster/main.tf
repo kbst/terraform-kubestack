@@ -31,5 +31,5 @@ module "cluster" {
   aws_auth_map_users    = local.cluster_aws_auth_map_users
   aws_auth_map_accounts = local.cluster_aws_auth_map_accounts
 
-  kustomize_build_path = local.kustomize_build_path
+  manifest_path = local.manifest_path
 }

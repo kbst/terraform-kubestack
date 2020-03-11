@@ -44,5 +44,5 @@ module "cluster" {
 
   auto_upgrade = local.cluster_auto_upgrade
 
-  kustomize_build_path = local.kustomize_build_path
+  manifest_path = local.manifest_path
 }

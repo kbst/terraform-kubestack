@@ -50,5 +50,7 @@ locals {
   cluster_auto_repair = lookup(local.cfg, "cluster_auto_repair", true)
 
   cluster_auto_upgrade = lookup(local.cfg, "cluster_auto_upgrade", true)
-}
 
+  kbp_default          = "manifests/overlays/${terraform.workspace}"
+  kustomize_build_path = lookup(local.cfg, "kustomize_build_path", local.kbp_default)
+}

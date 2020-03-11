@@ -43,5 +43,6 @@ module "cluster" {
   auto_repair = local.cluster_auto_repair
 
   auto_upgrade = local.cluster_auto_upgrade
-}
 
+  kustomize_build_path = local.kustomize_build_path
+}

@@ -64,3 +64,8 @@ variable "aws_auth_map_accounts" {
   description = "mapAccounts entries added to aws-auth configmap"
   type        = string
 }
+
+variable "kustomize_build_path" {
+  type        = string
+  description = "Path to Kustomize overlay to build."
+}

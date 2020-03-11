@@ -37,4 +37,6 @@ module "cluster" {
 
   default_node_pool_vm_size         = local.default_node_pool_vm_size
   default_node_pool_os_disk_size_gb = local.default_node_pool_os_disk_size_gb
+
+  kustomize_build_path = local.kustomize_build_path
 }

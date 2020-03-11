@@ -1,9 +1,7 @@
 module "cluster_services" {
   source = "../../../common/cluster_services"
 
-  cluster_type = "eks"
-
-  metadata_labels = var.metadata_labels
+  kustomize_build_path = var.kustomize_build_path
 
   template_string = file("${path.module}/templates/kubeconfig.tpl")
 

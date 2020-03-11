@@ -27,4 +27,7 @@ locals {
   default_node_pool_vm_size = lookup(local.cfg, "default_node_pool_vm_size", "Standard_D1_v2")
 
   default_node_pool_os_disk_size_gb = lookup(local.cfg, "default_node_pool_os_disk_size_gb", "30")
+
+  kbp_default          = "manifests/overlays/${terraform.workspace}"
+  kustomize_build_path = lookup(local.cfg, "kustomize_build_path", local.kbp_default)
 }

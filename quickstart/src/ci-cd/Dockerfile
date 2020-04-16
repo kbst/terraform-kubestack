@@ -50,7 +50,7 @@ RUN echo "TERRAFORM_PROVIDER_KUSTOMIZE_VERSION: ${TERRAFORM_PROVIDER_KUSTOMIZE_V
     && mv terraform-provider-kustomization-${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}-linux-amd64 /opt/bin/terraform-provider-kustomization \
     && chmod +x /opt/bin/terraform-provider-kustomization
 
-COPY nss-wrapper /opt/bin/nss-wrapper
+COPY entrypoint /opt/bin/entrypoint
 
 
 #
@@ -144,5 +144,5 @@ ENV PATH=$PATH:/opt/azure/bin
 
 WORKDIR /infra
 
-ENTRYPOINT ["/opt/bin/nss-wrapper"]
+ENTRYPOINT ["/opt/bin/entrypoint"]
 CMD bash

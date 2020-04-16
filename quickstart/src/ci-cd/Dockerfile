@@ -23,9 +23,9 @@ RUN mkdir -p /opt/bin
 # Common builder
 FROM builder AS common
 
-ARG KUBECTL_VERSION=v1.17.2
+ARG KUBECTL_VERSION=v1.18.1
 ARG KUSTOMIZE_VERSION=v3.5.4
-ARG TERRAFORM_VERSION=0.12.20
+ARG TERRAFORM_VERSION=0.12.24
 ARG TERRAFORM_PROVIDER_KUSTOMIZE_VERSION=v0.1.0-beta.3
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
@@ -79,7 +79,7 @@ RUN echo "AWS_CLI_VERSION: N/A" \
 # Google builder
 FROM builder AS google
 
-ARG GOOGLE_CLOUD_SDK_VERSION=279.0.0
+ARG GOOGLE_CLOUD_SDK_VERSION=289.0.0
 
 RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
@@ -93,7 +93,7 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
 # Azure builder
 FROM builder AS azure
 
-ARG AZURE_CLI_VERSION=2.0.81
+ARG AZURE_CLI_VERSION=2.3.1
 
 RUN apt-get update && apt-get install -y \
     libffi-dev

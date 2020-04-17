@@ -1,6 +1,9 @@
 substitutions:
     _HOME: /workspace/tests/.user
     _TF_IN_AUTOMATION: "1"
+    _KBST_AUTH_AWS: ""
+    _KBST_AUTH_AZ: ""
+    _KBST_AUTH_GCLOUD: ""
 
 steps:
 - id: docker build
@@ -11,6 +14,16 @@ steps:
   - -t
   - kbst-infra-automation:bootstrap
   - ci-cd/
+
+- id: authenticate
+  name: 'kbst-infra-automation:bootstrap'
+  dir: tests
+  env:
+  - HOME=$_HOME
+  - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
+  - KBST_AUTH_AWS=$_KBST_AUTH_AWS
+  - KBST_AUTH_AZ=$_KBST_AUTH_AZ
+  - KBST_AUTH_GCLOUD=$_KBST_AUTH_GCLOUD
 
 - id: terraform init
   name: 'kbst-infra-automation:bootstrap'

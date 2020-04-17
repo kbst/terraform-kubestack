@@ -1,9 +1,13 @@
 #!/bin/sh
 set -e
 
-mkdir -p /infra/.user
+# home may be modified from multiple sources
+# try to normalize before using it in paths below
+REALHOME=$(realpath $HOME)
 
-echo "kbst:x:$(id -u):$(id -g):Kubestack User:/infra/.user:/bin/sh" > /tmp/passwd
+mkdir -p $REALHOME
+
+echo "kbst:x:$(id -u):$(id -g):Kubestack User:${REALHOME}:/bin/sh" > /tmp/passwd
 
 export LD_PRELOAD=libnss_wrapper.so
 export NSS_WRAPPER_PASSWD=/tmp/passwd
@@ -12,7 +16,7 @@ export NSS_WRAPPER_GROUP=/etc/group
 #
 #
 # AWS auth
-AWS_CONFIG_PATH=/infra/.user/.aws
+AWS_CONFIG_PATH=$REALHOME/.aws
 mkdir -p $AWS_CONFIG_PATH
 
 # handle base64 encoded AWS crendentials
@@ -25,7 +29,7 @@ fi
 #
 #
 # Azure auth
-AZ_CONFIG_PATH=/infra/.user/.azure
+AZ_CONFIG_PATH=$REALHOME/.azure
 mkdir -p $AZ_CONFIG_PATH
 touch $AZ_CONFIG_PATH/KBST_AUTH_AZ
 
@@ -49,7 +53,7 @@ export ARM_TENANT_ID
 #
 #
 # Gcloud auth
-GCLOUD_CONFIG_PATH=/infra/.user/.config/gcloud
+GCLOUD_CONFIG_PATH=$REALHOME/.config/gcloud
 mkdir -p $GCLOUD_CONFIG_PATH
 
 # handle base64 encoded GCLOUD crendentials

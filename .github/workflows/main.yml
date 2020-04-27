@@ -32,7 +32,7 @@ jobs:
         docker save -o ./quickstart/_dist/image.tar $IMAGE
 
     - name: 'Upload artifacts'
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2-preview
       with:
         name: quickstart-artifacts
         path: ./quickstart/_dist
@@ -46,7 +46,7 @@ jobs:
 
     steps:
     - name: 'Download artifacts'
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v2-preview
       with:
         name: quickstart-artifacts
 
@@ -107,7 +107,7 @@ jobs:
 
     steps:
     - name: 'Download artifacts'
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v2-preview
       with:
         name: quickstart-artifacts
 

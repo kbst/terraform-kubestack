@@ -18,19 +18,6 @@ jobs:
     - name: Build artifacts
       uses: ./.github/actions/build_artifacts
 
-    # Docker actions run as root, fix ownership of _dist
-    - name: Fix owner
-      run: |
-        sudo chown -R `id -u`:`id -g` ./quickstart/_dist
-
-    - name: Build and save image
-      env:
-        DOCKER_BUILDKIT: 1
-      run: |
-        IMAGE=$(cat ./quickstart/_dist/infra-quickstart-gke/ci-cd/Dockerfile | sed 's/FROM //')
-        docker build -t $IMAGE oci/
-        docker save -o ./quickstart/_dist/image.tar $IMAGE
-
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v1
       with:
@@ -53,10 +40,6 @@ jobs:
     - name: 'Unzip ${{ matrix.test-for }} quickstart'
       run: |
         unzip quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-*.zip
-
-    - name: 'Docker load'
-      run: |
-        docker load -i quickstart-artifacts/image.tar
 
     - name: 'Docker build'
       env:
@@ -110,19 +93,6 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: quickstart-artifacts
-
-    - name: 'Docker load'
-      run: |
-        docker load -i quickstart-artifacts/image.tar
-
-    - name: 'Docker login'
-      run: |
-        echo ${{ secrets.DOCKER_AUTH }} | docker login --username kbstci --password-stdin
-
-    - name: 'Docker push'
-      run: |
-        IMAGE=$(cat quickstart-artifacts/infra-quickstart-gke/ci-cd/Dockerfile | sed 's/FROM //')
-        docker push $IMAGE
 
     - name: 'Setup gcloud'
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master

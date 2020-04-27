@@ -9,29 +9,11 @@ from jinja2 import Environment, FileSystemLoader
 SRCDIR = 'quickstart/src'
 DISTDIR = 'quickstart/_dist'
 
-
-def replace_version(dist_path, file_name, context):
-    # Replace templated variable with version in clusters.tf
-    jinja = Environment(loader=FileSystemLoader(dist_path))
-    template = jinja.get_template(file_name)
-    data = template.render(context)
-
-    with open(f'{dist_path}/{file_name}', 'w') as f:
-        f.write(data)
-        # always include newline at end of file
-        f.write('\n')
-
-
 # Use tag as version, fallback to commit sha
 version = environ.get('GITHUB_SHA')
-# Non tagged images go to a different image repository
-image_name = 'kubestack/framework-dev'
-
 gitref = environ.get('GITHUB_REF')
 if gitref.startswith('refs/tags/'):
     version = gitref.replace('refs/tags/', '')
-    # Tagged releases go to main image repository
-    image_name = 'kubestack/framework'
 
 # Clean DISTDIR
 if isdir(DISTDIR):
@@ -56,12 +38,14 @@ for configuration in configurations:
     copytree(manifests_src, manifests_dist)
     copytree(cicd_src, cicd_dist)
 
-    # Replace templated version variable in clusters.tf
-    replace_version(configuration_dist, 'clusters.tf', {'version': version})
+    # Replace templated variable with version in clusters.tf
+    jinja = Environment(loader=FileSystemLoader(configuration_dist))
+    template = jinja.get_template('clusters.tf')
+    data = template.render(version=version)
 
-    # Replace templated variables in Dockerfile
-    replace_version(cicd_dist,
-                    'Dockerfile',
-                    {'image_name': image_name, 'image_tag': version})
+    with open(f'{configuration_dist}/clusters.tf', 'w') as f:
+        f.write(data)
+        # always include newline at end of file
+        f.write('\n')
 
     make_archive(archive_name, 'zip', f'{DISTDIR}', configuration_name)

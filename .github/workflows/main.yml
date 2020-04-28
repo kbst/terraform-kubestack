@@ -8,7 +8,7 @@ on:
     - "*"  # run for tags
 
 jobs:
-  build:
+  build-artifacts:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,15 +18,50 @@ jobs:
     - name: Build artifacts
       uses: ./.github/actions/build_artifacts
 
+    # Docker actions run as root, fix ownership of _dist
+    - name: Fix owner
+      run: |
+        sudo chown -R `id -u`:`id -g` ./quickstart/_dist
+
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v1
       with:
         name: quickstart-artifacts
         path: ./quickstart/_dist
 
+  build-image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v1
+
+    - name: 'Docker login'
+      run: |
+        echo ${{ secrets.DOCKER_AUTH }} | docker login --username kbstci --password-stdin
+
+    - name: Build image
+      env:
+        DOCKER_BUILDKIT: 1
+      run: |
+        docker run \
+          --rm \
+          --privileged \
+          -v `pwd`/oci:/tmp/work \
+          -v $HOME/.docker:/root/.docker \
+          --entrypoint buildctl-daemonless.sh \
+          moby/buildkit:master \
+              build \
+              --frontend dockerfile.v0 \
+              --local context=/tmp/work \
+              --local dockerfile=/tmp/work \
+              --output type=image,name=kubestack/framework-dev:test-${{ github.sha }},push=true \
+              --export-cache type=registry,ref=kubestack/framework-dev:buildcache,push=true \
+              --import-cache type=registry,ref=kubestack/framework-dev:buildcache
+
   test:
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build-artifacts, build-image]
     strategy:
       matrix:
         test-for: ["aks", "eks", "gke"]
@@ -40,6 +75,13 @@ jobs:
     - name: 'Unzip ${{ matrix.test-for }} quickstart'
       run: |
         unzip quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-*.zip
+
+    # Align image test tag and tag in artifact's Dockerfile
+    - name: 'Docker retag'
+      run: |
+        FROM_IMAGE=$(cat ./infra-quickstart-${{ matrix.test-for }}/ci-cd/Dockerfile | sed 's/FROM //')
+        docker pull kubestack/framework-dev:test-${{ github.sha }}
+        docker tag kubestack/framework-dev:test-${{ github.sha }} $FROM_IMAGE
 
     - name: 'Docker build'
       env:
@@ -84,9 +126,38 @@ jobs:
           kbst-infra-automation:test \
           terraform validate
 
-  publish:
+  publish-image:
     runs-on: ubuntu-latest
-    needs: [build, test]
+    needs: [test]
+
+    steps:
+    - name: 'Download artifacts'
+      uses: actions/download-artifact@v1
+      with:
+        name: quickstart-artifacts
+
+    - name: 'Docker retag'
+      run: |
+        FROM_IMAGE=$(cat quickstart-artifacts/infra-quickstart-gke/ci-cd/Dockerfile | sed 's/FROM //')
+        docker pull kubestack/framework-dev:test-${{ github.sha }}
+        docker tag kubestack/framework-dev:test-${{ github.sha }} $FROM_IMAGE
+
+    - name: 'Docker login'
+      run: |
+        echo ${{ secrets.DOCKER_AUTH }} | docker login --username kbstci --password-stdin
+
+    - name: 'Docker push'
+      run: |
+        IMAGE=$(cat quickstart-artifacts/infra-quickstart-gke/ci-cd/Dockerfile | sed 's/FROM //')
+        docker push $IMAGE
+
+  publish-artifacts:
+    runs-on: ubuntu-latest
+    needs: [test]
+
+    strategy:
+      matrix:
+        test-for: ["aks", "eks", "gke"]
 
     steps:
     - name: 'Download artifacts'
@@ -99,5 +170,13 @@ jobs:
       with:
         service_account_key: ${{ secrets.GCLOUD_AUTH }}
 
+    - name: 'Publish dev archives'
+      if: startsWith(github.ref, 'refs/tags/v') == false
+      run: |
+        gsutil -m cp quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-${{ github.sha }}.zip gs://dev.quickstart.kubestack.com
+
     - name: 'Publish archives'
-      run: gsutil -m cp quickstart-artifacts/*.zip gs://dev.quickstart.kubestack.com
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        VERSION=$(echo $GITHUB_REF | sed -e "s#^refs/tags/##")
+        gsutil -m cp quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-${VERSION}.zip gs://quickstart.kubestack.com

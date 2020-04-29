@@ -31,7 +31,6 @@ steps:
   env:
   - HOME=$_HOME
   - TF_IN_AUTOMATION=$_TF_IN_AUTOMATION
-  - TF_LOG=debug
   args:
   - terraform
   - init

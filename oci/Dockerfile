@@ -110,6 +110,30 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 
 #
 #
+# KinD builder
+FROM golang:1.14.2 as kind-builder
+
+ARG DOCKER_CLI_VERSION=19.03.8
+ARG TERRAFORM_PROVIDER_KIND_VERSION=3cfa37367cb4eb7e5afacede63f3f69859a965f7
+
+RUN mkdir -p /opt/bin
+
+# kind requires docker client
+RUN echo "DOCKER_CLI_VERSION: ${DOCKER_CLI_VERSION}" \
+    && curl -O https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_CLI_VERSION}.tgz \
+    && tar zxvf docker-${DOCKER_CLI_VERSION}.tgz -C . docker/docker \
+    && mv docker/docker /opt/bin/docker \
+    && /opt/bin/docker --help
+
+# install kind terraform provider from source
+RUN  git clone https://github.com/kyma-incubator/terraform-provider-kind.git && \
+     cd terraform-provider-kind && \
+     git checkout ${TERRAFORM_PROVIDER_KIND_VERSION} && \
+     go build -o /opt/bin/terraform-provider-kind
+
+
+#
+#
 # Final base
 FROM ${BASE_IMAGE} AS final-base
 
@@ -164,6 +188,15 @@ FROM final-base AS aks
 # Azure
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
+
+
+#
+#
+# KinD variant
+FROM final-base AS kind
+
+# KinD provider
+COPY --from=kind-builder /opt/bin /opt/bin
 
 
 #

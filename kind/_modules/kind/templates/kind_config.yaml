@@ -1,6 +1,21 @@
 kind: Cluster
-apiVersion: kind.sigs.k8s.io/v1alpha3
+apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
-%{ for role in split(",", node_roles) ~}
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+        authorization-mode: "AlwaysAllow"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: ${http_port}
+    protocol: TCP
+  - containerPort: 443
+    hostPort: ${https_port}
+    protocol: TCP
+%{ for role in split(",", extra_nodes) ~}
 - role: ${role}
 %{ endfor ~}

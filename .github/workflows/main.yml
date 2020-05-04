@@ -34,7 +34,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
 
     steps:
     - name: 'Checkout'
@@ -69,7 +69,7 @@ jobs:
     needs: [build-test-artifacts, build-image]
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
 
     steps:
     - name: 'Download test-artifacts'
@@ -134,7 +134,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
 
     steps:
     - name: 'Download test-artifacts'
@@ -165,7 +165,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
 
     steps:
     - name: 'Download test-artifacts'

@@ -16,6 +16,11 @@ module "cluster" {
   metadata_tags   = module.cluster_metadata.tags
   metadata_labels = module.cluster_metadata.labels
 
-  node_roles = local.node_roles
-}
+  node_image  = local.node_image
+  extra_nodes = local.extra_nodes
 
+  http_port  = local.http_port
+  https_port = local.https_port
+
+  manifest_path = local.manifest_path
+}

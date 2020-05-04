@@ -2,15 +2,19 @@ clusters = {
   kind_zero = {
     # Settings for Apps-cluster
     apps = {
-      name_prefix = "testing"
-      base_domain = "infra.local"
+      name_prefix = "kind"
+      base_domain = "infra.127.0.0.1.xip.io"
 
-      node_roles = "control-plane,control-plane,control-plane,worker,worker,worker"
+      # clusters always have at least one control-plan node
+      # uncommenting extra_nodes below will give you a cluster
+      # with 3 control-plan nodes and 3 worker nodes
+      # extra_nodes = "control-plane,control-plane,worker,worker,worker"
     }
 
     # Settings for Ops-cluster
     ops = {
-      node_roles = "control-plane,worker,worker"
+      # optionally reduce number of ops nodes
+      # extra_nodes = "worker"
     }
   }
 }

@@ -43,24 +43,21 @@ configurations = [n for n in listdir(f'{SRCDIR}/configurations')
                   if not n.startswith('_')]
 
 for configuration in configurations:
-    configuration_name = f'infra-quickstart-{configuration}'
+    configuration_name = f'kubestack-starter-{configuration}'
     configuration_src = f'{SRCDIR}/configurations/{configuration}'
     configuration_dist = f'{DISTDIR}/{configuration_name}'
     archive_name = f'{configuration_dist}-{version}'
     manifests_src = f'{SRCDIR}/manifests'
     manifests_dist = f'{configuration_dist}/manifests'
-    cicd_src = f'{SRCDIR}/ci-cd'
-    cicd_dist = f'{configuration_dist}/ci-cd'
 
     copytree(configuration_src, configuration_dist)
     copytree(manifests_src, manifests_dist)
-    copytree(cicd_src, cicd_dist)
 
     # Replace templated version variable in clusters.tf
     replace_version(configuration_dist, 'clusters.tf', {'version': version})
 
     # Replace templated variables in Dockerfile
-    replace_version(cicd_dist,
+    replace_version(configuration_dist,
                     'Dockerfile',
                     {'image_name': image_name, 'image_tag': version})
 

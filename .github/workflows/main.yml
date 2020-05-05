@@ -8,7 +8,7 @@ on:
     - "*"  # run for tags
 
 jobs:
-  build-artifacts:
+  build-test-artifacts:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,11 +26,15 @@ jobs:
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v1
       with:
-        name: quickstart-artifacts
+        name: test-artifacts
         path: ./quickstart/_dist
 
   build-image:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
     - name: 'Checkout'
@@ -40,7 +44,7 @@ jobs:
       run: |
         echo ${{ secrets.DOCKER_AUTH }} | docker login --username kbstci --password-stdin
 
-    - name: Build image
+    - name: Build ${{ matrix.starter }} image
       env:
         DOCKER_BUILDKIT: 1
       run: |
@@ -55,128 +59,133 @@ jobs:
               --frontend dockerfile.v0 \
               --local context=/tmp/work \
               --local dockerfile=/tmp/work \
-              --output type=image,name=kubestack/framework-dev:test-${{ github.sha }},push=true \
-              --export-cache type=registry,ref=kubestack/framework-dev:buildcache,push=true \
-              --import-cache type=registry,ref=kubestack/framework-dev:buildcache
+              --output type=image,name=kubestack/framework-dev:test-${{ github.sha }}-${{ matrix.starter }},push=true \
+              --export-cache type=registry,ref=kubestack/framework-dev:buildcache-${{ matrix.starter }},push=true \
+              --import-cache type=registry,ref=kubestack/framework-dev:buildcache-${{ matrix.starter }} \
+              --opt target=${{ matrix.starter }}
 
   test:
     runs-on: ubuntu-latest
-    needs: [build-artifacts, build-image]
+    needs: [build-test-artifacts, build-image]
     strategy:
       matrix:
-        test-for: ["aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
-    - name: 'Download artifacts'
+    - name: 'Download test-artifacts'
       uses: actions/download-artifact@v1
       with:
-        name: quickstart-artifacts
+        name: test-artifacts
 
-    - name: 'Unzip ${{ matrix.test-for }} quickstart'
+    - name: 'Unzip ${{ matrix.starter }} quickstart'
       run: |
-        unzip quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-*.zip
-
-    # Align image test tag and tag in artifact's Dockerfile
-    - name: 'Docker retag'
-      run: |
-        FROM_IMAGE=$(cat ./infra-quickstart-${{ matrix.test-for }}/ci-cd/Dockerfile | sed 's/FROM //')
-        docker pull kubestack/framework-dev:test-${{ github.sha }}
-        docker tag kubestack/framework-dev:test-${{ github.sha }} $FROM_IMAGE
+        unzip test-artifacts/kubestack-starter-${{ matrix.starter }}-*.zip
 
     - name: 'Docker build'
       env:
         DOCKER_BUILDKIT: 1
-      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      working-directory: ./kubestack-starter-${{ matrix.starter }}
+      # retagging here is necessary because we only push images
+      # to kubestack/framework after they have been tested
+      # but the Dockerfiles in the artifact have the target image name
       run: |
-        docker build -t kbst-infra-automation:test ci-cd/
+        SOURCE_IMAGE=kubestack/framework-dev:test-${{ github.sha }}-${{ matrix.starter }}
+        docker pull $SOURCE_IMAGE
+        TARGET_IMAGE=$(cat Dockerfile | sed 's/FROM //')
+        docker tag $SOURCE_IMAGE $TARGET_IMAGE
+        docker build -t test-image:${{ github.sha }} .
 
     - name: 'Configure Kubestack'
-      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
-        # disable remote state for tests
-        rm state.tf
-
-        # set name prefix
+        # set name_prefix
         sed -i 's/name_prefix = ""/name_prefix = "test"/g' config.auto.tfvars
 
     - name: 'Terraform init'
-      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
           -v `pwd`:/infra \
           -u `id -u`:`id -g` \
-          kbst-infra-automation:test \
+          test-image:${{ github.sha }} \
           terraform init
 
     - name: 'Terraform workspace new ops'
-      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
           -v `pwd`:/infra \
           -u `id -u`:`id -g` \
-          kbst-infra-automation:test \
+          test-image:${{ github.sha }} \
           terraform workspace new ops
 
     - name: 'Terraform validate'
-      working-directory: ./infra-quickstart-${{ matrix.test-for }}
+      working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
           -v `pwd`:/infra \
           -u `id -u`:`id -g` \
-          kbst-infra-automation:test \
+          test-image:${{ github.sha }} \
           terraform validate
 
   publish-image:
     runs-on: ubuntu-latest
     needs: [test]
 
+    strategy:
+      matrix:
+        starter: ["multi-cloud", "aks", "eks", "gke"]
+
     steps:
-    - name: 'Download artifacts'
+    - name: 'Download test-artifacts'
       uses: actions/download-artifact@v1
       with:
-        name: quickstart-artifacts
-
-    - name: 'Docker retag'
-      run: |
-        FROM_IMAGE=$(cat quickstart-artifacts/infra-quickstart-gke/ci-cd/Dockerfile | sed 's/FROM //')
-        docker pull kubestack/framework-dev:test-${{ github.sha }}
-        docker tag kubestack/framework-dev:test-${{ github.sha }} $FROM_IMAGE
+        name: test-artifacts
 
     - name: 'Docker login'
       run: |
         echo ${{ secrets.DOCKER_AUTH }} | docker login --username kbstci --password-stdin
 
     - name: 'Docker push'
+      # pull the image built for testing
+      # retag it as the image specified in the artifact
+      # push the new image with the new tag
       run: |
-        IMAGE=$(cat quickstart-artifacts/infra-quickstart-gke/ci-cd/Dockerfile | sed 's/FROM //')
-        docker push $IMAGE
+        SOURCE_IMAGE=kubestack/framework-dev:test-${{ github.sha }}-${{ matrix.starter }}
+        docker pull $SOURCE_IMAGE
+        TARGET_IMAGE=$(cat test-artifacts/kubestack-starter-${{ matrix.starter }}/Dockerfile | sed 's/FROM //')
+        docker tag $SOURCE_IMAGE $TARGET_IMAGE
+        docker push $TARGET_IMAGE
 
-  publish-artifacts:
+  publish-starter:
     runs-on: ubuntu-latest
-    needs: [test]
+    # only publish the artifacts when tests passed and images are pushed
+    # because publishing the starter is what makes a release public
+    needs: [test, publish-image]
 
     strategy:
       matrix:
-        test-for: ["aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
-    - name: 'Download artifacts'
+    - name: 'Download test-artifacts'
       uses: actions/download-artifact@v1
       with:
-        name: quickstart-artifacts
+        name: test-artifacts
 
     - name: 'Setup gcloud'
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         service_account_key: ${{ secrets.GCLOUD_AUTH }}
 
-    - name: 'Publish dev archives'
-      if: startsWith(github.ref, 'refs/tags/v') == false
+    - name: 'Publish ${{ matrix.starter }} starter'
       run: |
-        gsutil -m cp quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-${{ github.sha }}.zip gs://dev.quickstart.kubestack.com
-
-    - name: 'Publish archives'
-      if: startsWith(github.ref, 'refs/tags/v')
-      run: |
-        VERSION=$(echo $GITHUB_REF | sed -e "s#^refs/tags/##")
-        gsutil -m cp quickstart-artifacts/infra-quickstart-${{ matrix.test-for }}-${VERSION}.zip gs://quickstart.kubestack.com
+        SOURCE_FILE=test-artifacts/kubestack-starter-${{ matrix.starter }}-${{ github.sha }}.zip
+        TARGET_BUCKET=dev.quickstart.kubestack.com
+        if [[ GITHUB_REF = refs/tags/v* ]]
+        then
+          VERSION=$(echo $GITHUB_REF | sed -e "s#^refs/tags/##")
+          SOURCE_FILE=test-artifacts/kubestack-starter-${{ matrix.starter }}-${VERSION}.zip
+          TARGET_BUCKET=quickstart.kubestack.com
+        fi
+        gsutil -m cp $SOURCE_FILE gs://$TARGET_BUCKET

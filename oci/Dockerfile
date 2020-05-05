@@ -21,7 +21,7 @@ RUN mkdir -p /opt/bin
 #
 #
 # Common builder
-FROM builder AS common
+FROM builder AS common-builder
 
 ARG KUBECTL_VERSION=v1.18.1
 ARG KUSTOMIZE_VERSION=v3.5.4
@@ -56,7 +56,7 @@ COPY entrypoint /opt/bin/entrypoint
 #
 #
 # AWS builder
-FROM builder AS aws
+FROM builder AS aws-builder
 
 ARG AWS_IAM_AUTHENTICATOR_VERSION=0.5.0
 
@@ -76,8 +76,8 @@ RUN echo "AWS_CLI_VERSION: N/A" \
 
 #
 #
-# Google builder
-FROM builder AS google
+# GCP builder
+FROM builder AS gcp-builder
 
 ARG GOOGLE_CLOUD_SDK_VERSION=289.0.0
 
@@ -91,7 +91,7 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
 #
 #
 # Azure builder
-FROM builder AS azure
+FROM builder AS azure-builder
 
 ARG AZURE_CLI_VERSION=2.3.1
 
@@ -110,8 +110,8 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 
 #
 #
-# Final
-FROM ${BASE_IMAGE} AS final
+# Final base
+FROM ${BASE_IMAGE} AS final-base
 
 RUN apt-get update && apt-get install -y \
       ca-certificates \
@@ -127,22 +127,58 @@ RUN apt-get update && apt-get install -y \
 ENV HOME=/infra/.user
 
 # Common
-COPY --from=common /opt/bin /opt/bin
+COPY --from=common-builder /opt/bin /opt/bin
 ENV PATH=/opt/bin:$PATH
-
-# AWS
-COPY --from=aws /opt/aws /opt/aws
-ENV PATH=$PATH:/opt/aws/bin
-
-# Google
-COPY --from=google /opt/google /opt/google
-ENV PATH=$PATH:/opt/google/bin
-
-# Azure
-COPY --from=azure /opt/azure /opt/azure
-ENV PATH=$PATH:/opt/azure/bin
 
 WORKDIR /infra
 
 ENTRYPOINT ["/opt/bin/entrypoint"]
 CMD bash
+
+
+#
+#
+# AWS variant
+FROM final-base AS eks
+
+# AWS
+COPY --from=aws-builder /opt/aws /opt/aws
+ENV PATH=$PATH:/opt/aws/bin
+
+
+#
+#
+# GCP variant
+FROM final-base AS gke
+
+# GCP
+COPY --from=gcp-builder /opt/google /opt/google
+ENV PATH=$PATH:/opt/google/bin
+
+
+#
+#
+# Azure variant
+FROM final-base AS aks
+
+# Azure
+COPY --from=azure-builder /opt/azure /opt/azure
+ENV PATH=$PATH:/opt/azure/bin
+
+
+#
+#
+# Default (multi-cloud) variant
+FROM final-base AS multi-cloud
+
+# AWS
+COPY --from=aws-builder /opt/aws /opt/aws
+ENV PATH=$PATH:/opt/aws/bin
+
+# GCP
+COPY --from=gcp-builder /opt/google /opt/google
+ENV PATH=$PATH:/opt/google/bin
+
+# Azure
+COPY --from=azure-builder /opt/azure /opt/azure
+ENV PATH=$PATH:/opt/azure/bin

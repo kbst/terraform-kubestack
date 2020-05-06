@@ -50,7 +50,7 @@ RUN echo "TERRAFORM_PROVIDER_KUSTOMIZE_VERSION: ${TERRAFORM_PROVIDER_KUSTOMIZE_V
     && mv terraform-provider-kustomization-${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}-linux-amd64 /opt/bin/terraform-provider-kustomization \
     && chmod +x /opt/bin/terraform-provider-kustomization
 
-COPY entrypoint /opt/bin/entrypoint
+COPY entrypoint entrypoint_user /opt/bin/
 
 
 #
@@ -144,7 +144,6 @@ RUN apt-get update && apt-get install -y \
       wget \
       openssh-client \
       dnsutils \
-      libnss-wrapper \
       unzip \
     && rm -rf /var/lib/apt/lists/*
 

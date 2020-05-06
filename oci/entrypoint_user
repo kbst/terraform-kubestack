@@ -1,0 +1,65 @@
+#!/bin/sh
+set -e
+
+#
+#
+# AWS auth
+# only if aws cli is installed
+if [ -x "$(command -v aws)" ]; then
+  AWS_CONFIG_PATH=~/.aws
+  mkdir -p $AWS_CONFIG_PATH
+
+  # handle base64 encoded AWS crendentials
+  if [ ! -z "$KBST_AUTH_AWS" ]; then
+    echo "$KBST_AUTH_AWS" | base64 --decode > $AWS_CONFIG_PATH/credentials
+    aws sts get-caller-identity
+  fi
+fi
+
+#
+#
+# Azure auth
+# only if az cli is installed
+if [ -x "$(command -v az)" ]; then
+  AZ_CONFIG_PATH=~/.azure
+  mkdir -p $AZ_CONFIG_PATH
+  touch $AZ_CONFIG_PATH/KBST_AUTH_AZ
+
+  # handle base64 encoded AZ crendentials
+  if [ ! -z "$KBST_AUTH_AZ" ]; then
+    echo "$KBST_AUTH_AZ" | base64 --decode > $AZ_CONFIG_PATH/KBST_AUTH_AZ
+    . $AZ_CONFIG_PATH/KBST_AUTH_AZ
+    az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
+  fi
+
+  # always source and export the ARM_ env variables
+  # required by the azurerm Terraform provider
+  . $AZ_CONFIG_PATH/KBST_AUTH_AZ
+  export ARM_ACCESS_KEY
+  export ARM_CLIENT_ID
+  export ARM_CLIENT_SECRET
+  export ARM_SUBSCRIPTION_ID
+  export ARM_TENANT_ID
+fi
+
+#
+#
+# Gcloud auth
+# only if az cli is installed
+if [ -x "$(command -v gcloud)" ]; then
+  GCLOUD_CONFIG_PATH=~/.config/gcloud
+  mkdir -p $GCLOUD_CONFIG_PATH
+
+  # handle base64 encoded GCLOUD crendentials
+  if [ ! -z "$KBST_AUTH_GCLOUD" ]; then
+    echo "$KBST_AUTH_GCLOUD" | base64 --decode > $GCLOUD_CONFIG_PATH/application_default_credentials.json
+    gcloud auth activate-service-account --key-file $GCLOUD_CONFIG_PATH/application_default_credentials.json
+  fi
+fi
+
+# do not have KBST_AUTH_* env vars set in runtime env
+unset KBST_AUTH_AWS
+unset KBST_AUTH_AZ
+unset KBST_AUTH_GCLOUD
+
+exec "$@"

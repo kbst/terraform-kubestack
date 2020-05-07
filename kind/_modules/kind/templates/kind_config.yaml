@@ -16,6 +16,8 @@ nodes:
   - containerPort: 443
     hostPort: ${https_port}
     protocol: TCP
+%{ if extra_nodes != "" }
 %{ for role in split(",", extra_nodes) ~}
 - role: ${role}
 %{ endfor ~}
+%{ endif }

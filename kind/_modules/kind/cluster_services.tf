@@ -1,23 +1,16 @@
-data "local_file" "kubeconfig" {
-  filename = data.external.kind_kubeconfig.result["kubeconfig_path"]
-
-  depends_on = [null_resource.cluster]
-}
-
 module "cluster_services" {
   source = "../../../common/cluster_services"
 
-  cluster_type = "kind"
+  manifest_path = var.manifest_path
 
-  metadata_labels = var.metadata_labels
-
-  template_string = data.local_file.kubeconfig.content
+  template_string = kind.current.kubeconfig
 
   template_vars = {
     # hack, because modules can't have depends_on
-    # prevent a race between kubernetes provider and cluster services/kustomize
-    # creating the namespace and the provider erroring out during apply
-    not_used = kubernetes_namespace.current.metadata[0].name
+    # enforcing node pools to be _created before_
+    # and _destroyed after_ the cluster services
+    # to prevent namespace getting stuck in terminating
+    # during destroy
+    not_used = kind.current.name
   }
 }
-

@@ -34,7 +34,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
 
     steps:
     - name: 'Checkout'
@@ -68,8 +68,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-test-artifacts, build-image]
     strategy:
+      fail-fast: false
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
 
     steps:
     - name: 'Download test-artifacts'
@@ -95,18 +96,38 @@ jobs:
         docker tag $SOURCE_IMAGE $TARGET_IMAGE
         docker build -t test-image:${{ github.sha }} .
 
-    - name: 'Configure Kubestack'
+    - name: 'Configure Kubestack for ${{ matrix.starter }}'
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
-        # set name_prefix
+        # ALL: set name_prefix
         sed -i 's/name_prefix = ""/name_prefix = "test"/g' config.auto.tfvars
+
+        # ALL: set base_domain
+        sed -i 's/base_domain = ""/base_domain = "infra.serverwolken.de"/g' config.auto.tfvars
+
+        # AKS: set resource_group
+        sed -i 's/resource_group = ""/resource_group = "terraform-kubestack-testing"/g' config.auto.tfvars
+
+        # EKS: set region
+        sed -i 's/region = ""/region = "eu-west-1"/g' providers.tf
+
+        # EKS: set cluster_availability_zones
+        sed -i 's/cluster_availability_zones = ""/cluster_availability_zones = "eu-west-1a,eu-west-1b"/g' config.auto.tfvars
+
+        # GKE: set project_id
+        sed -i 's/project_id = ""/project_id = "terraform-kubestack-testing"/g' config.auto.tfvars
+
+        # GKE: set region
+        sed -i 's/region = ""/region = "europe-west1"/g' config.auto.tfvars
+
+        # GKE: set cluster_node_locations
+        sed -i 's/cluster_node_locations = ""/cluster_node_locations = "europe-west1-b,europe-west1-c,europe-west1-d"/g' config.auto.tfvars
 
     - name: 'Terraform init'
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
           -v `pwd`:/infra \
-          -u `id -u`:`id -g` \
           test-image:${{ github.sha }} \
           terraform init
 
@@ -115,7 +136,6 @@ jobs:
       run: |
         docker run --rm \
           -v `pwd`:/infra \
-          -u `id -u`:`id -g` \
           test-image:${{ github.sha }} \
           terraform workspace new ops
 
@@ -124,9 +144,24 @@ jobs:
       run: |
         docker run --rm \
           -v `pwd`:/infra \
-          -u `id -u`:`id -g` \
           test-image:${{ github.sha }} \
           terraform validate
+
+    - name: 'Terraform plan'
+      working-directory: ./kubestack-starter-${{ matrix.starter }}
+      env:
+        KBST_AUTH_AWS: ${{ secrets.KBST_AUTH_AWS }}
+        KBST_AUTH_AZ: ${{ secrets.KBST_AUTH_AZ }}
+        KBST_AUTH_GCLOUD: ${{ secrets.KBST_AUTH_GCLOUD }}
+      run: |
+        docker run --rm \
+          -e KBST_AUTH_AWS \
+          -e KBST_AUTH_AZ \
+          -e KBST_AUTH_GCLOUD \
+          -v `pwd`:/infra \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          test-image:${{ github.sha }} \
+          terraform plan
 
   publish-image:
     runs-on: ubuntu-latest
@@ -134,7 +169,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
 
     steps:
     - name: 'Download test-artifacts'
@@ -165,7 +200,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke"]
+        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
 
     steps:
     - name: 'Download test-artifacts'

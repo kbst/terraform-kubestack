@@ -18,8 +18,27 @@ variable "metadata_labels" {
   description = "Metadata labels to use."
 }
 
-variable "node_roles" {
+variable "extra_nodes" {
   type        = string
   description = "Comma seperated list of node roles. E.g. 'control-plan,worker'"
 }
 
+variable "http_port" {
+  type        = string
+  description = "Port to bind on localhost for http ingress."
+}
+
+variable "https_port" {
+  type        = string
+  description = "Port to bind on localhost for https ingress."
+}
+
+variable "node_image" {
+  type        = string
+  description = "Docker image kind will use to boot the cluster nodes. Defaults to 'kindest/node:v1.16.1'"
+}
+
+variable "manifest_path" {
+  type        = string
+  description = "Path to Kustomize overlay to build."
+}

@@ -1,70 +1,23 @@
 #!/bin/sh
 set -e
 
+uid=$(stat -c '%u' /infra)
+gid=$(stat -c '%g' /infra)
+
 # home may be modified from multiple sources
 # try to normalize before using it in paths below
 REALHOME=$(realpath $HOME)
 
 mkdir -p $REALHOME
+chown $uid:$gid $REALHOME
 
-echo "kbst:x:$(id -u):$(id -g):Kubestack User:${REALHOME}:/bin/sh" > /tmp/passwd
+echo "kbst:x:${uid}:${gid}:Kubestack User:${REALHOME}:/bin/sh" >> /etc/passwd
+echo "kbst:x:${gid}:" >> /etc/group
 
-export LD_PRELOAD=libnss_wrapper.so
-export NSS_WRAPPER_PASSWD=/tmp/passwd
-export NSS_WRAPPER_GROUP=/etc/group
-
-#
-#
-# AWS auth
-AWS_CONFIG_PATH=$REALHOME/.aws
-mkdir -p $AWS_CONFIG_PATH
-
-# handle base64 encoded AWS crendentials
-if [ ! -z "$KBST_AUTH_AWS" ]; then
-  echo "$KBST_AUTH_AWS" | base64 --decode > $AWS_CONFIG_PATH/credentials
-  aws sts get-caller-identity
+# if docker.sock is mounted, add our user to the socket's group
+if test -S "/var/run/docker.sock"; then
+    echo "docker:x:$(stat -c '%g' /var/run/docker.sock):kbst" >> /etc/group
 fi
 
-
-#
-#
-# Azure auth
-AZ_CONFIG_PATH=$REALHOME/.azure
-mkdir -p $AZ_CONFIG_PATH
-touch $AZ_CONFIG_PATH/KBST_AUTH_AZ
-
-# handle base64 encoded AZ crendentials
-if [ ! -z "$KBST_AUTH_AZ" ]; then
-  echo "$KBST_AUTH_AZ" | base64 --decode > $AZ_CONFIG_PATH/KBST_AUTH_AZ
-  . $AZ_CONFIG_PATH/KBST_AUTH_AZ
-  az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
-fi
-
-# always source and export the ARM_ env variables
-# required by the azurerm Terraform provider
-. $AZ_CONFIG_PATH/KBST_AUTH_AZ
-export ARM_ACCESS_KEY
-export ARM_CLIENT_ID
-export ARM_CLIENT_SECRET
-export ARM_SUBSCRIPTION_ID
-export ARM_TENANT_ID
-
-
-#
-#
-# Gcloud auth
-GCLOUD_CONFIG_PATH=$REALHOME/.config/gcloud
-mkdir -p $GCLOUD_CONFIG_PATH
-
-# handle base64 encoded GCLOUD crendentials
-if [ ! -z "$KBST_AUTH_GCLOUD" ]; then
-  echo "$KBST_AUTH_GCLOUD" | base64 --decode > $GCLOUD_CONFIG_PATH/application_default_credentials.json
-  gcloud auth activate-service-account --key-file $GCLOUD_CONFIG_PATH/application_default_credentials.json
-fi
-
-# do not have KBST_AUTH_* env vars set in runtime env
-unset KBST_AUTH_AWS
-unset KBST_AUTH_AZ
-unset KBST_AUTH_GCLOUD
-
-exec "$@"
+# stop running as root to preserve volume mount file ownership
+exec runuser -u kbst -- entrypoint_user "$@"

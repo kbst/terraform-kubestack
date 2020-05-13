@@ -10,7 +10,7 @@ SRCDIR = 'quickstart/src'
 DISTDIR = 'quickstart/_dist'
 
 
-def replace_version(dist_path, file_name, context):
+def replace_template(dist_path, file_name, context):
     # Replace templated variable with version in clusters.tf
     jinja = Environment(loader=FileSystemLoader(dist_path))
     template = jinja.get_template(file_name)
@@ -54,11 +54,16 @@ for configuration in configurations:
     copytree(manifests_src, manifests_dist)
 
     # Replace templated version variable in clusters.tf
-    replace_version(configuration_dist, 'clusters.tf', {'version': version})
+    replace_template(configuration_dist, 'clusters.tf', {'version': version})
 
     # Replace templated variables in Dockerfile
-    replace_version(configuration_dist,
-                    'Dockerfile',
-                    {'image_name': image_name, 'image_tag': version})
+    replace_template(configuration_dist,
+                     'Dockerfile',
+                     {'image_name': image_name, 'image_tag': version})
+
+    # Replace default ingress reference
+    replace_template(manifests_dist,
+                     'overlays/apps/kustomization.yaml',
+                     {'configuration': configuration})
 
     make_archive(archive_name, 'zip', f'{DISTDIR}', configuration_name)

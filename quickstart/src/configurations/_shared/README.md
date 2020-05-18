@@ -84,48 +84,55 @@ To accelerate the developer workflow, a [development environment][6], can be run
 
 In case of the automation being unavailable, upgrades requiring manual steps or in disaster recovery scenarios run Terraform and the cloud CLI locally. Kubestack provides container images bundling all dependencies to use for both automated and manual operations.
 
-```shell
-# Build the bootstrap container
-docker build -t kubestack .
+ 1. Exec into container
 
-# Exec into the bootstrap container
-docker run --rm -ti \
-    -v `pwd`:/infra \
-    # uncomment to mount the docker socket for local dev
-    # -v /var/run/docker.sock:/var/run/docker.sock \
-    kubestack
-```
+    ```shell
+    # Build the bootstrap container
+    docker build -t kubestack .
 
-```shell
-# if you haven't before, login
+    # Exec into the bootstrap container
+    # add docker socket mount for local dev
+    # -v /var/run/docker.sock:/var/run/docker.sock
+    docker run --rm -ti \
+       -v `pwd`:/infra \
+       kubestack
+    ```
 
-# for AWS
-aws configure
+ 1. Authenticate providers
 
-# for Azure
-az login
+    Credentials are cached inside the `.user` directory. The directory is excluded from Git by the default `.gitignore`.
 
-# for GCP
-gcloud init
-gcloud auth application-default login
-```
+    ```shell
+    # for AWS
+    aws configure
 
-```shell
-# select the desired environment
-# for ops
-terraform workspace select ops
+    # for Azure
+    az login
 
-# or for apps
-terraform workspace select apps
-```
+    # for GCP
+    gcloud init
+    gcloud auth application-default login
+    ```
 
-```shell
-# run terraform init
-terraform init
+ 1. Select desired environment
 
-# run terraform commands as required, e.g.
-terraform plan
-```
+    ```shell
+    # for ops
+    terraform workspace select ops
+
+    # or for apps
+    terraform workspace select apps
+    ```
+
+ 1. Run Terraform commands
+
+    ```shell
+    # run terraform init
+    terraform init
+
+    # run, e.g. terraform plan
+    terraform plan
+    ```
 
 [1]: https://www.kubestack.com
 [2]: https://www.kubestack.com/catalog

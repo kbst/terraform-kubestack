@@ -217,7 +217,7 @@ jobs:
       run: |
         SOURCE_FILE=test-artifacts/kubestack-starter-${{ matrix.starter }}-${{ github.sha }}.zip
         TARGET_BUCKET=dev.quickstart.kubestack.com
-        if [[ GITHUB_REF = refs/tags/v* ]]
+        if [[ $GITHUB_REF = refs/tags/v* ]]
         then
           VERSION=$(echo $GITHUB_REF | sed -e "s#^refs/tags/##")
           SOURCE_FILE=test-artifacts/kubestack-starter-${{ matrix.starter }}-${VERSION}.zip

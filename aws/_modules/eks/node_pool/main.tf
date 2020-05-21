@@ -19,16 +19,16 @@ USERDATA
 
 resource "aws_launch_configuration" "nodes" {
   associate_public_ip_address = true
-  iam_instance_profile = var.iam_instance_profile_name
-  image_id = data.aws_ami.eks_node.id
-  instance_type = var.instance_type
-  name_prefix = var.metadata_name
-  security_groups = var.security_groups
-  user_data_base64 = base64encode(local.node_userdata)
+  iam_instance_profile        = var.iam_instance_profile_name
+  image_id                    = data.aws_ami.eks_node.id
+  instance_type               = var.instance_type
+  name_prefix                 = var.metadata_name
+  security_groups             = var.security_groups
+  user_data_base64            = base64encode(local.node_userdata)
 
   root_block_device {
     volume_size = var.root_device_volume_size
-    encrypted = var.root_device_encrypted
+    encrypted   = var.root_device_encrypted
   }
 
   lifecycle {
@@ -37,23 +37,41 @@ resource "aws_launch_configuration" "nodes" {
 }
 
 resource "aws_autoscaling_group" "nodes" {
-  desired_capacity = var.desired_capacity
+  desired_capacity     = var.desired_capacity
   launch_configuration = aws_launch_configuration.nodes.id
-  max_size = var.max_size
-  min_size = var.min_size
-  name = var.metadata_name
-  vpc_zone_identifier = var.vpc_zone_identifiers
+  max_size             = var.max_size
+  min_size             = var.min_size
+  name                 = var.metadata_name
+  vpc_zone_identifier  = var.vpc_zone_identifiers
 
   tag {
-    key = "Name"
-    value = var.metadata_name
+    key                 = "Name"
+    value               = var.metadata_name
     propagate_at_launch = true
   }
 
   tag {
-    key = "kubernetes.io/cluster/${var.metadata_name}"
-    value = "owned"
+    key                 = "kubernetes.io/cluster/${var.metadata_name}"
+    value               = "owned"
     propagate_at_launch = true
   }
 }
 
+resource "aws_eks_node_group" "nodes" {
+  cluster_name    = var.cluster_name
+  node_group_name = var.pool_name
+  node_role_arn   = var.role_arn
+  subnet_ids      = var.vpc_zone_identifiers
+
+  scaling_config {
+    desired_size = var.desired_capacity
+    max_size     = var.max_size
+    min_size     = var.min_size
+  }
+
+  instance_types = [var.instance_type]
+  disk_size      = var.root_device_volume_size
+
+  tags   = var.eks_metadata_tags
+  labels = var.metadata_labels
+}

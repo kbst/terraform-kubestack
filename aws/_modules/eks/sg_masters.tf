@@ -22,14 +22,3 @@ resource "aws_security_group_rule" "masters_ingress_apiserver_public" {
   to_port           = 443
   type              = "ingress"
 }
-
-resource "aws_security_group_rule" "masters_ingress_apiserver_nodes" {
-  description              = "Allow pods to communicate with the cluster API Server"
-  from_port                = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.masters.id
-  source_security_group_id = aws_security_group.nodes.id
-  to_port                  = 443
-  type                     = "ingress"
-}
-

@@ -5,12 +5,12 @@ provider "external" {
 
 # https://github.com/terraform-providers/terraform-provider-google/releases
 provider "google" {
-  version = "~> 3.9.0"
+  version = "~> 3.22.0"
 }
 
 # https://github.com/terraform-providers/terraform-provider-kubernetes/releases
 provider "kubernetes" {
-  version = "~> 1.10.0"
+  version = "~> 1.11.3"
 }
 
 # https://github.com/terraform-providers/terraform-provider-template/releases

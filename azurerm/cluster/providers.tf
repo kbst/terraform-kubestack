@@ -5,17 +5,19 @@ provider "external" {
 
 # https://github.com/terraform-providers/terraform-provider-azurerm/releases
 provider "azurerm" {
-  version = "~> 1.44.0"
+  version = "~> 2.11.0"
+
+  features {}
 }
 
 # https://github.com/terraform-providers/terraform-provider-azuread/releases
 provider "azuread" {
-  version = "~> 0.7.0"
+  version = "~> 0.9.0"
 }
 
 # https://github.com/terraform-providers/terraform-provider-kubernetes/releases
 provider "kubernetes" {
-  version = "~> 1.10.0"
+  version = "~> 1.11.3"
 }
 
 # https://github.com/terraform-providers/terraform-provider-random/releases

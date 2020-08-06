@@ -1,8 +1,4 @@
 module "node_pool" {
-  providers = {
-    kubernetes = kubernetes.eks
-  }
-
   source = "./node_pool"
 
   metadata_labels   = var.metadata_labels

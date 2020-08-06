@@ -53,3 +53,8 @@ variable "subnet_ids" {
   type        = list(string)
   description = "List of VPC subnet IDs to use for nodes."
 }
+
+variable "depends-on-aws-auth" {
+  type        = map(string)
+  description = "Used as a depends_on shim to first create the aws-auth configmap before creating the node_pool."
+}

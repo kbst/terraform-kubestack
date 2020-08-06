@@ -1,4 +1,8 @@
 module "node_pool" {
+  providers = {
+    kubernetes = kubernetes.eks
+  }
+
   source = "./node_pool"
 
   metadata_labels   = var.metadata_labels
@@ -17,4 +21,10 @@ module "node_pool" {
   min_size      = var.min_size
 
   disk_size = var.root_device_volume_size
+
+  # force node_pool to depend on aws-auth configmap
+  depends-on-aws-auth = {
+    name      = kubernetes_config_map.current.metadata[0].name
+    namespace = kubernetes_config_map.current.metadata[0].namespace
+  }
 }

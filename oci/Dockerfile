@@ -26,7 +26,7 @@ FROM builder AS common-builder
 ARG KUBECTL_VERSION=v1.18.3
 ARG KUSTOMIZE_VERSION=v3.6.1
 ARG TERRAFORM_VERSION=0.12.25
-ARG TERRAFORM_PROVIDER_KUSTOMIZE_VERSION=v0.1.2-beta.0
+ARG TERRAFORM_PROVIDER_KUSTOMIZE_VERSION=v0.2.0-beta.0
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && curl -Lo /opt/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
@@ -48,8 +48,8 @@ RUN echo "TERRAFORM_VERSION: ${TERRAFORM_VERSION}" \
 RUN echo "TERRAFORM_PROVIDER_KUSTOMIZE_VERSION: ${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}" \
     && curl -LO https://github.com/kbst/terraform-provider-kustomize/releases/download/${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}/terraform-provider-kustomization-linux-amd64_${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}.tgz \
     && tar -xf terraform-provider-kustomization-linux-amd64_${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}.tgz \
-    && mv terraform.d/plugins/linux_amd64/terraform-provider-kustomization /opt/bin/terraform-provider-kustomization \
-    && chmod +x /opt/bin/terraform-provider-kustomization
+    && mv terraform.d/plugins/linux_amd64/terraform-provider-kustomization_${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION} /opt/bin/ \
+    && chmod +x /opt/bin/terraform-provider-kustomization_${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}
 
 COPY entrypoint entrypoint_user /opt/bin/
 

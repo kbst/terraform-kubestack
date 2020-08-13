@@ -1,17 +1,3 @@
-data "kubernetes_config_map" "aws_auth" {
-  # Force an explicit depends_on, on the configmap
-  # before creating the node pool
-  # Otherwise the aws_eks_node_group resource
-  # creates the configmap leaving TF to error
-  # out because it already exists
-
-  metadata {
-    name      = var.depends-on-aws-auth.name
-    namespace = var.depends-on-aws-auth.namespace
-  }
-}
-
-
 resource "aws_eks_node_group" "nodes" {
   cluster_name    = var.cluster_name
   node_group_name = var.node_group_name
@@ -30,5 +16,5 @@ resource "aws_eks_node_group" "nodes" {
   tags   = var.eks_metadata_tags
   labels = var.metadata_labels
 
-  depends_on = [data.kubernetes_config_map.aws_auth]
+  depends_on = [var.depends-on-aws-auth]
 }

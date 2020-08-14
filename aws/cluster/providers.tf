@@ -1,6 +1,6 @@
 # https://github.com/terraform-providers/terraform-provider-aws/releases
 provider "aws" {
-  version = "~> 2.63.0"
+  version = "~> 3.2.0"
 }
 
 # https://github.com/terraform-providers/terraform-provider-external/releases
@@ -10,7 +10,7 @@ provider "external" {
 
 # https://github.com/terraform-providers/terraform-provider-kubernetes/releases
 provider "kubernetes" {
-  version = "~> 1.11.3"
+  version = "~> 1.12.0"
 }
 
 # https://github.com/terraform-providers/terraform-provider-template/releases

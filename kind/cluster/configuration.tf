@@ -12,7 +12,7 @@ locals {
 
   base_domain = local.cfg["base_domain"]
 
-  node_image  = lookup(local.cfg, "node_image", "kindest/node:v1.16.1")
+  node_image  = lookup(local.cfg, "node_image", "kindest/node:v1.16.9")
   extra_nodes = lookup(local.cfg, "extra_nodes", "")
 
   http_port_default = terraform.workspace == "apps" ? 80 : 8080

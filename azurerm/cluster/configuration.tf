@@ -1,12 +1,13 @@
-locals {
-  # apps config and merged ops config
-  workspaces = {
-    apps = var.configuration["apps"]
-    ops  = merge(var.configuration["apps"], var.configuration["ops"])
-  }
+module "configuration" {
+  source = "../../common/configuration"
 
+  configuration = var.configuration
+  base_key      = var.base_key
+}
+
+locals {
   # current workspace config
-  cfg = local.workspaces[terraform.workspace]
+  cfg = module.configuration.merged[terraform.workspace]
 
   name_prefix = local.cfg["name_prefix"]
 

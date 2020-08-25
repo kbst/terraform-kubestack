@@ -1,4 +1,6 @@
 resource "azurerm_public_ip" "current" {
+  count = var.disable_default_ingress ? 0 : 1
+
   name                = var.metadata_name
   location            = azurerm_kubernetes_cluster.current.location
   resource_group_name = azurerm_kubernetes_cluster.current.node_resource_group
@@ -10,6 +12,8 @@ resource "azurerm_public_ip" "current" {
 }
 
 resource "kubernetes_service" "current" {
+  count = var.disable_default_ingress ? 0 : 1
+
   provider = kubernetes.aks
 
   metadata {
@@ -19,7 +23,7 @@ resource "kubernetes_service" "current" {
 
   spec {
     type             = "LoadBalancer"
-    load_balancer_ip = azurerm_public_ip.current.ip_address
+    load_balancer_ip = azurerm_public_ip.current[0].ip_address
 
     selector = {
       "kubestack.com/ingress-default" = "true"
@@ -42,6 +46,8 @@ resource "kubernetes_service" "current" {
 }
 
 resource "azurerm_dns_zone" "current" {
+  count = var.disable_default_ingress ? 0 : 1
+
   name                = var.metadata_fqdn
   resource_group_name = data.azurerm_resource_group.current.name
 
@@ -49,21 +55,25 @@ resource "azurerm_dns_zone" "current" {
 }
 
 resource "azurerm_dns_a_record" "host" {
+  count = var.disable_default_ingress ? 0 : 1
+
   name                = "@"
-  zone_name           = azurerm_dns_zone.current.name
+  zone_name           = azurerm_dns_zone.current[0].name
   resource_group_name = data.azurerm_resource_group.current.name
   ttl                 = 300
-  records             = [azurerm_public_ip.current.ip_address]
+  records             = [azurerm_public_ip.current[0].ip_address]
 
   tags = var.metadata_labels
 }
 
 resource "azurerm_dns_a_record" "wildcard" {
+  count = var.disable_default_ingress ? 0 : 1
+
   name                = "*"
-  zone_name           = azurerm_dns_zone.current.name
+  zone_name           = azurerm_dns_zone.current[0].name
   resource_group_name = data.azurerm_resource_group.current.name
   ttl                 = 300
-  records             = [azurerm_public_ip.current.ip_address]
+  records             = [azurerm_public_ip.current[0].ip_address]
 
   tags = var.metadata_labels
 }

@@ -39,4 +39,6 @@ module "cluster" {
   default_node_pool_os_disk_size_gb = local.default_node_pool_os_disk_size_gb
 
   manifest_path = local.manifest_path
+
+  disable_default_ingress = local.disable_default_ingress
 }

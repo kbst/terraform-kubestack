@@ -1,4 +1,6 @@
 resource "kubernetes_service" "current" {
+  count = var.disable_default_ingress ? 0 : 1
+
   provider = kubernetes.eks
 
   metadata {
@@ -30,36 +32,39 @@ resource "kubernetes_service" "current" {
 }
 
 resource "aws_route53_zone" "current" {
+  count = var.disable_default_ingress ? 0 : 1
+
   name = "${var.metadata_fqdn}."
 }
 
-locals {
-  elb_hostname = kubernetes_service.current.load_balancer_ingress[0].hostname
-}
-
 data "aws_elb_hosted_zone_id" "current" {
+  count = var.disable_default_ingress ? 0 : 1
 }
 
 resource "aws_route53_record" "host" {
-  zone_id = aws_route53_zone.current.zone_id
+  count = var.disable_default_ingress ? 0 : 1
+
+  zone_id = aws_route53_zone.current[0].zone_id
   name    = var.metadata_fqdn
   type    = "A"
 
   alias {
-    name                   = local.elb_hostname
-    zone_id                = data.aws_elb_hosted_zone_id.current.id
+    name                   = kubernetes_service.current[0].load_balancer_ingress[0].hostname
+    zone_id                = data.aws_elb_hosted_zone_id.current[0].id
     evaluate_target_health = true
   }
 }
 
 resource "aws_route53_record" "wildcard" {
-  zone_id = aws_route53_zone.current.zone_id
+  count = var.disable_default_ingress ? 0 : 1
+
+  zone_id = aws_route53_zone.current[0].zone_id
   name    = "*.${var.metadata_fqdn}"
   type    = "A"
 
   alias {
-    name                   = local.elb_hostname
-    zone_id                = data.aws_elb_hosted_zone_id.current.id
+    name                   = kubernetes_service.current[0].load_balancer_ingress[0].hostname
+    zone_id                = data.aws_elb_hosted_zone_id.current[0].id
     evaluate_target_health = true
   }
 }

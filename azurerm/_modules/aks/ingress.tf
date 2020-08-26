@@ -5,6 +5,7 @@ resource "azurerm_public_ip" "current" {
   location            = azurerm_kubernetes_cluster.current.location
   resource_group_name = azurerm_kubernetes_cluster.current.node_resource_group
   allocation_method   = "Static"
+  sku                 = "Standard"
 
   tags = var.metadata_labels
 

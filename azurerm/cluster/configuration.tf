@@ -25,7 +25,7 @@ locals {
   default_node_pool_max_count           = lookup(local.cfg, "default_node_pool_max_count", "1")
   default_node_pool_node_count          = lookup(local.cfg, "default_node_pool_node_count", "1")
 
-  default_node_pool_vm_size = lookup(local.cfg, "default_node_pool_vm_size", "Standard_D1_v2")
+  default_node_pool_vm_size = lookup(local.cfg, "default_node_pool_vm_size", "Standard_B2s")
 
   default_node_pool_os_disk_size_gb = lookup(local.cfg, "default_node_pool_os_disk_size_gb", "30")
 
@@ -33,4 +33,6 @@ locals {
   manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
 
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
+
+  service_principal_end_date_relative = lookup(local.cfg, "service_principal_end_date_relative", "8766h")
 }

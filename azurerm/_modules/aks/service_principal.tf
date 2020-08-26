@@ -14,6 +14,5 @@ resource "random_string" "password" {
 resource "azuread_service_principal_password" "current" {
   service_principal_id = azuread_service_principal.current.id
   value                = random_string.password.result
-  end_date_relative    = "2160h" # valid for 90 days
+  end_date_relative    = var.service_principal_end_date_relative
 }
-

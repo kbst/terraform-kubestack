@@ -41,4 +41,6 @@ module "cluster" {
   manifest_path = local.manifest_path
 
   disable_default_ingress = local.disable_default_ingress
+
+  service_principal_end_date_relative = local.service_principal_end_date_relative
 }

@@ -20,6 +20,8 @@ clusters = {
 
     # Settings for Ops-cluster
     ops = {}
+
+    loc = {}
   }
 
   eks_zero = {
@@ -58,6 +60,8 @@ clusters = {
       # e.g. cluster_availability_zones = "eu-west-1a,eu-west-1b"
       cluster_availability_zones = ""
     }
+
+    loc = {}
   }
 
   gke_zero = {
@@ -102,5 +106,7 @@ clusters = {
       # e.g. cluster_node_locations = "europe-west3-a"
       cluster_node_locations = ""
     }
+
+    loc = {}
   }
 }

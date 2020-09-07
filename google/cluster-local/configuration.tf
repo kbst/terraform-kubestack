@@ -31,7 +31,7 @@ locals {
 
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
-  node_image = lookup(local.cfg, "node_image", "kindest/node:v1.18.0")
+  node_image = lookup(local.cfg, "node_image", null)
 
   # technically it should be min_node_count times number of AZs
   # but it seems better to keep node count low in the dev env

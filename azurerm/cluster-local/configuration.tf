@@ -32,7 +32,7 @@ locals {
 
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
-  node_image = lookup(local.cfg, "node_image", "kindest/node:v1.18.0")
+  node_image = lookup(local.cfg, "node_image", null)
 
   node_count = lookup(local.cfg, "default_node_pool_min_count", "1")
   nodes = [

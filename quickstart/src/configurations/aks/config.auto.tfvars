@@ -1,6 +1,6 @@
 clusters = {
   aks_zero = {
-    # Settings for Apps-cluster
+    # apps envrionment configuration
     apps = {
       # Set name_prefix used to generate the cluster_name
       # [name_prefix]-[workspace]-[region]
@@ -18,7 +18,10 @@ clusters = {
       resource_group = ""
     }
 
-    # Settings for Ops-cluster
+    # ops environment, inherrits from apps
     ops = {}
+
+    # loc environment, inherrits from apps
+    loc = {}
   }
 }

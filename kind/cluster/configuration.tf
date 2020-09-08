@@ -24,4 +24,6 @@ locals {
 
   manifest_path_default = "manifests/overlays/${terraform.workspace}"
   manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
+
+  disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 }

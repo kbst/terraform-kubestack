@@ -23,4 +23,6 @@ module "cluster" {
   https_port = local.https_port
 
   manifest_path = local.manifest_path
+
+  disable_default_ingress = local.disable_default_ingress
 }

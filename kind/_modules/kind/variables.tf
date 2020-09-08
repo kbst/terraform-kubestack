@@ -42,3 +42,8 @@ variable "manifest_path" {
   type        = string
   description = "Path to Kustomize overlay to build."
 }
+
+variable "disable_default_ingress" {
+  type        = bool
+  description = "Whether to disable the default ingress."
+}

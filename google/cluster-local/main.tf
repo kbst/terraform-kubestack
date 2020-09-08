@@ -24,5 +24,5 @@ module "cluster" {
 
   manifest_path = local.manifest_path
 
-  #disable_default_ingress = local.disable_default_ingress
+  disable_default_ingress = local.disable_default_ingress
 }

@@ -1,3 +1,3 @@
-output "cluster_ns" {
-  value = module.cluster.cluster_ns
+output "default_ingress_nameservers" {
+  value = module.cluster.default_ingress_nameservers
 }

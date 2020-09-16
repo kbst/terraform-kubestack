@@ -1,3 +1,3 @@
-output "name_servers" {
-  value = ingress.aws_route53.zone.current.name_servers
+output "cluster_ns" {
+  value = var.disable_default_ingress ? null : aws_route53_zone.current[0].name_servers
 }

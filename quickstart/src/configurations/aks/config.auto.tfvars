@@ -16,6 +16,13 @@ clusters = {
 
       # The Azure resource group to use
       resource_group = ""
+
+      # CNI/Advanced networking configuration parameters. 
+      # Leave commented for default 'kubenet' networking
+      # network_plugin   = "azure"
+      # service_cidr     = "10.0.0.0/16"
+      # dns_service_ip   = "10.0.0.10"
+      # max_pods         = 30
     }
 
     # Settings for Ops-cluster

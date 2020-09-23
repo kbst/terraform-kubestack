@@ -33,13 +33,13 @@ resource "azurerm_kubernetes_cluster" "current" {
   }
 
   network_profile {
-    network_plugin = var.network_plugin
-    network_policy = var.network_plugin == "azure" ? "azure" : "calico"
+    network_plugin      = var.network_plugin
+    network_policy      = var.network_plugin == "azure" ? "azure" : "calico"
 
-    docker_bridge_cidr = "172.17.0.1/16"
-    service_cidr = var.service_cidr
-    dns_service_ip = var.dns_service_ip
-    pod_cidr = var.network_plugin == "azure" ? null : "10.244.0.0/16"
+    docker_bridge_cidr  = "172.17.0.1/16"
+    service_cidr        = var.service_cidr
+    dns_service_ip      = var.dns_service_ip
+    pod_cidr            = var.network_plugin == "azure" ? null : "10.244.0.0/16"
   }
 
   service_principal {

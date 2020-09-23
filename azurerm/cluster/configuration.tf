@@ -17,6 +17,11 @@ locals {
 
   dns_prefix = lookup(local.cfg, "dns_prefix", "api")
 
+  network_plugin = lookup(local.cfg, "network_plugin", "kubenet")
+  service_cidr   = lookup(local.cfg, "service_cidr", "10.0.0.0/16")
+  dns_service_ip = lookup(local.cfg, "dns_service_ip", "10.0.0.10")
+  max_pods       = lookup(local.cfg, "max_pods", null)
+
   default_node_pool_name = lookup(local.cfg, "default_node_pool_name", "default")
   default_node_pool_type = lookup(local.cfg, "default_node_pool_type", "VirtualMachineScaleSets")
 

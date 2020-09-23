@@ -23,10 +23,35 @@ variable "resource_group" {
   description = "Resource group to use for the cluster."
 }
 
+variable "network_plugin" {
+  type        = string
+  description = "Network plugin to use. Set to 'azure' for CNI"
+}
+
 variable "dns_prefix" {
   type        = string
   description = "DNS prefix of AKS cluster API server."
   default     = "api"
+}
+
+variable "vnet_subnet_id" {
+  type        = string
+  description = "ID of the subnet for the cluster nodepool, if using CNI for networking."
+}
+
+variable "service_cidr" {
+  type        = string
+  description = "CIDR range for pods."
+}
+
+variable "dns_service_ip" {
+  type        = string
+  description = "IP address for the kube-dns service. Must be within service_cidr."
+}
+
+variable "max_pods" {
+  type        = number
+  description = "Maximum number of pods to run per node, if using CNI for networking."
 }
 
 variable "default_node_pool_name" {

@@ -1,6 +1,6 @@
 clusters = {
   gke_zero = {
-    # Settings for Apps-cluster
+    # apps environment
     apps = {
       # The Google cloud project ID to use
       project_id = ""
@@ -33,13 +33,10 @@ clusters = {
       cluster_node_locations = ""
     }
 
-    # Settings for Ops-cluster
-    # configuration here overwrites the values from apps
-    ops = {
-      # Overwrite apps["cluster_node_locations"] to have a smaller
-      # ops cluster
-      # e.g. cluster_node_locations = "europe-west3-a"
-      cluster_node_locations = ""
-    }
+    # ops environment, inherrits from apps
+    ops = {}
+
+    # loc environment, inherrits from apps
+    loc = {}
   }
 }

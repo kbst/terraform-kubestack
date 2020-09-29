@@ -1,6 +1,6 @@
 clusters = {
   eks_zero = {
-    # Settings for Apps-cluster
+    # apps environment
     apps = {
       # Set name_prefix used to generate the cluster_name
       # [name_prefix]-[workspace]-[region]
@@ -27,13 +27,10 @@ clusters = {
       cluster_availability_zones = ""
     }
 
-    # Settings for Ops-cluster
-    ops = {
-      # Overwrite apps["cluster_availability_zones"] to have a smaller
-      # ops cluster
-      # EKS requires a min. of 2 zones
-      # e.g. cluster_availability_zones = "eu-west-1a,eu-west-1b"
-      cluster_availability_zones = ""
-    }
+    # ops environment, inherrits from apps
+    ops = {}
+
+    # loc environment, inherrits from apps
+    loc = {}
   }
 }

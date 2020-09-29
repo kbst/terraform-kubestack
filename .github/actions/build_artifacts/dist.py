@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from os import environ, listdir, mkdir
-from os.path import isdir
+from os.path import isdir, exists, join
 from shutil import copytree, make_archive, rmtree
 
 from jinja2 import Environment, FileSystemLoader
@@ -56,10 +56,13 @@ for configuration in configurations:
     # Replace templated version variable in clusters.tf
     replace_template(configuration_dist, 'clusters.tf', {'version': version})
 
-    # Replace templated variables in Dockerfile
-    replace_template(configuration_dist,
-                     'Dockerfile',
-                     {'image_name': image_name, 'image_tag': version})
+    # Replace templated variables in Dockerfiles
+    dockerfiles = ['Dockerfile', 'Dockerfile.loc']
+    for dockerfile in dockerfiles:
+        if exists(join(configuration_dist, dockerfile)):
+            replace_template(configuration_dist,
+                             dockerfile,
+                             {'image_name': image_name, 'image_tag': version})
 
     # Replace default ingress reference
     replace_template(manifests_dist,

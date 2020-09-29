@@ -112,10 +112,10 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 #
 #
 # KinD builder
-FROM golang:1.14.2 as kind-builder
+FROM builder as kind-builder
 
 ARG DOCKER_CLI_VERSION=19.03.8
-ARG TERRAFORM_PROVIDER_KIND_VERSION=3cfa37367cb4eb7e5afacede63f3f69859a965f7
+ARG TERRAFORM_PROVIDER_KIND_VERSION=v0.0.3
 
 RUN mkdir -p /opt/bin
 
@@ -126,11 +126,10 @@ RUN echo "DOCKER_CLI_VERSION: ${DOCKER_CLI_VERSION}" \
     && mv docker/docker /opt/bin/docker \
     && /opt/bin/docker --help
 
-# install kind terraform provider from source
-RUN  git clone https://github.com/kyma-incubator/terraform-provider-kind.git && \
-    cd terraform-provider-kind && \
-    git checkout ${TERRAFORM_PROVIDER_KIND_VERSION} && \
-    go build -o /opt/bin/terraform-provider-kind
+RUN echo "TERRAFORM_PROVIDER_KIND_VERSION: ${TERRAFORM_PROVIDER_KIND_VERSION}" \
+    && curl -LO https://github.com/kyma-incubator/terraform-provider-kind/releases/download/${TERRAFORM_PROVIDER_KIND_VERSION}/terraform-provider-kind-linux-amd64 \
+    && mv terraform-provider-kind-linux-amd64 /opt/bin/terraform-provider-kind \
+    && chmod +x /opt/bin/terraform-provider-kind
 
 
 #

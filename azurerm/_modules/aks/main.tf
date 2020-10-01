@@ -39,7 +39,7 @@ resource "azurerm_kubernetes_cluster" "current" {
     docker_bridge_cidr  = "172.17.0.1/16"
     service_cidr        = var.service_cidr
     dns_service_ip      = var.dns_service_ip
-    pod_cidr            = var.network_plugin == "azure" ? null : "10.244.0.0/16"
+    pod_cidr            = var.network_plugin == "azure" ? null : var.pod_cidr
   }
 
   service_principal {

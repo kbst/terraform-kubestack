@@ -41,12 +41,17 @@ variable "vnet_subnet_id" {
 
 variable "service_cidr" {
   type        = string
-  description = "CIDR range for pods."
+  description = "CIDR range for kubernetes service."
 }
 
 variable "dns_service_ip" {
   type        = string
   description = "IP address for the kube-dns service. Must be within service_cidr."
+}
+
+variable "pod_cidr" {
+  type        = string
+  description = "CIDR range for pods."
 }
 
 variable "max_pods" {

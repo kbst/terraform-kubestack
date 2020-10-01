@@ -31,6 +31,7 @@ module "cluster" {
   network_plugin = local.network_plugin
   service_cidr   = local.service_cidr
   dns_service_ip = local.dns_service_ip
+  pod_cidr       = local.pod_cidr
   max_pods       = local.max_pods
 
   default_node_pool_name = local.default_node_pool_name

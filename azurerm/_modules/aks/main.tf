@@ -64,7 +64,7 @@ resource "azurerm_kubernetes_cluster" "current" {
 data "external" "aks_nsg_id" {
   program = [
     "bash",
-    "${path.root}/scripts/aks_nsg_name.sh"
+    "${path.module}/aks_nsg_name.sh"
   ]
 
   query = {

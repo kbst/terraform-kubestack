@@ -24,7 +24,7 @@ jobs:
         sudo chown -R `id -u`:`id -g` ./quickstart/_dist
 
     - name: 'Upload artifacts'
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: test-artifacts
         path: ./quickstart/_dist
@@ -74,9 +74,10 @@ jobs:
 
     steps:
     - name: 'Download test-artifacts'
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v2
       with:
         name: test-artifacts
+        path: test-artifacts
 
     - name: 'Unzip ${{ matrix.starter }} quickstart'
       run: |
@@ -173,9 +174,10 @@ jobs:
 
     steps:
     - name: 'Download test-artifacts'
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v2
       with:
         name: test-artifacts
+        path: test-artifacts
 
     - name: 'Docker login'
       run: |
@@ -204,9 +206,10 @@ jobs:
 
     steps:
     - name: 'Download test-artifacts'
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v2
       with:
         name: test-artifacts
+        path: test-artifacts
 
     - name: 'Setup gcloud'
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master

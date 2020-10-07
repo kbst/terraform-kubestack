@@ -44,7 +44,7 @@ RUN echo "TERRAFORM_VERSION: ${TERRAFORM_VERSION}" \
     && chmod +x /opt/bin/terraform \
     && /opt/bin/terraform version
 
-COPY entrypoint entrypoint_user /opt/bin/
+COPY oci/entrypoint oci/entrypoint_user /opt/bin/
 
 
 #
@@ -109,7 +109,7 @@ FROM builder as kind-builder
 
 ARG DOCKER_CLI_VERSION=19.03.8
 
-RUN mkdir -p /opt/bin
+RUN mkdir -p /opt/bin   
 
 # kind requires docker client
 RUN echo "DOCKER_CLI_VERSION: ${DOCKER_CLI_VERSION}" \
@@ -148,12 +148,35 @@ CMD bash
 
 #
 #
+# Vendor terraform providers and modules
+FROM final-base as terraform-cache 
+
+COPY quickstart/_dist /_dist
+
+RUN mkdir -p /tmp/.terraform/plugin-cache
+ENV TF_PLUGIN_CACHE_DIR=/tmp/.terraform/plugin-cache
+
+RUN set -e &&\
+    for name in `ls /_dist/`; do \
+    if [ -d /_dist/$name ]; then \
+    cd /_dist/$name &&\
+    terraform init &&\
+    terraform providers mirror /tmp/.terraform/plugins/$name; \
+    fi; \
+    done
+
+
+#
+#
 # AWS variant
 FROM final-base AS eks
 
 # AWS
 COPY --from=aws-builder /opt/aws /opt/aws
 ENV PATH=$PATH:/opt/aws/bin
+
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-eks /usr/local/share/terraform/plugins
 
 
 #
@@ -165,6 +188,9 @@ FROM final-base AS gke
 COPY --from=gcp-builder /opt/google /opt/google
 ENV PATH=$PATH:/opt/google/bin
 
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-gke /usr/local/share/terraform/plugins
+
 
 #
 #
@@ -175,6 +201,9 @@ FROM final-base AS aks
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
 
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-aks /usr/local/share/terraform/plugins
+
 
 #
 #
@@ -183,6 +212,9 @@ FROM final-base AS kind
 
 # KinD provider
 COPY --from=kind-builder /opt/bin /opt/bin
+
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-kind /usr/local/share/terraform/plugins
 
 
 #
@@ -201,3 +233,6 @@ ENV PATH=$PATH:/opt/google/bin
 # Azure
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
+
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-multi-cloud /usr/local/share/terraform/plugins

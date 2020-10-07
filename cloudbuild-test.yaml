@@ -8,12 +8,13 @@ substitutions:
 steps:
 - id: docker build
   name: 'gcr.io/cloud-builders/docker'
-  dir: tests
   args:
   - build
   - -t
   - kbst-infra-automation:bootstrap
-  - ci-cd/
+  - --file
+  - tests/ci-cd/Dockerfile
+  - .
 
 - id: authenticate
   name: 'kbst-infra-automation:bootstrap'

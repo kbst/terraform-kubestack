@@ -109,7 +109,7 @@ jobs:
         sed -i 's/resource_group = ""/resource_group = "terraform-kubestack-testing"/g' config.auto.tfvars
 
         # EKS: set region
-        sed -i 's/region = ""/region = "eu-west-1"/g' providers.tf
+        sed -i 's/region = ""/region = "eu-west-1"/g' providers.tf || true
 
         # EKS: set cluster_availability_zones
         sed -i 's/cluster_availability_zones = ""/cluster_availability_zones = "eu-west-1a,eu-west-1b"/g' config.auto.tfvars

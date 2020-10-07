@@ -1,5 +1,3 @@
-provider "azurerm" {}
-
 provider "aws" {
   alias = "eks_zero"
 
@@ -8,5 +6,3 @@ provider "aws" {
   # the respective cluster module in clusters.tf
   region = ""
 }
-
-provider "google" {}

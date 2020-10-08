@@ -19,10 +19,15 @@ clusters = {
 
       # CNI/Advanced networking configuration parameters. 
       # Leave commented for default 'kubenet' networking
-      # network_plugin   = "azure"
-      # service_cidr     = "10.0.0.0/16"
-      # dns_service_ip   = "10.0.0.10"
-      # max_pods         = 30
+      # vnet_address_space       = "10.16.0.0/12"  # accepts multiple comma-separated values
+      # subnet_address_prefixes  = "10.18.0.0/16"  # accepts multiple comma-separated values
+      # subnet_service_endpoints = null            # accepts multiple comma-separated values
+    
+      # network_plugin           = "azure"
+      # network_policy           = "azure"
+      # service_cidr             = "10.0.0.0/16"
+      # dns_service_ip           = "10.0.0.10"
+      # max_pods                 = 30
     }
 
     # ops environment, inherrits from apps

@@ -23,20 +23,35 @@ variable "resource_group" {
   description = "Resource group to use for the cluster."
 }
 
+variable "vnet_address_space" {
+  type        = list(string)
+  description = "Address space for the virtual network."
+}
+
+variable "subnet_address_prefixes" {
+  type        = list(string)
+  description = "Address space for the cluster subnet."
+}
+
+variable "subnet_service_endpoints" {
+  type        = list(string)
+  description = "List of service endpoints to expose on the subnet."
+}
+
 variable "network_plugin" {
   type        = string
-  description = "Network plugin to use. Set to 'azure' for CNI"
+  description = "Network plugin to use. Set to 'azure' for CNI; 'kubenet' for Basic"
+}
+
+variable "network_policy" {
+  type        = string
+  description = "Network policy to use. Set to 'azure' for CNI; 'calico' for Basic"
 }
 
 variable "dns_prefix" {
   type        = string
   description = "DNS prefix of AKS cluster API server."
   default     = "api"
-}
-
-variable "vnet_subnet_id" {
-  type        = string
-  description = "ID of the subnet for the cluster nodepool, if using CNI for networking."
 }
 
 variable "service_cidr" {

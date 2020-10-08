@@ -28,13 +28,13 @@ resource "azurerm_kubernetes_cluster" "current" {
     vm_size         = var.default_node_pool_vm_size
     os_disk_size_gb = var.default_node_pool_os_disk_size_gb
     
-    vnet_subnet_id = var.vnet_subnet_id
+    vnet_subnet_id = var.network_plugin == "azure" ? azurerm_subnet.current[0].id : null
     max_pods       = var.max_pods
   }
 
   network_profile {
     network_plugin      = var.network_plugin
-    network_policy      = var.network_plugin == "azure" ? "azure" : "calico"
+    network_policy      = var.network_policy
 
     docker_bridge_cidr  = "172.17.0.1/16"
     service_cidr        = var.service_cidr
@@ -59,15 +59,4 @@ resource "azurerm_kubernetes_cluster" "current" {
   }
 
   tags = var.metadata_labels
-}
-
-data "external" "aks_nsg_id" {
-  program = [
-    "bash",
-    "${path.module}/aks_nsg_name.sh"
-  ]
-
-  query = {
-    resource_group = "${azurerm_kubernetes_cluster.current.node_resource_group}"
-  }
 }

@@ -17,9 +17,9 @@ locals {
 
   dns_prefix = lookup(local.cfg, "dns_prefix", "api")
 
-  vnet_address_space        = split(",", lookup(local.cfg, "vnet_address_space", ["10.0.0.0/8"]))
-  subnet_address_prefixes   = split(",", lookup(local.cfg, "subnet_address_prefixes", ["10.1.0.0/16"]))
-  subnet_service_endpoints  = split(",", lookup(local.cfg, "subnet_service_endpoints", null))
+  vnet_address_space        = split(",", lookup(local.cfg, "vnet_address_space", "10.0.0.0/8"))
+  subnet_address_prefixes   = split(",", lookup(local.cfg, "subnet_address_prefixes", "10.1.0.0/16"))
+  subnet_service_endpoints  = split(",", lookup(local.cfg, "subnet_service_endpoints", ""))
 
   network_plugin = lookup(local.cfg, "network_plugin", "kubenet")
   network_policy = lookup(local.cfg, "network_policy", "calico")

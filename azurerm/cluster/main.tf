@@ -27,6 +27,17 @@ module "cluster" {
 
   dns_prefix = local.dns_prefix
 
+  vnet_address_space        = local.vnet_address_space
+  subnet_address_prefixes   = local.subnet_address_prefixes
+  subnet_service_endpoints  = local.subnet_service_endpoints
+
+  network_plugin            = local.network_plugin
+  network_policy            = local.network_policy
+  service_cidr              = local.service_cidr
+  dns_service_ip            = local.dns_service_ip
+  pod_cidr                  = local.pod_cidr
+  max_pods                  = local.max_pods
+
   default_node_pool_name = local.default_node_pool_name
   default_node_pool_type = local.default_node_pool_type
 

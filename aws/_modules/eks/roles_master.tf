@@ -20,11 +20,11 @@ POLICY
 
 resource "aws_iam_role_policy_attachment" "master_cluster_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role = aws_iam_role.master.name
+  role       = aws_iam_role.master.name
 }
 
 resource "aws_iam_role_policy_attachment" "master_service_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role = aws_iam_role.master.name
+  role       = aws_iam_role.master.name
 }
 

@@ -1,3 +1,7 @@
+provider "azurerm" {
+  features {}
+}
+
 provider "kubernetes" {
   alias = "aks"
 
@@ -12,4 +16,3 @@ provider "kubernetes" {
     azurerm_kubernetes_cluster.current.kube_config[0].cluster_ca_certificate,
   )
 }
-

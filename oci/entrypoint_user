@@ -45,7 +45,7 @@ fi
 #
 #
 # Gcloud auth
-# only if az cli is installed
+# only if gcloud cli is installed
 if [ -x "$(command -v gcloud)" ]; then
   GCLOUD_CONFIG_PATH=~/.config/gcloud
   mkdir -p $GCLOUD_CONFIG_PATH

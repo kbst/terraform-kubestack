@@ -25,8 +25,7 @@ FROM builder AS common-builder
 
 ARG KUBECTL_VERSION=v1.18.7
 ARG KUSTOMIZE_VERSION=v3.6.1
-ARG TERRAFORM_VERSION=0.12.29
-ARG TERRAFORM_PROVIDER_KUSTOMIZE_VERSION=v0.2.0-beta.0
+ARG TERRAFORM_VERSION=0.13.4
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && curl -Lo /opt/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
@@ -45,13 +44,7 @@ RUN echo "TERRAFORM_VERSION: ${TERRAFORM_VERSION}" \
     && chmod +x /opt/bin/terraform \
     && /opt/bin/terraform version
 
-RUN echo "TERRAFORM_PROVIDER_KUSTOMIZE_VERSION: ${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}" \
-    && curl -LO https://github.com/kbst/terraform-provider-kustomize/releases/download/${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}/terraform-provider-kustomization-linux-amd64_${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}.tgz \
-    && tar -xf terraform-provider-kustomization-linux-amd64_${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}.tgz \
-    && mv terraform.d/plugins/linux_amd64/terraform-provider-kustomization_${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION} /opt/bin/ \
-    && chmod +x /opt/bin/terraform-provider-kustomization_${TERRAFORM_PROVIDER_KUSTOMIZE_VERSION}
-
-COPY entrypoint entrypoint_user /opt/bin/
+COPY oci/entrypoint oci/entrypoint_user /opt/bin/
 
 
 #
@@ -115,9 +108,8 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 FROM builder as kind-builder
 
 ARG DOCKER_CLI_VERSION=19.03.8
-ARG TERRAFORM_PROVIDER_KIND_VERSION=v0.0.3
 
-RUN mkdir -p /opt/bin
+RUN mkdir -p /opt/bin   
 
 # kind requires docker client
 RUN echo "DOCKER_CLI_VERSION: ${DOCKER_CLI_VERSION}" \
@@ -125,11 +117,6 @@ RUN echo "DOCKER_CLI_VERSION: ${DOCKER_CLI_VERSION}" \
     && tar zxvf docker-${DOCKER_CLI_VERSION}.tgz -C . docker/docker \
     && mv docker/docker /opt/bin/docker \
     && /opt/bin/docker --help
-
-RUN echo "TERRAFORM_PROVIDER_KIND_VERSION: ${TERRAFORM_PROVIDER_KIND_VERSION}" \
-    && curl -LO https://github.com/kyma-incubator/terraform-provider-kind/releases/download/${TERRAFORM_PROVIDER_KIND_VERSION}/terraform-provider-kind-linux-amd64 \
-    && mv terraform-provider-kind-linux-amd64 /opt/bin/terraform-provider-kind \
-    && chmod +x /opt/bin/terraform-provider-kind
 
 
 #
@@ -161,12 +148,35 @@ CMD bash
 
 #
 #
+# Vendor terraform providers and modules
+FROM final-base as terraform-cache 
+
+COPY quickstart/_dist /_dist
+
+RUN mkdir -p /tmp/.terraform/plugin-cache
+ENV TF_PLUGIN_CACHE_DIR=/tmp/.terraform/plugin-cache
+
+RUN set -e &&\
+    for name in `ls /_dist/`; do \
+    if [ -d /_dist/$name ]; then \
+    cd /_dist/$name &&\
+    terraform init &&\
+    terraform providers mirror /tmp/.terraform/plugins/$name; \
+    fi; \
+    done
+
+
+#
+#
 # AWS variant
 FROM final-base AS eks
 
 # AWS
 COPY --from=aws-builder /opt/aws /opt/aws
 ENV PATH=$PATH:/opt/aws/bin
+
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-eks /usr/local/share/terraform/plugins
 
 
 #
@@ -178,6 +188,9 @@ FROM final-base AS gke
 COPY --from=gcp-builder /opt/google /opt/google
 ENV PATH=$PATH:/opt/google/bin
 
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-gke /usr/local/share/terraform/plugins
+
 
 #
 #
@@ -188,6 +201,9 @@ FROM final-base AS aks
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
 
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-aks /usr/local/share/terraform/plugins
+
 
 #
 #
@@ -196,6 +212,9 @@ FROM final-base AS kind
 
 # KinD provider
 COPY --from=kind-builder /opt/bin /opt/bin
+
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-kind /usr/local/share/terraform/plugins
 
 
 #
@@ -214,3 +233,6 @@ ENV PATH=$PATH:/opt/google/bin
 # Azure
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
+
+# Terraform cache
+COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-multi-cloud /usr/local/share/terraform/plugins

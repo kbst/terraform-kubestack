@@ -18,3 +18,6 @@ test-cleanup:
 
 providers:
 	cloud-build-local --substitutions=_KBST_AUTH_AWS=${KBST_AUTH_AWS},_KBST_AUTH_GCLOUD=${KBST_AUTH_GCLOUD},_KBST_AUTH_AZ=${KBST_AUTH_AZ},_GITHUB_REF=$(GITHUB_REF),_GITHUB_SHA=$(GITHUB_SHA) --dryrun=false --config cloudbuild-providers.yaml .
+
+shell: build
+	docker run -ti --rm -e KBST_AUTH_AWS -e KBST_AUTH_AZ -e KBST_AUTH_GCLOUD -e HOME=/infra/tests/.user -v `pwd`:/infra:z --workdir /infra/tests kubestack/framework:local-$(GITHUB_SHA) bash

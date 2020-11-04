@@ -56,4 +56,8 @@ locals {
   manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
 
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
+
+  enable_private_nodes    = lookup(local.cfg, "enable_private_nodes", true)
+  master_cidr_block       = lookup(local.cfg, "master_cidr_block", "172.16.0.32/28")
 }
+

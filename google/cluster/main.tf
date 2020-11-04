@@ -47,4 +47,7 @@ module "cluster" {
   manifest_path = local.manifest_path
 
   disable_default_ingress = local.disable_default_ingress
+
+  enable_private_nodes    = local.enable_private_nodes
+  master_cidr_block       = local.master_cidr_block
 }

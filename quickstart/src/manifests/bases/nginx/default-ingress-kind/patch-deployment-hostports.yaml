@@ -2,14 +2,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-ingress-controller
+  name: ingress-nginx-controller
   namespace: ingress-kbst-default
 spec:
   template:
     spec:
       dnsPolicy: ClusterFirst
       containers:
-        - name: nginx-ingress-controller
+        - name: controller
           ports:
             - name: http
               containerPort: 80

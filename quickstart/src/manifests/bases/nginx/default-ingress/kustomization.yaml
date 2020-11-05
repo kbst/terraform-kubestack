@@ -6,7 +6,7 @@ namespace: ingress-kbst-default
 commonAnnotations:
   catalog.kubestack.com/heritage: kubestack.com/catalog/nginx
   catalog.kubestack.com/variant: default-ingress
-  app.kubernetes.io/version: v0.30.0
+  app.kubernetes.io/version: v0.40.2
 commonLabels:
   app.kubernetes.io/component: ingress-controller
   app.kubernetes.io/managed-by: kubestack
@@ -16,12 +16,6 @@ patchesJson6902:
 - path: patch-namespace.yaml
   target:
     kind: Namespace
+    group: ""
     name: ingress-nginx
-    version: v1
-- path: patch-deployment-publish-service.yaml
-  target:
-    kind: Deployment
-    name: nginx-ingress-controller
-    namespace: ingress-kbst-default
-    group: apps
     version: v1

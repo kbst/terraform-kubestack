@@ -5,3 +5,8 @@ bases:
 patches:
 - patch-deployment-control-plane.yaml
 - patch-deployment-hostports.yaml
+commonAnnotations:
+  app.kubernetes.io/version: v0.40.2
+replicas:
+- name: ingress-nginx-controller
+  count: 1

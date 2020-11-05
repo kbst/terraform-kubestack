@@ -5,5 +5,5 @@ resources:
 - ../apps
 
 replicas:
-- name: nginx-ingress-controller
+- name: ingress-nginx-controller
   count: 1

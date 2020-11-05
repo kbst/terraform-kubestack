@@ -113,3 +113,13 @@ variable "disable_default_ingress" {
   type        = bool
   description = "Whether to disable the default ingress."
 }
+
+variable "enable_private_nodes" {
+  type        = bool
+  description = "Whether to enable private nodes"
+}
+
+variable "master_cidr_block" {
+  type        = string
+  description = "The IP range for the master network"
+}

@@ -35,4 +35,7 @@ locals {
   manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
 
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
+
+  enabled_cluster_log_types_lookup = lookup(local.cfg, "enabled_cluster_log_types", "api,audit,authenticator,controllerManager,scheduler")
+  enabled_cluster_log_types        = split(",", local.enabled_cluster_log_types_lookup)
 }

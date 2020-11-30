@@ -74,3 +74,8 @@ variable "disable_default_ingress" {
   type        = bool
   description = "Whether to disable the default ingress."
 }
+
+variable "enabled_cluster_log_types" {
+  type        = list(string)
+  description = "List of cluster log types to enable."
+}

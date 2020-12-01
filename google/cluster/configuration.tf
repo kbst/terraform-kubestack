@@ -59,5 +59,7 @@ locals {
 
   enable_private_nodes    = lookup(local.cfg, "enable_private_nodes", true)
   master_cidr_block       = lookup(local.cfg, "master_cidr_block", "172.16.0.32/28")
-}
 
+  # by default include cloud_nat when private nodes are enabled
+  enable_cloud_nat = lookup(local.cfg, "enable_cloud_nat", local.enable_private_nodes)
+}

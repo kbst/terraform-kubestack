@@ -3,7 +3,7 @@ terraform {
   required_providers {
     kustomization = {
       source  = "kbst/kustomization"
-      version = ">= 0.2"
+      version = ">= 0.3.0"
     }
 
     template = {

@@ -50,4 +50,5 @@ module "cluster" {
 
   enable_private_nodes    = local.enable_private_nodes
   master_cidr_block       = local.master_cidr_block
+  enable_cloud_nat        = local.enable_cloud_nat
 }

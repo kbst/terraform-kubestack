@@ -31,6 +31,8 @@ clusters = {
     ops = {}
 
     # loc environment, inherrits from apps
-    loc = {}
+    loc = {
+      node_image = "ghcr.io/kbst/kind-eks-d:v1.18.9-kbst.1"
+    }
   }
 }

@@ -44,7 +44,7 @@ clusters = {
       cluster_min_size         = "1"
       cluster_max_size         = "3"
 
-      # Comma seperated list of zone names to deploy worker nodes in
+      # Comma-separated list of zone names to deploy worker nodes in
       # EKS requires a min. of 2 zones
       # Must match region set in provider
       # e.g. cluster_availability_zones = "eu-west-1a,eu-west-1b,eu-west-1c"
@@ -91,7 +91,7 @@ clusters = {
       # The Google cloud region to deploy the clusters in
       region = ""
 
-      # Comma seperated list of zone names to deploy worker nodes in.
+      # Comma-separated list of zone names to deploy worker nodes in.
       # Must match region above.
       # e.g. cluster_node_locations = "europe-west3-a,europe-west3-b,europe-west3-c"
       # FIXME: Use actual list when TF 0.12 finally supports heterogeneous maps

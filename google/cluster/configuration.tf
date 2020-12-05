@@ -62,4 +62,6 @@ locals {
 
   # by default include cloud_nat when private nodes are enabled
   enable_cloud_nat = lookup(local.cfg, "enable_cloud_nat", local.enable_private_nodes)
+
+  disable_container_registry = lookup(local.cfg, "disable_container_registry", true)
 }

@@ -19,7 +19,7 @@ clusters = {
       cluster_min_size         = "1"
       cluster_max_size         = "3"
 
-      # Comma seperated list of zone names to deploy worker nodes in
+      # Comma-separated list of zone names to deploy worker nodes in
       # EKS requires a min. of 2 zones
       # Must match region set in provider
       # e.g. cluster_availability_zones = "eu-west-1a,eu-west-1b,eu-west-1c"
@@ -27,10 +27,10 @@ clusters = {
       cluster_availability_zones = ""
     }
 
-    # ops environment, inherrits from apps
+    # ops environment, inherits from apps
     ops = {}
 
-    # loc environment, inherrits from apps
+    # loc environment, inherits from apps
     loc = {
       node_image = "ghcr.io/kbst/kind-eks-d:v1.18.9-kbst.1"
     }

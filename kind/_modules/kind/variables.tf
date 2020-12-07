@@ -20,7 +20,7 @@ variable "metadata_labels" {
 
 variable "extra_nodes" {
   type        = string
-  description = "Comma seperated list of node roles. E.g. 'control-plan,worker'"
+  description = "Comma-separated list of node roles. E.g. 'control-plane,worker'"
 }
 
 variable "http_port" {

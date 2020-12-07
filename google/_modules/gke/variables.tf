@@ -10,7 +10,7 @@ variable "metadata_name" {
 
 variable "metadata_fqdn" {
   type        = string
-  description = "DNS name of the zone. Requires dot at the end. E.g. example.com"
+  description = "DNS name of the zone. E.g. `infra.example.com`"
 }
 
 variable "metadata_tags" {

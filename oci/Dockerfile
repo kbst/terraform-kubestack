@@ -23,9 +23,9 @@ RUN mkdir -p /opt/bin
 # Common builder
 FROM builder AS common-builder
 
-ARG KUBECTL_VERSION=v1.18.7
-ARG KUSTOMIZE_VERSION=v3.8.7
-ARG TERRAFORM_VERSION=0.13.4
+ARG KUBECTL_VERSION=v1.20.2
+ARG KUSTOMIZE_VERSION=v3.9.2
+ARG TERRAFORM_VERSION=0.13.6
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && curl -Lo /opt/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
@@ -73,7 +73,7 @@ RUN echo "AWS_CLI_VERSION: N/A" \
 # GCP builder
 FROM builder AS gcp-builder
 
-ARG GOOGLE_CLOUD_SDK_VERSION=305.0.0
+ARG GOOGLE_CLOUD_SDK_VERSION=326.0.0
 
 RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
@@ -87,7 +87,7 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
 # Azure builder
 FROM builder AS azure-builder
 
-ARG AZURE_CLI_VERSION=2.10.1
+ARG AZURE_CLI_VERSION=2.18.0
 
 RUN apt-get update && apt-get install -y \
     libffi-dev
@@ -107,7 +107,7 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 # KinD builder
 FROM builder as kind-builder
 
-ARG DOCKER_CLI_VERSION=19.03.8
+ARG DOCKER_CLI_VERSION=20.10.3
 
 RUN mkdir -p /opt/bin   
 

@@ -1,5 +1,5 @@
 resource "azuread_application" "current" {
-  name = var.metadata_name
+  display_name = var.metadata_name
 }
 
 resource "azuread_service_principal" "current" {

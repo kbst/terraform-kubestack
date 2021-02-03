@@ -52,14 +52,7 @@ COPY oci/entrypoint oci/entrypoint_user /opt/bin/
 # AWS builder
 FROM builder AS aws-builder
 
-ARG AWS_IAM_AUTHENTICATOR_VERSION=0.5.1
-
 RUN mkdir -p /opt/aws/bin
-
-RUN echo "AWS_IAM_AUTHENTICATOR_VERSION: ${AWS_IAM_AUTHENTICATOR_VERSION}" \
-    && curl -Lo /opt/aws/bin/aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${AWS_IAM_AUTHENTICATOR_VERSION}/aws-iam-authenticator_${AWS_IAM_AUTHENTICATOR_VERSION}_linux_amd64 \
-    && chmod +x /opt/aws/bin/aws-iam-authenticator \
-    && /opt/aws/bin/aws-iam-authenticator
 
 RUN echo "AWS_CLI_VERSION: N/A" \
     && curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" \

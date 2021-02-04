@@ -218,7 +218,7 @@ jobs:
         path: ./quickstart/_dist
 
     - name: 'Setup gcloud'
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0.2.0
       with:
         service_account_key: ${{ secrets.GCLOUD_AUTH }}
 

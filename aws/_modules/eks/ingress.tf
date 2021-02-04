@@ -49,7 +49,7 @@ resource "aws_route53_record" "host" {
   type    = "A"
 
   alias {
-    name                   = kubernetes_service.current[0].load_balancer_ingress[0].hostname
+    name                   = kubernetes_service.current[0].status[0].load_balancer[0].ingress[0].hostname
     zone_id                = data.aws_elb_hosted_zone_id.current[0].id
     evaluate_target_health = true
   }
@@ -63,7 +63,7 @@ resource "aws_route53_record" "wildcard" {
   type    = "A"
 
   alias {
-    name                   = kubernetes_service.current[0].load_balancer_ingress[0].hostname
+    name                   = kubernetes_service.current[0].status[0].load_balancer[0].ingress[0].hostname
     zone_id                = data.aws_elb_hosted_zone_id.current[0].id
     evaluate_target_health = true
   }

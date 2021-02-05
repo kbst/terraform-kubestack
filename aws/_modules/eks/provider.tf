@@ -20,11 +20,8 @@ data "aws_eks_cluster_auth" "current" {
 provider "kubernetes" {
   alias = "eks"
 
-  load_config_file = false
-
   host                   = aws_eks_cluster.current.endpoint
   cluster_ca_certificate = base64decode(aws_eks_cluster.current.certificate_authority[0].data)
 
   token = data.aws_eks_cluster_auth.current.token
 }
-

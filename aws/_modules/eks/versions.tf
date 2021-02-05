@@ -2,18 +2,21 @@
 terraform {
   required_providers {
     aws = {
+      # https://registry.terraform.io/providers/hashicorp/aws/latest
       source  = "hashicorp/aws"
-      version = ">= 3.9.0"
+      version = ">= 3.26.0"
     }
 
     external = {
+      # https://registry.terraform.io/providers/hashicorp/external/latest
       source  = "hashicorp/external"
-      version = "~> 1.2.0"
+      version = ">= 2.0.0"
     }
 
     kubernetes = {
+      # https://registry.terraform.io/providers/hashicorp/kubernetes/latest
       source  = "hashicorp/kubernetes"
-      version = "~> 1.12.0"
+      version = ">= 2.0.2"
     }
   }
 

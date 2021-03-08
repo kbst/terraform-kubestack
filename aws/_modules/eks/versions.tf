@@ -4,13 +4,13 @@ terraform {
     aws = {
       # https://registry.terraform.io/providers/hashicorp/aws/latest
       source  = "hashicorp/aws"
-      version = "~> 3.26.0"
+      version = "~> 3.31.0"
     }
 
     external = {
       # https://registry.terraform.io/providers/hashicorp/external/latest
       source  = "hashicorp/external"
-      version = "~> 2.0.0"
+      version = "~> 2.1.0"
     }
 
     kubernetes = {

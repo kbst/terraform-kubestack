@@ -38,4 +38,6 @@ locals {
 
   enabled_cluster_log_types_lookup = lookup(local.cfg, "enabled_cluster_log_types", "api,audit,authenticator,controllerManager,scheduler")
   enabled_cluster_log_types        = split(",", local.enabled_cluster_log_types_lookup)
+
+  disable_openid_connect_provider = lookup(local.cfg, "disable_openid_connect_provider", false)
 }

@@ -36,4 +36,6 @@ module "cluster" {
   disable_default_ingress = local.disable_default_ingress
 
   enabled_cluster_log_types = local.enabled_cluster_log_types
+
+  disable_openid_connect_provider = local.disable_openid_connect_provider
 }

@@ -18,6 +18,12 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.0.2"
     }
+
+    tls = {
+      # https://registry.terraform.io/providers/hashicorp/tls/latest
+      source  = "hashicorp/tls"
+      version = "~> 3.1.0"
+    }
   }
 
   required_version = ">= 0.13"

@@ -22,5 +22,6 @@ module "node_pool" {
   disk_type    = var.disk_type
   image_type   = var.image_type
   machine_type = var.machine_type
-}
 
+  node_workload_metadata_config = var.node_workload_metadata_config
+}

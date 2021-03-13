@@ -97,3 +97,7 @@ variable "auto_upgrade" {
   default     = true
 }
 
+variable "node_workload_metadata_config" {
+  description = "How to expose the node metadata to the workload running on the node."
+  type        = string
+}

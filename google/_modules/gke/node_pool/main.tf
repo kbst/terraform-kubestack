@@ -29,6 +29,10 @@ resource "google_container_node_pool" "current" {
     labels = var.metadata_labels
 
     tags = var.metadata_tags
+
+    workload_metadata_config {
+      node_metadata = var.node_workload_metadata_config
+    }
   }
 
   management {

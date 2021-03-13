@@ -17,9 +17,9 @@ locals {
 
   dns_prefix = lookup(local.cfg, "dns_prefix", "api")
 
-  vnet_address_space        = split(",", lookup(local.cfg, "vnet_address_space", "10.0.0.0/8"))
-  subnet_address_prefixes   = split(",", lookup(local.cfg, "subnet_address_prefixes", "10.1.0.0/16"))
-  subnet_service_endpoints  = split(",", lookup(local.cfg, "subnet_service_endpoints", ""))
+  vnet_address_space       = split(",", lookup(local.cfg, "vnet_address_space", "10.0.0.0/8"))
+  subnet_address_prefixes  = split(",", lookup(local.cfg, "subnet_address_prefixes", "10.1.0.0/16"))
+  subnet_service_endpoints = split(",", lookup(local.cfg, "subnet_service_endpoints", ""))
 
   network_plugin = lookup(local.cfg, "network_plugin", "kubenet")
   network_policy = lookup(local.cfg, "network_policy", "calico")
@@ -46,4 +46,7 @@ locals {
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
   service_principal_end_date_relative = lookup(local.cfg, "service_principal_end_date_relative", "8766h")
+
+  disable_managed_identities = lookup(local.cfg, "disable_managed_identities", false)
+  user_assigned_identity_id  = lookup(local.cfg, "user_assigned_identity_id", null)
 }

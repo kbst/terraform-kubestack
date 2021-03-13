@@ -23,6 +23,13 @@ resource "google_container_cluster" "current" {
 
   network = google_compute_network.current.self_link
 
+  dynamic "workload_identity_config" {
+    for_each = var.disable_workload_identity == false ? toset([1]) : toset([])
+    content {
+      identity_namespace = "${var.project}.svc.id.goog"
+    }
+  }
+
   #
   #
   # Addon config

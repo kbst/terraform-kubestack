@@ -128,3 +128,13 @@ variable "enable_cloud_nat" {
   type        = bool
   description = "Whether to enable cloud nat and allow internet access for private nodes."
 }
+
+variable "disable_workload_identity" {
+  description = "Wheter to disable workload identity support."
+  type        = bool
+}
+
+variable "node_workload_metadata_config" {
+  description = "How to expose the node metadata to the workload running on the node."
+  type        = string
+}

@@ -27,24 +27,38 @@ resource "azurerm_kubernetes_cluster" "current" {
 
     vm_size         = var.default_node_pool_vm_size
     os_disk_size_gb = var.default_node_pool_os_disk_size_gb
-    
+
     vnet_subnet_id = var.network_plugin == "azure" ? azurerm_subnet.current[0].id : null
     max_pods       = var.max_pods
   }
 
   network_profile {
-    network_plugin      = var.network_plugin
-    network_policy      = var.network_policy
+    network_plugin = var.network_plugin
+    network_policy = var.network_policy
 
-    docker_bridge_cidr  = "172.17.0.1/16"
-    service_cidr        = var.service_cidr
-    dns_service_ip      = var.dns_service_ip
-    pod_cidr            = var.network_plugin == "azure" ? null : var.pod_cidr
+    docker_bridge_cidr = "172.17.0.1/16"
+    service_cidr       = var.service_cidr
+    dns_service_ip     = var.dns_service_ip
+    pod_cidr           = var.network_plugin == "azure" ? null : var.pod_cidr
   }
 
-  service_principal {
-    client_id     = azuread_application.current.application_id
-    client_secret = azuread_service_principal_password.current.value
+  dynamic "identity" {
+    for_each = var.disable_managed_identities == true ? toset([]) : toset([1])
+
+    content {
+      type = var.user_assigned_identity_id == null ? "SystemAssigned" : "UserAssigned"
+
+      user_assigned_identity_id = var.user_assigned_identity_id
+    }
+  }
+
+  dynamic "service_principal" {
+    for_each = var.disable_managed_identities == true ? toset([1]) : toset([])
+
+    content {
+      client_id     = azuread_application.current[0].application_id
+      client_secret = azuread_service_principal_password.current[0].value
+    }
   }
 
   addon_profile {

@@ -136,3 +136,15 @@ variable "service_principal_end_date_relative" {
   type        = string
   description = "Relative time in hours for which the service principal password is valid. Defaults to 1 year."
 }
+
+variable "disable_managed_identities" {
+  type        = bool
+  description = "Keep using legacy service principal instead of new managed identities."
+  default     = false
+}
+
+variable "user_assigned_identity_id" {
+  type        = string
+  description = "ID of the UserAssigned identity to use."
+  default     = null
+}

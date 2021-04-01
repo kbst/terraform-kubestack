@@ -7,6 +7,7 @@ resource "azurerm_kubernetes_cluster" "current" {
   location            = data.azurerm_resource_group.current.location
   resource_group_name = data.azurerm_resource_group.current.name
   dns_prefix          = var.dns_prefix
+  sku_tier            = var.sku_tier
 
   role_based_access_control {
     enabled = true
@@ -30,6 +31,7 @@ resource "azurerm_kubernetes_cluster" "current" {
 
     vnet_subnet_id = var.network_plugin == "azure" ? azurerm_subnet.current[0].id : null
     max_pods       = var.max_pods
+    node_labels    = var.metadata_labels
   }
 
   network_profile {

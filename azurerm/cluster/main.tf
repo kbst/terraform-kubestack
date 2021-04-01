@@ -27,6 +27,8 @@ module "cluster" {
 
   dns_prefix = local.dns_prefix
 
+  sku_tier = local.sku_tier
+
   vnet_address_space       = local.vnet_address_space
   subnet_address_prefixes  = local.subnet_address_prefixes
   subnet_service_endpoints = local.subnet_service_endpoints

@@ -148,3 +148,9 @@ variable "user_assigned_identity_id" {
   description = "ID of the UserAssigned identity to use."
   default     = null
 }
+
+variable "sku_tier" {
+  type        = string
+  description = "The SKU tier to use for the cluster. Possible values are 'Free' and 'Paid'. Defaults to 'Free'."
+  default     = "Free"
+}

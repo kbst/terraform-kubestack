@@ -17,6 +17,8 @@ locals {
 
   dns_prefix = lookup(local.cfg, "dns_prefix", "api")
 
+  sku_tier = lookup(local.cfg, "sku_tier", "Free")
+
   vnet_address_space      = split(",", lookup(local.cfg, "vnet_address_space", "10.0.0.0/8"))
   subnet_address_prefixes = split(",", lookup(local.cfg, "subnet_address_prefixes", "10.1.0.0/16"))
 

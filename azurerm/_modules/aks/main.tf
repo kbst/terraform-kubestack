@@ -31,6 +31,7 @@ resource "azurerm_kubernetes_cluster" "current" {
 
     vnet_subnet_id = var.network_plugin == "azure" ? azurerm_subnet.current[0].id : null
     max_pods       = var.max_pods
+    node_labels    = var.metadata_labels
   }
 
   network_profile {

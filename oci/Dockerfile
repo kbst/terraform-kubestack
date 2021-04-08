@@ -141,22 +141,39 @@ CMD bash
 
 #
 #
-# Vendor terraform providers and modules
-FROM final-base as terraform-cache 
+# Build starters and provider cache
+FROM final-base as dist-helper
 
-COPY quickstart/_dist /_dist
+ARG GIT_SHA=master
+ARG GIT_REF=refs/heads/master
 
-RUN mkdir -p /tmp/.terraform/plugin-cache
-ENV TF_PLUGIN_CACHE_DIR=/tmp/.terraform/plugin-cache
+COPY quickstart /quickstart
+WORKDIR /quickstart
 
+# Build starters
+RUN cd build_artifacts &&\
+    pip install --no-cache-dir pipenv &&\
+    pipenv install
+
+ENV GIT_SHA=${GIT_SHA} \
+    GIT_REF=${GIT_REF}
+RUN cd build_artifacts &&\
+    pipenv run python dist.py dist
+
+# Run terraform init for each starter
+RUN mkdir -p /terraform/plugin-cache
+ENV TF_PLUGIN_CACHE_DIR=/terraform/plugin-cache
 RUN set -e &&\
-    for name in `ls /_dist/`; do \
-    if [ -d /_dist/$name ]; then \
-    cd /_dist/$name &&\
+    for name in `ls /quickstart/_dist/`; do \
+    if [ -d /quickstart/_dist/$name ]; then \
+    cd /quickstart/_dist/$name &&\
     terraform init &&\
-    terraform providers mirror /tmp/.terraform/plugins/$name; \
+    terraform providers mirror /terraform/plugins/$name; \
     fi; \
     done
+
+RUN cd build_artifacts &&\
+    pipenv run python dist.py compress
 
 
 #
@@ -169,7 +186,7 @@ COPY --from=aws-builder /opt/aws /opt/aws
 ENV PATH=$PATH:/opt/aws/bin
 
 # Terraform cache
-COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-eks /usr/local/share/terraform/plugins
+COPY --from=dist-helper /terraform/plugins/kubestack-starter-eks /usr/local/share/terraform/plugins
 
 
 #
@@ -182,7 +199,7 @@ COPY --from=gcp-builder /opt/google /opt/google
 ENV PATH=$PATH:/opt/google/bin
 
 # Terraform cache
-COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-gke /usr/local/share/terraform/plugins
+COPY --from=dist-helper /terraform/plugins/kubestack-starter-gke /usr/local/share/terraform/plugins
 
 
 #
@@ -195,7 +212,7 @@ COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
 
 # Terraform cache
-COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-aks /usr/local/share/terraform/plugins
+COPY --from=dist-helper /terraform/plugins/kubestack-starter-aks /usr/local/share/terraform/plugins
 
 
 #
@@ -207,7 +224,7 @@ FROM final-base AS kind
 COPY --from=kind-builder /opt/bin /opt/bin
 
 # Terraform cache
-COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-kind /usr/local/share/terraform/plugins
+COPY --from=dist-helper /terraform/plugins/kubestack-starter-kind /usr/local/share/terraform/plugins
 
 
 #
@@ -228,4 +245,4 @@ COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
 
 # Terraform cache
-COPY --from=terraform-cache /tmp/.terraform/plugins/kubestack-starter-multi-cloud /usr/local/share/terraform/plugins
+COPY --from=dist-helper /terraform/plugins/kubestack-starter-multi-cloud /usr/local/share/terraform/plugins

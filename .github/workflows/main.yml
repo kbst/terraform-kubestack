@@ -14,14 +14,9 @@ jobs:
     steps:
     - name: 'Checkout'
       uses: actions/checkout@v1
-
-    - name: Build artifacts
-      uses: ./.github/actions/build_artifacts
-
-    # Docker actions run as root, fix ownership of _dist
-    - name: Fix owner
-      run: |
-        sudo chown -R `id -u`:`id -g` ./quickstart/_dist
+    
+    - name: 'Build artifacts'
+      run: make dist
 
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v2

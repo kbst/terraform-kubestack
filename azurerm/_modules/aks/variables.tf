@@ -23,6 +23,12 @@ variable "resource_group" {
   description = "Resource group to use for the cluster."
 }
 
+variable "legacy_vnet_name" {
+  type        = bool
+  description = "Wheter to use the legacy vnet and subnet names."
+  default     = false
+}
+
 variable "vnet_address_space" {
   type        = list(string)
   description = "Address space for the virtual network."

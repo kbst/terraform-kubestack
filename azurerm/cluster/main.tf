@@ -29,6 +29,7 @@ module "cluster" {
 
   sku_tier = local.sku_tier
 
+  legacy_vnet_name         = local.legacy_vnet_name
   vnet_address_space       = local.vnet_address_space
   subnet_address_prefixes  = local.subnet_address_prefixes
   subnet_service_endpoints = local.subnet_service_endpoints

@@ -43,6 +43,8 @@ clusters = {
       resource_group = "terraform-kubestack-testing"
       name_prefix    = "kbstacctest"
       base_domain    = "infra.serverwolken.de"
+
+      network_plugin = "azure"
     }
 
     # Settings for Ops-cluster

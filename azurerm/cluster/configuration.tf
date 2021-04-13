@@ -19,6 +19,7 @@ locals {
 
   sku_tier = lookup(local.cfg, "sku_tier", "Free")
 
+  legacy_vnet_name        = lookup(local.cfg, "legacy_vnet_name", false)
   vnet_address_space      = split(",", lookup(local.cfg, "vnet_address_space", "10.0.0.0/8"))
   subnet_address_prefixes = split(",", lookup(local.cfg, "subnet_address_prefixes", "10.1.0.0/16"))
 

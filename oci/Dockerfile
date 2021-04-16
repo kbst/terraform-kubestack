@@ -1,8 +1,8 @@
 #
 #
 # Image versions
-ARG BASE_BUILDER=python:3.8
-ARG BASE_IMAGE=python:3.8-slim
+ARG BASE_BUILDER=python:3.9
+ARG BASE_IMAGE=python:3.9-slim
 
 
 #
@@ -23,8 +23,13 @@ RUN mkdir -p /opt/bin
 # Common builder
 FROM builder AS common-builder
 
-ARG KUBECTL_VERSION=v1.20.2
+# https://kubernetes.io/docs/setup/release/notes/
+ARG KUBECTL_VERSION=v1.21.0
+
+# https://github.com/kubernetes-sigs/kustomize/releases
 ARG KUSTOMIZE_VERSION=v3.9.2
+
+# https://www.terraform.io/downloads.html
 ARG TERRAFORM_VERSION=0.14.5
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
@@ -52,12 +57,15 @@ COPY oci/entrypoint oci/entrypoint_user /opt/bin/
 # AWS builder
 FROM builder AS aws-builder
 
+# https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
+ARG AWS_CLI_VERSION=2.1.38
+
 RUN mkdir -p /opt/aws/bin
 
-RUN echo "AWS_CLI_VERSION: N/A" \
-    && curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" \
-    && unzip awscli-bundle.zip \
-    && ./awscli-bundle/install -i /opt/aws \
+RUN echo "AWS_CLI_VERSION: ${AWS_CLI_VERSION}" \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install -i /opt/aws -b /opt/aws/bin \
     && /opt/aws/bin/aws --version
 
 
@@ -66,7 +74,8 @@ RUN echo "AWS_CLI_VERSION: N/A" \
 # GCP builder
 FROM builder AS gcp-builder
 
-ARG GOOGLE_CLOUD_SDK_VERSION=326.0.0
+# https://cloud.google.com/sdk/docs/release-notes
+ARG GOOGLE_CLOUD_SDK_VERSION=336.0.0
 
 RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
@@ -80,7 +89,8 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
 # Azure builder
 FROM builder AS azure-builder
 
-ARG AZURE_CLI_VERSION=2.18.0
+# https://docs.microsoft.com/en-us/cli/azure/release-notes-azure-cli?tabs=azure-cli
+ARG AZURE_CLI_VERSION=2.22.0
 
 RUN apt-get update && apt-get install -y \
     libffi-dev
@@ -100,7 +110,8 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 # KinD builder
 FROM builder as kind-builder
 
-ARG DOCKER_CLI_VERSION=20.10.3
+# https://docs.docker.com/engine/release-notes/
+ARG DOCKER_CLI_VERSION=20.10.6
 
 RUN mkdir -p /opt/bin   
 

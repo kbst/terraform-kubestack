@@ -168,6 +168,7 @@ RUN set -e &&\
     if [ -d /quickstart/_dist/$name ]; then \
     cd /quickstart/_dist/$name &&\
     terraform init &&\
+    rm -rf .terraform &&\
     terraform providers mirror /terraform/plugins/$name; \
     fi; \
     done

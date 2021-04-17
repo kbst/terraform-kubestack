@@ -3,13 +3,27 @@ _all: dist build
 GIT_REF := $(shell echo "refs/heads/"`git rev-parse --abbrev-ref HEAD`)
 GIT_SHA := $(shell echo `git rev-parse --verify HEAD^{commit}`)
 
+DOCKER_PUSH ?= false
+DOCKER_TARGET ?= multi-cloud
+
+ifeq ("${DOCKER_PUSH}", "true")
+BUILD_CACHE_DIST := --cache-to type=registry,mode=max,ref=kubestack/framework-dev:buildcache-dist-helper,push=${DOCKER_PUSH}
+BUILD_OUTPUT := --output type=registry,push=${DOCKER_PUSH}
+BUILD_CACHE := --cache-to type=registry,mode=max,ref=kubestack/framework-dev:buildcache-${DOCKER_TARGET},push=${DOCKER_PUSH}
+else
+BUILD_OUTPUT := --output type=docker
+endif
+
 dist:
 	rm -rf quickstart/_dist
 
-	docker build \
+	docker buildx build \
 		--build-arg GIT_REF=${GIT_REF} \
 		--build-arg GIT_SHA=${GIT_SHA} \
 		--file oci/Dockerfile \
+		--output type=docker \
+		--cache-from type=registry,ref=kubestack/framework-dev:buildcache-dist-helper \
+		${BUILD_CACHE_DIST} \
 		--progress plain \
 		-t dist-helper:latest \
 		--target dist-helper \
@@ -23,15 +37,18 @@ dist:
 
 	docker cp dist-helper:/quickstart/_dist quickstart/_dist
 	docker stop dist-helper
-	
 
 build:
-	docker build \
+	docker buildx build \
 		--build-arg GIT_REF=${GIT_REF} \
 		--build-arg GIT_SHA=${GIT_SHA} \
 		--file oci/Dockerfile \
+		${BUILD_OUTPUT} \
+		--cache-from type=registry,ref=kubestack/framework-dev:buildcache-${DOCKER_TARGET} \
+		${BUILD_CACHE} \
 		--progress plain \
-		-t kubestack/framework:local-$(GIT_SHA) \
+		--target ${DOCKER_TARGET} \
+		-t kubestack/framework-dev:test-$(GIT_SHA)-${DOCKER_TARGET} \
 		. 
 
 validate: .init
@@ -51,7 +68,7 @@ cleanup: .init
 		entrypoint terraform destroy --input=false --auto-approve
 	$(MAKE) .stop-container
 
-shell: .init
+shell: .check-container
 	docker exec \
 		-ti \
 		test-container-$(GIT_SHA) \
@@ -71,7 +88,7 @@ shell: .init
 		-e KBST_AUTH_GCLOUD \
 		-e HOME=/infra/tests/.user \
 		--workdir /infra/tests \
-		kubestack/framework:local-$(GIT_SHA) \
+		kubestack/framework-dev:test-$(GIT_SHA)-${DOCKER_TARGET} \
 		sleep infinity
 
 .stop-container:

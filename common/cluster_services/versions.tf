@@ -10,7 +10,7 @@ terraform {
     template = {
       # https://registry.terraform.io/providers/hashicorp/template/latest
       source  = "hashicorp/template"
-      version = "~> 2.2.0"
+      version = ">= 2.2.0"
     }
   }
 

@@ -167,8 +167,8 @@ RUN set -e &&\
     for name in `ls /quickstart/_dist/`; do \
     if [ -d /quickstart/_dist/$name ]; then \
     cd /quickstart/_dist/$name &&\
-    terraform init &&\
-    terraform providers mirror /terraform/plugins/$name; \
+    terraform init --upgrade &&\
+    rm -rf .terraform; \
     fi; \
     done
 
@@ -185,9 +185,6 @@ FROM final-base AS eks
 COPY --from=aws-builder /opt/aws /opt/aws
 ENV PATH=$PATH:/opt/aws/bin
 
-# Terraform cache
-COPY --from=dist-helper /terraform/plugins/kubestack-starter-eks /usr/local/share/terraform/plugins
-
 
 #
 #
@@ -197,9 +194,6 @@ FROM final-base AS gke
 # GCP
 COPY --from=gcp-builder /opt/google /opt/google
 ENV PATH=$PATH:/opt/google/bin
-
-# Terraform cache
-COPY --from=dist-helper /terraform/plugins/kubestack-starter-gke /usr/local/share/terraform/plugins
 
 
 #
@@ -211,9 +205,6 @@ FROM final-base AS aks
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
 
-# Terraform cache
-COPY --from=dist-helper /terraform/plugins/kubestack-starter-aks /usr/local/share/terraform/plugins
-
 
 #
 #
@@ -222,9 +213,6 @@ FROM final-base AS kind
 
 # KinD provider
 COPY --from=kind-builder /opt/bin /opt/bin
-
-# Terraform cache
-COPY --from=dist-helper /terraform/plugins/kubestack-starter-kind /usr/local/share/terraform/plugins
 
 
 #
@@ -243,6 +231,3 @@ ENV PATH=$PATH:/opt/google/bin
 # Azure
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
-
-# Terraform cache
-COPY --from=dist-helper /terraform/plugins/kubestack-starter-multi-cloud /usr/local/share/terraform/plugins

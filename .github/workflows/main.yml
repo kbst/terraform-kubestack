@@ -14,8 +14,21 @@ jobs:
     steps:
     - name: 'Checkout'
       uses: actions/checkout@v1
-    
+
+    - name: 'Setup buildx'
+      uses: docker/setup-buildx-action@v1
+      with:
+        install: true
+
+    - name: 'Docker login'
+      uses: docker/login-action@v1
+      with:
+        username: kbstci
+        password: ${{ secrets.DOCKER_AUTH }}
+
     - name: 'Build artifacts'
+      env:
+        DOCKER_PUSH: true
       run: make dist
 
     - name: 'Upload artifacts'
@@ -41,29 +54,22 @@ jobs:
         name: test-artifacts
         path: ./quickstart/_dist
 
+    - name: 'Setup buildx'
+      uses: docker/setup-buildx-action@v1
+      with:
+        install: true
+
     - name: 'Docker login'
-      run: |
-        echo ${{ secrets.DOCKER_AUTH }} | docker login --username kbstci --password-stdin
+      uses: docker/login-action@v1
+      with:
+        username: kbstci
+        password: ${{ secrets.DOCKER_AUTH }}
 
     - name: Build ${{ matrix.starter }} image
       env:
-        DOCKER_BUILDKIT: 1
-      run: |
-        docker run \
-          --rm \
-          --privileged \
-          -v `pwd`:/tmp/work \
-          -v $HOME/.docker:/root/.docker \
-          --entrypoint buildctl-daemonless.sh \
-          moby/buildkit:master \
-              build \
-              --frontend dockerfile.v0 \
-              --local context=/tmp/work \
-              --local dockerfile=/tmp/work/oci \
-              --output type=image,name=kubestack/framework-dev:test-${{ github.sha }}-${{ matrix.starter }},push=true \
-              --export-cache type=registry,ref=kubestack/framework-dev:buildcache-${{ matrix.starter }},push=true \
-              --import-cache type=registry,ref=kubestack/framework-dev:buildcache-${{ matrix.starter }} \
-              --opt target=${{ matrix.starter }}
+        DOCKER_PUSH: true
+        DOCKER_TARGET: ${{ matrix.starter }}
+      run: make build
 
   test:
     runs-on: ubuntu-latest
@@ -83,6 +89,12 @@ jobs:
     - name: 'Unzip ${{ matrix.starter }} quickstart'
       run: |
         unzip quickstart/_dist/kubestack-starter-${{ matrix.starter }}-*.zip
+
+    - name: 'Docker login'
+      uses: docker/login-action@v1
+      with:
+        username: kbstci
+        password: ${{ secrets.DOCKER_AUTH }}
 
     - name: 'Docker build'
       env:
@@ -181,8 +193,10 @@ jobs:
         path: ./quickstart/_dist
 
     - name: 'Docker login'
-      run: |
-        echo ${{ secrets.DOCKER_AUTH }} | docker login --username kbstci --password-stdin
+      uses: docker/login-action@v1
+      with:
+        username: kbstci
+        password: ${{ secrets.DOCKER_AUTH }}
 
     - name: 'Docker push'
       # pull the image built for testing

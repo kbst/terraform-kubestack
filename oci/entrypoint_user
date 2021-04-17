@@ -12,7 +12,7 @@ if [ -x "$(command -v aws)" ]; then
   # handle base64 encoded AWS crendentials
   if [ ! -z "$KBST_AUTH_AWS" ]; then
     echo "$KBST_AUTH_AWS" | base64 --decode > $AWS_CONFIG_PATH/credentials
-    aws sts get-caller-identity
+    AWS_EC2_METADATA_DISABLED=true aws sts get-caller-identity
   fi
 fi
 

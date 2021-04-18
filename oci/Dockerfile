@@ -155,9 +155,14 @@ CMD bash
 # Build starters and provider cache
 FROM final-base as dist-helper
 
-# Run inheritance module tests
 COPY common /common
+
+# Run inheritance module tests
 RUN cd /common/configuration &&\
+    terraform test
+
+# Run metadata module tests
+RUN cd /common/metadata &&\
     terraform test
 
 ARG GIT_SHA=master

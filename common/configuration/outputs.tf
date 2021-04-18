@@ -1,12 +1,7 @@
 locals {
-  base = {
-    (var.base_key) = var.configuration[var.base_key]
-  }
+  base_config = var.configuration[var.base_key]
 
-  base_config = local.base[var.base_key]
-
-  overlays = {
-    # include all envs but the base_key in overlays
+  merged = {
     for env_key, env in var.configuration :
     env_key => {
       # loop through all config keys in base_key environment and current env
@@ -15,10 +10,9 @@ locals {
       for key in setunion(keys(env), keys(local.base_config)) :
       key => lookup(env, key, null) != null ? env[key] : local.base_config[key]
     }
-    if env_key != var.base_key
   }
 }
 
 output "merged" {
-  value = merge(local.base, local.overlays)
+  value = local.merged
 }

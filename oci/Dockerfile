@@ -153,7 +153,7 @@ CMD bash
 #
 #
 # Build starters and provider cache
-FROM final-base as dist-helper
+FROM final-base as dist-helper-build
 
 COPY common /common
 
@@ -195,6 +195,13 @@ RUN set -e &&\
 
 RUN cd build_artifacts &&\
     pipenv run python dist.py compress
+
+#
+#
+# Dist artifacts
+FROM alpine as dist-helper
+
+COPY --from=dist-helper-build /quickstart/_dist /quickstart/_dist
 
 
 #

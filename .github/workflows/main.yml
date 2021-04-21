@@ -29,6 +29,8 @@ jobs:
     - name: 'Build artifacts'
       env:
         DOCKER_PUSH: true
+        GIT_SHA: ${{ github.sha }}
+        GIT_REF: ${{ github.ref }}
       run: make dist
 
     - name: 'Upload artifacts'

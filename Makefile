@@ -1,7 +1,7 @@
 _all: dist build
 
-GIT_REF := $(shell echo "refs/heads/"`git rev-parse --abbrev-ref HEAD`)
-GIT_SHA := $(shell echo `git rev-parse --verify HEAD^{commit}`)
+GIT_REF ?= $(shell echo "refs/heads/"`git rev-parse --abbrev-ref HEAD`)
+GIT_SHA ?= $(shell echo `git rev-parse --verify HEAD^{commit}`)
 
 DOCKER_PUSH ?= false
 DOCKER_TARGET ?= multi-cloud

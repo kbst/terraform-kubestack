@@ -24,6 +24,8 @@ locals {
 
   cluster_min_size = local.cfg["cluster_min_size"]
 
+  cluster_version = lookup(local.cfg, "cluster_version", null)
+
   worker_root_device_volume_size = lookup(local.cfg, "worker_root_device_volume_size", null)
   worker_root_device_encrypted   = lookup(local.cfg, "worker_root_device_encrypted", null)
 

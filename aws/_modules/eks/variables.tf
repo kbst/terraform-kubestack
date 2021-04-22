@@ -84,3 +84,9 @@ variable "disable_openid_connect_provider" {
   type        = bool
   description = "Whether to disable the OpenID connect provider."
 }
+
+variable "cluster_version" {
+  type        = string
+  default     = null
+  description = "The version of the cluster (defaults to latest available)"
+}

@@ -12,5 +12,7 @@ resource "aws_eks_cluster" "current" {
     aws_iam_role_policy_attachment.master_service_policy,
   ]
 
+  version = var.cluster_version
+
   enabled_cluster_log_types = var.enabled_cluster_log_types
 }

@@ -23,6 +23,7 @@ module "cluster" {
   desired_capacity   = local.cluster_desired_capacity
   max_size           = local.cluster_max_size
   min_size           = local.cluster_min_size
+  cluster_version    = local.cluster_version
 
   root_device_encrypted   = local.worker_root_device_encrypted
   root_device_volume_size = local.worker_root_device_volume_size

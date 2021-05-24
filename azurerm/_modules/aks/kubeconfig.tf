@@ -1,9 +1,7 @@
-module "cluster_services" {
-  source = "../../../common/cluster_services"
+data "template_file" "kubeconfig" {
+  template = file("${path.module}/templates/kubeconfig.tpl")
 
-  template_string = file("${path.module}/templates/kubeconfig.tpl")
-
-  template_vars = {
+  vars = {
     cluster_name     = azurerm_kubernetes_cluster.current.name
     cluster_endpoint = azurerm_kubernetes_cluster.current.kube_config[0].host
     cluster_ca       = azurerm_kubernetes_cluster.current.kube_config[0].cluster_ca_certificate

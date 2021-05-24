@@ -4,5 +4,5 @@ output "aks_vnet" {
 
 output "kubeconfig" {
   sensitive = true
-  value     = module.cluster_services.kubeconfig
+  value     = data.template_file.kubeconfig.rendered
 }

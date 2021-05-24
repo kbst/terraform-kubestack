@@ -8,9 +8,3 @@ variable "configuration_base_key" {
   description = "The key in the configuration map all other keys inherit from."
   default     = "apps"
 }
-
-variable "manifest_path" {
-  type        = string
-  description = "Path to Kustomize overlay to build."
-  default     = null
-}

@@ -50,11 +50,6 @@ def dist(version, image_name, configuration):
                              dockerfile,
                              {'image_name': image_name, 'image_tag': version})
 
-    # Replace default ingress reference
-    replace_template(manifests_dist,
-                     'overlays/apps/kustomization.yaml',
-                     {'configuration': configuration})
-
 
 def compress(version, configuration):
     starter = f'{ARTIFACT_PREFIX}{configuration}'

@@ -9,3 +9,10 @@ output "current_metadata" {
 output "kubeconfig" {
   value = module.cluster.kubeconfig
 }
+
+output "default_ingress_ip" {
+  # the cluster module returns an IP as a string
+  # we YAML encode null for cluster-local to provide
+  # a unified output to consumers
+  value = yamlencode(null)
+}

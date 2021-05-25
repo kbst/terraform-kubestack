@@ -6,3 +6,7 @@ output "kubeconfig" {
   sensitive = true
   value     = data.template_file.kubeconfig.rendered
 }
+
+output "default_ingress_ip" {
+  value = length(azurerm_public_ip.current) > 0 ? azurerm_public_ip.current[0].ip_address : null
+}

@@ -9,3 +9,7 @@ output "current_metadata" {
 output "kubeconfig" {
   value = module.cluster.kubeconfig
 }
+
+output "default_ingress_ip" {
+  value = module.cluster.default_ingress_ip
+}

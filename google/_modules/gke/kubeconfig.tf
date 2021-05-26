@@ -7,4 +7,8 @@ data "template_file" "kubeconfig" {
     cluster_ca       = google_container_cluster.current.master_auth[0].cluster_ca_certificate
     path_cwd         = path.cwd
   }
+
+  # when the node pool is destroyed before the k8s namespaces
+  # the namespaces get stuck in terminating
+  depends_on = [module.node_pool]
 }

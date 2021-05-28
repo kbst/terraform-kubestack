@@ -1,6 +1,8 @@
-clusters = {
-  gke_zero = {
-    # apps environment
+module "gke_zero" {
+  source = "github.com/kbst/terraform-kubestack//google/cluster?ref={{version}}"
+
+  configuration = {
+    # Settings for Apps-cluster
     apps = {
       # The Google cloud project ID to use
       project_id = ""
@@ -18,7 +20,7 @@ clusters = {
       base_domain = ""
 
       # Initial desired K8s version, will be upgraded automatically
-      cluster_min_master_version = "1.16"
+      cluster_min_master_version = "1.15"
 
       # Initial number of desired nodes per zone
       cluster_initial_node_count = 1
@@ -33,10 +35,15 @@ clusters = {
       cluster_node_locations = ""
     }
 
-    # ops environment, inherits from apps
-    ops = {}
+    # Settings for Ops-cluster
+    # configuration here overwrites the values from apps
+    ops = {
+      # Overwrite apps["cluster_node_locations"] to have a smaller
+      # ops cluster
+      # e.g. cluster_node_locations = "europe-west3-a"
+      cluster_node_locations = ""
+    }
 
-    # loc environment, inherits from apps
     loc = {}
   }
 }

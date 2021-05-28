@@ -1,6 +1,12 @@
-clusters = {
-  eks_zero = {
-    # apps environment
+module "eks_zero" {
+  providers = {
+    aws = aws.eks_zero
+  }
+
+  source = "github.com/kbst/terraform-kubestack//aws/cluster?ref={{version}}"
+
+  configuration = {
+    # Settings for Apps-cluster
     apps = {
       # Set name_prefix used to generate the cluster_name
       # [name_prefix]-[workspace]-[region]
@@ -27,12 +33,15 @@ clusters = {
       cluster_availability_zones = ""
     }
 
-    # ops environment, inherits from apps
-    ops = {}
-
-    # loc environment, inherits from apps
-    loc = {
-      node_image = "ghcr.io/kbst/kind-eks-d:v1.18.9-kbst.1"
+    # Settings for Ops-cluster
+    ops = {
+      # Overwrite apps["cluster_availability_zones"] to have a smaller
+      # ops cluster
+      # EKS requires a min. of 2 zones
+      # e.g. cluster_availability_zones = "eu-west-1a,eu-west-1b"
+      cluster_availability_zones = ""
     }
+
+    loc = {}
   }
 }

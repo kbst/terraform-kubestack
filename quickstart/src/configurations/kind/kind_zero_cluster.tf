@@ -1,5 +1,7 @@
-clusters = {
-  kind_zero = {
+module "kind_zero" {
+  source = "github.com/kbst/terraform-kubestack//kind/cluster?ref={{version}}"
+
+  configuration = {
     # Settings for Apps-cluster
     apps = {
       name_prefix = "kind"

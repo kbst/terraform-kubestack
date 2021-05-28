@@ -1,3 +1,13 @@
 terraform {
-  required_version = ">= 0.13"
+  required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+
+    kustomization = {
+      source = "kbst/kustomization"
+    }
+  }
+
+  required_version = ">= 0.15"
 }

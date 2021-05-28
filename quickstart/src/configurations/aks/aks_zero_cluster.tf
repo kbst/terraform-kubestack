@@ -1,5 +1,7 @@
-clusters = {
-  aks_zero = {
+module "aks_zero" {
+  source = "github.com/kbst/terraform-kubestack//azurerm/cluster?ref={{version}}"
+
+  configuration = {
     # apps envrionment configuration
     apps = {
       # Set name_prefix used to generate the cluster_name

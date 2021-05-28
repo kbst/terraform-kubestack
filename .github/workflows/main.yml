@@ -116,28 +116,28 @@ jobs:
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         # ALL: set name_prefix
-        sed -i 's/name_prefix = ""/name_prefix = "test"/g' config.auto.tfvars
+        sed -i 's/name_prefix = ""/name_prefix = "test"/g' *_cluster.tf
 
         # ALL: set base_domain
-        sed -i 's/base_domain = ""/base_domain = "infra.serverwolken.de"/g' config.auto.tfvars
+        sed -i 's/base_domain = ""/base_domain = "infra.serverwolken.de"/g' *_cluster.tf
 
         # AKS: set resource_group
-        sed -i 's/resource_group = ""/resource_group = "terraform-kubestack-testing"/g' config.auto.tfvars
+        sed -i 's/resource_group = ""/resource_group = "terraform-kubestack-testing"/g' aks_zero_cluster.tf || true
 
         # EKS: set region
-        sed -i 's/region = ""/region = "eu-west-1"/g' providers.tf || true
+        sed -i 's/region = ""/region = "eu-west-1"/g' eks_zero_providers.tf || true
 
         # EKS: set cluster_availability_zones
-        sed -i 's/cluster_availability_zones = ""/cluster_availability_zones = "eu-west-1a,eu-west-1b"/g' config.auto.tfvars
+        sed -i 's/cluster_availability_zones = ""/cluster_availability_zones = "eu-west-1a,eu-west-1b"/g' eks_zero_cluster.tf || true
 
         # GKE: set project_id
-        sed -i 's/project_id = ""/project_id = "terraform-kubestack-testing"/g' config.auto.tfvars
+        sed -i 's/project_id = ""/project_id = "terraform-kubestack-testing"/g' gke_zero_cluster.tf || true
 
         # GKE: set region
-        sed -i 's/region = ""/region = "europe-west1"/g' config.auto.tfvars
+        sed -i 's/region = ""/region = "europe-west1"/g' gke_zero_cluster.tf || true
 
         # GKE: set cluster_node_locations
-        sed -i 's/cluster_node_locations = ""/cluster_node_locations = "europe-west1-b,europe-west1-c,europe-west1-d"/g' config.auto.tfvars
+        sed -i 's/cluster_node_locations = ""/cluster_node_locations = "europe-west1-b,europe-west1-c,europe-west1-d"/g' gke_zero_cluster.tf || true
 
     - name: 'Terraform init'
       working-directory: ./kubestack-starter-${{ matrix.starter }}
@@ -177,7 +177,7 @@ jobs:
           -v `pwd`:/infra \
           -v /var/run/docker.sock:/var/run/docker.sock \
           test-image:${{ github.sha }} \
-          terraform plan
+          terraform plan --target module.aks_zero --target module.eks_zero --target module.gke_zero
 
   publish-image:
     runs-on: ubuntu-latest

@@ -51,4 +51,6 @@ locals {
 
   disable_managed_identities = lookup(local.cfg, "disable_managed_identities", false)
   user_assigned_identity_id  = lookup(local.cfg, "user_assigned_identity_id", null)
+
+  kubernetes_version = lookup(local.cfg, "kubernetes_version", null)
 }

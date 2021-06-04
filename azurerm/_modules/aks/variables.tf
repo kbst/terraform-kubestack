@@ -155,3 +155,8 @@ variable "sku_tier" {
   description = "The SKU tier to use for the cluster. Possible values are 'Free' and 'Paid'. Defaults to 'Free'."
   default     = "Free"
 }
+
+variable "kubernetes_version" {
+  type        = string
+  description = "Version of Kubernetes to use when creating the cluster. If not specified, latest version will be used."
+}

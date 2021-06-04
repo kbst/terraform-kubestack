@@ -38,11 +38,6 @@ variable "node_image" {
   description = "Docker image kind will use to boot the cluster nodes. Defaults to 'kindest/node:v1.16.1'"
 }
 
-variable "manifest_path" {
-  type        = string
-  description = "Path to Kustomize overlay to build."
-}
-
 variable "disable_default_ingress" {
   type        = bool
   description = "Whether to disable the default ingress."

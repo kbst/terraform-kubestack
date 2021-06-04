@@ -128,11 +128,6 @@ variable "default_node_pool_os_disk_size_gb" {
   default     = "30"
 }
 
-variable "manifest_path" {
-  type        = string
-  description = "Path to Kustomize overlay to build."
-}
-
 variable "disable_default_ingress" {
   type        = bool
   description = "Whether to disable the default ingress."

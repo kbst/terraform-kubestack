@@ -32,8 +32,6 @@ module "cluster" {
   aws_auth_map_users    = local.cluster_aws_auth_map_users
   aws_auth_map_accounts = local.cluster_aws_auth_map_accounts
 
-  manifest_path = local.manifest_path
-
   disable_default_ingress = local.disable_default_ingress
 
   enabled_cluster_log_types = local.enabled_cluster_log_types

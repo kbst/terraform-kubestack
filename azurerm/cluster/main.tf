@@ -52,8 +52,6 @@ module "cluster" {
   default_node_pool_vm_size         = local.default_node_pool_vm_size
   default_node_pool_os_disk_size_gb = local.default_node_pool_os_disk_size_gb
 
-  manifest_path = local.manifest_path
-
   disable_default_ingress = local.disable_default_ingress
 
   service_principal_end_date_relative = local.service_principal_end_date_relative

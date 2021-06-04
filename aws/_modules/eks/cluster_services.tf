@@ -1,8 +1,6 @@
 module "cluster_services" {
   source = "../../../common/cluster_services"
 
-  manifest_path = var.manifest_path
-
   template_string = file("${path.module}/templates/kubeconfig.tpl")
 
   template_vars = {

@@ -45,9 +45,6 @@ locals {
 
   default_node_pool_os_disk_size_gb = lookup(local.cfg, "default_node_pool_os_disk_size_gb", "30")
 
-  manifest_path_default = "manifests/overlays/${terraform.workspace}"
-  manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
-
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
   service_principal_end_date_relative = lookup(local.cfg, "service_principal_end_date_relative", "8766h")

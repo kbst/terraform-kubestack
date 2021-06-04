@@ -52,9 +52,6 @@ locals {
 
   cluster_auto_upgrade = lookup(local.cfg, "cluster_auto_upgrade", true)
 
-  manifest_path_default = "manifests/overlays/${terraform.workspace}"
-  manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
-
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
   enable_private_nodes = lookup(local.cfg, "enable_private_nodes", true)

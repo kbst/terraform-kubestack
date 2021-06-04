@@ -33,9 +33,6 @@ locals {
   cluster_aws_auth_map_users    = lookup(local.cfg, "cluster_aws_auth_map_users", "")
   cluster_aws_auth_map_accounts = lookup(local.cfg, "cluster_aws_auth_map_accounts", "")
 
-  manifest_path_default = "manifests/overlays/${terraform.workspace}"
-  manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
-
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
   enabled_cluster_log_types_lookup = lookup(local.cfg, "enabled_cluster_log_types", "api,audit,authenticator,controllerManager,scheduler")

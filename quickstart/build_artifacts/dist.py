@@ -13,7 +13,6 @@ ARTIFACT_PREFIX = 'kubestack-starter-'
 
 
 def replace_template(dist_path, file_name, context):
-    # Replace templated variable with version in clusters.tf
     jinja = Environment(loader=FileSystemLoader(dist_path))
     template = jinja.get_template(file_name)
     data = template.render(context)
@@ -38,9 +37,11 @@ def dist(version, image_name, configuration):
     copytree(configuration_src, configuration_dist)
     copytree(manifests_src, manifests_dist)
 
-    # Replace templated version variable in clusters.tf
-    replace_template(configuration_dist, 'clusters.tf',
-                     {'version': version})
+    # Replace templated version variables in *.tf files
+    for tf_file in [n for n in listdir(configuration_dist)
+                    if n.endswith('.tf')]:
+        replace_template(configuration_dist, tf_file,
+                         {'version': version})
 
     # Replace templated variables in Dockerfiles
     dockerfiles = ['Dockerfile', 'Dockerfile.loc']
@@ -49,11 +50,6 @@ def dist(version, image_name, configuration):
             replace_template(configuration_dist,
                              dockerfile,
                              {'image_name': image_name, 'image_tag': version})
-
-    # Replace default ingress reference
-    replace_template(manifests_dist,
-                     'overlays/apps/kustomization.yaml',
-                     {'configuration': configuration})
 
 
 def compress(version, configuration):

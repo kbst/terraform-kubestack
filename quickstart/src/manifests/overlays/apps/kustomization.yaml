@@ -1,5 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-{% if configuration == 'kind' %}- ../../bases/nginx/default-ingress-kind{% else %}- ../../bases/nginx/default-ingress{% endif %}

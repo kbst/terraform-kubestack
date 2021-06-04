@@ -26,9 +26,6 @@ locals {
   https_port_default = terraform.workspace == "apps" ? 443 : 8443
   https_port         = lookup(local.cfg, "https_port", local.https_port_default)
 
-  manifest_path_default = "manifests/overlays/${terraform.workspace}"
-  manifest_path         = var.manifest_path != null ? var.manifest_path : local.manifest_path_default
-
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
   node_image = lookup(local.cfg, "node_image", null)

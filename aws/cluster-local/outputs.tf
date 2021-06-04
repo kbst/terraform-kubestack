@@ -7,6 +7,5 @@ output "current_metadata" {
 }
 
 output "kubeconfig" {
-  sensitive = true
-  value     = module.cluster.kubeconfig
+  value = module.cluster.kubeconfig
 }

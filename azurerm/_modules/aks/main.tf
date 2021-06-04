@@ -8,6 +8,7 @@ resource "azurerm_kubernetes_cluster" "current" {
   resource_group_name = data.azurerm_resource_group.current.name
   dns_prefix          = var.dns_prefix
   sku_tier            = var.sku_tier
+  kubernetes_version  = var.kubernetes_version
 
   role_based_access_control {
     enabled = true

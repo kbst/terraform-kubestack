@@ -58,4 +58,6 @@ module "cluster" {
 
   disable_managed_identities = local.disable_managed_identities
   user_assigned_identity_id  = local.user_assigned_identity_id
+
+  kubernetes_version = local.kubernetes_version
 }

@@ -1,3 +1,5 @@
+data "aws_partition" "current" {}
+
 data "aws_caller_identity" "current" {
 }
 
@@ -10,7 +12,7 @@ locals {
   caller_id_arn_type = replace(element(local.resource_split, 0), "assumed-role", "role")
   caller_id_name     = element(local.resource_split, 1)
 
-  caller_id_arn = "arn:aws:iam::${data.aws_arn.current.account}:${local.caller_id_arn_type}/${local.caller_id_name}"
+  caller_id_arn = "arn:${data.aws_partition.current.partition}:iam::${data.aws_arn.current.account}:${local.caller_id_arn_type}/${local.caller_id_name}"
 }
 
 data "aws_eks_cluster_auth" "current" {

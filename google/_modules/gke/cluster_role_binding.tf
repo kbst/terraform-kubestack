@@ -1,5 +1,4 @@
-data "external" "gcloud_account" {
-  program = ["sh", "${path.module}/cluster_role_binding_get_user.sh"]
+data "google_client_openid_userinfo" "current" {
 }
 
 resource "kubernetes_cluster_role_binding" "current" {
@@ -17,10 +16,9 @@ resource "kubernetes_cluster_role_binding" "current" {
 
   subject {
     kind      = "User"
-    name      = data.external.gcloud_account.result["user"]
+    name      = data.google_client_openid_userinfo.current.email
     api_group = "rbac.authorization.k8s.io"
   }
 
   depends_on = [google_container_cluster.current]
 }
-

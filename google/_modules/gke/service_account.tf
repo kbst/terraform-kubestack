@@ -1,5 +1,5 @@
 resource "google_service_account" "current" {
-  account_id = var.metadata_name
+  account_id = substr(var.metadata_name, 0, 30)
   project    = var.project
 }
 

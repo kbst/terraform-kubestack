@@ -133,6 +133,12 @@ variable "disable_default_ingress" {
   description = "Whether to disable the default ingress."
 }
 
+variable "enable_azure_policy_agent" {
+  type        = bool
+  description = "whether to deploy the Azure policy agent to the cluster"
+  default     = false 
+}
+
 variable "service_principal_end_date_relative" {
   type        = string
   description = "Relative time in hours for which the service principal password is valid. Defaults to 1 year."

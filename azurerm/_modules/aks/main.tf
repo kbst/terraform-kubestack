@@ -64,6 +64,10 @@ resource "azurerm_kubernetes_cluster" "current" {
   }
 
   addon_profile {
+    azure_policy {
+      enabled = var.enable_azure_policy_agent
+    }
+
     kube_dashboard {
       enabled = false
     }

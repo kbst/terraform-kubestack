@@ -101,3 +101,9 @@ variable "node_workload_metadata_config" {
   description = "How to expose the node metadata to the workload running on the node."
   type        = string
 }
+
+variable "taint" {
+  description = "Taints to configure for the node pool."
+  type        = list(any)
+  default     = []
+}

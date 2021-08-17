@@ -11,6 +11,8 @@ resource "google_container_node_pool" "current" {
     max_node_count = var.max_node_count
   }
 
+  node_locations = var.node_locations
+
   #
   #
   # Node config

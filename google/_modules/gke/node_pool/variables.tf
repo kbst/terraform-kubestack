@@ -107,3 +107,9 @@ variable "taint" {
   type        = list(any)
   default     = []
 }
+
+variable "node_locations" {
+  type        = list(string)
+  description = "List of zones in the cluster's region to start worker nodes in. Defaults to cluster's node locations."
+  default     = null
+}

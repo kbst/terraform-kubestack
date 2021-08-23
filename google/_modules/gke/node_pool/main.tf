@@ -11,6 +11,8 @@ resource "google_container_node_pool" "current" {
     max_node_count = var.max_node_count
   }
 
+  node_locations = var.node_locations
+
   #
   #
   # Node config
@@ -33,6 +35,8 @@ resource "google_container_node_pool" "current" {
     workload_metadata_config {
       node_metadata = var.node_workload_metadata_config
     }
+
+    taint = var.taint
   }
 
   management {
@@ -40,4 +44,3 @@ resource "google_container_node_pool" "current" {
     auto_upgrade = var.auto_upgrade
   }
 }
-

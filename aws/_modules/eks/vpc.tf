@@ -1,5 +1,5 @@
 resource "aws_vpc" "current" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
 
   tags = local.eks_metadata_tags
 }
@@ -8,7 +8,7 @@ resource "aws_subnet" "current" {
   count = length(var.availability_zones)
 
   availability_zone       = var.availability_zones[count.index]
-  cidr_block              = "10.0.${count.index}.0/24"
+  cidr_block              = cidrsubnet(aws_vpc.current.cidr_block, var.vpc_subnet_newbits, count.index)
   vpc_id                  = aws_vpc.current.id
   map_public_ip_on_launch = true
 

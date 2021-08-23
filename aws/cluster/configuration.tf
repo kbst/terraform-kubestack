@@ -16,6 +16,9 @@ locals {
   cluster_availability_zones_lookup = lookup(local.cfg, "cluster_availability_zones", "")
   cluster_availability_zones        = split(",", local.cluster_availability_zones_lookup)
 
+  cluster_vpc_cidr           = lookup(local.cfg, "cluster_vpc_cidr", "10.0.0.0/16")
+  cluster_vpc_subnet_newbits = lookup(local.cfg, "cluster_vpc_subnet_newbits", "8")
+
   cluster_instance_type = local.cfg["cluster_instance_type"]
 
   cluster_desired_capacity = local.cfg["cluster_desired_capacity"]

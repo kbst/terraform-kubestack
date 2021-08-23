@@ -19,11 +19,14 @@ module "cluster" {
   metadata_labels = module.cluster_metadata.labels
 
   availability_zones = local.cluster_availability_zones
-  instance_type      = local.cluster_instance_type
-  desired_capacity   = local.cluster_desired_capacity
-  max_size           = local.cluster_max_size
-  min_size           = local.cluster_min_size
-  cluster_version    = local.cluster_version
+  vpc_cidr           = local.cluster_vpc_cidr
+  vpc_subnet_newbits = local.cluster_vpc_subnet_newbits
+
+  instance_type    = local.cluster_instance_type
+  desired_capacity = local.cluster_desired_capacity
+  max_size         = local.cluster_max_size
+  min_size         = local.cluster_min_size
+  cluster_version  = local.cluster_version
 
   root_device_encrypted   = local.worker_root_device_encrypted
   root_device_volume_size = local.worker_root_device_volume_size

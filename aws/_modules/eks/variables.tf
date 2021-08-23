@@ -18,6 +18,16 @@ variable "availability_zones" {
   type        = list(string)
 }
 
+variable "vpc_cidr" {
+  description = "CIDR to use for the VPC."
+  type        = string
+}
+
+variable "vpc_subnet_newbits" {
+  description = "CIDR to use for the VPC."
+  type        = string
+}
+
 variable "instance_type" {
   description = "AWS instance type to use for worker nodes."
   type        = string

@@ -46,9 +46,12 @@ module "cluster" {
 
   disable_default_ingress = local.disable_default_ingress
 
-  enable_private_nodes = local.enable_private_nodes
-  master_cidr_block    = local.master_cidr_block
-  enable_cloud_nat     = local.enable_cloud_nat
+  enable_private_nodes                   = local.enable_private_nodes
+  master_cidr_block                      = local.master_cidr_block
+  enable_cloud_nat                       = local.enable_cloud_nat
+  cloud_nat_endpoint_independent_mapping = local.cloud_nat_endpoint_independent_mapping
+
+  cloud_nat_min_ports_per_vm = local.cloud_nat_min_ports_per_vm
 
   disable_workload_identity     = local.disable_workload_identity
   node_workload_metadata_config = local.node_workload_metadata_config

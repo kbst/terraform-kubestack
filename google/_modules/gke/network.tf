@@ -22,8 +22,10 @@ resource "google_compute_router_nat" "nat" {
   region  = google_compute_router.current[0].region
   router  = google_compute_router.current[0].name
 
-  nat_ip_allocate_option             = "AUTO_ONLY"
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+  enable_endpoint_independent_mapping = var.cloud_nat_endpoint_independent_mapping
+  min_ports_per_vm                    = var.cloud_nat_min_ports_per_vm
+  nat_ip_allocate_option              = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat  = "ALL_SUBNETWORKS_ALL_IP_RANGES"
 
   log_config {
     enable = true

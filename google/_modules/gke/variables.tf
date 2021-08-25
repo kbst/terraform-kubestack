@@ -124,6 +124,16 @@ variable "enable_cloud_nat" {
   description = "Whether to enable cloud nat and allow internet access for private nodes."
 }
 
+variable "cloud_nat_endpoint_independent_mapping" {
+  type        = bool
+  description = "Whether to enable cloud nat endpoint independent mapping"
+}
+
+variable "cloud_nat_min_ports_per_vm" {
+  type        = number
+  description = "The min amount of ports per VM allowed for NAT mapping"
+}
+
 variable "disable_workload_identity" {
   description = "Wheter to disable workload identity support."
   type        = bool

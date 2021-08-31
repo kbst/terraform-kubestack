@@ -10,6 +10,10 @@ output "kubeconfig" {
   value = module.cluster.kubeconfig
 }
 
+output "kubeconfig_dummy" {
+  value = module.cluster.kubeconfig_dummy
+}
+
 output "default_ingress_ip" {
   value = module.cluster.default_ingress_ip
 }

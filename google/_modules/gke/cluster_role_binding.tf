@@ -2,8 +2,6 @@ data "google_client_openid_userinfo" "current" {
 }
 
 resource "kubernetes_cluster_role_binding" "current" {
-  provider = kubernetes.gke
-
   metadata {
     name = "cluster-admin-kubestack"
   }

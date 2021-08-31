@@ -1,6 +1,7 @@
 module "eks_zero" {
   providers = {
-    aws = aws.eks_zero
+    aws        = aws.eks_zero
+    kubernetes = kubernetes.eks_zero
   }
 
   source = "../aws/cluster"
@@ -9,7 +10,7 @@ module "eks_zero" {
     # Settings for Apps-cluster
     apps = {
       name_prefix                = "kbstacctest"
-      base_domain                = "infra.serverwolken.de"
+      base_domain                = var.base_domain
       cluster_instance_type      = "t3a.medium"
       cluster_desired_capacity   = "1"
       cluster_min_size           = "1"

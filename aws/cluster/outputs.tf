@@ -9,3 +9,7 @@ output "current_metadata" {
 output "kubeconfig" {
   value = module.cluster.kubeconfig
 }
+
+output "kubeconfig_dummy" {
+  value = module.cluster.kubeconfig_dummy
+}

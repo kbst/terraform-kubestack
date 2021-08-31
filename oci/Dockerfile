@@ -83,7 +83,6 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && mv google-cloud-sdk /opt/google \
     && /opt/google/bin/gcloud --version
 
-
 #
 #
 # Azure builder
@@ -102,7 +101,8 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
     && echo '#!/usr/bin/env bash\n/opt/azure/bin/python -m azure.cli "$@"' \
     > /opt/bin/az \
     && chmod +x /opt/bin/az \
-    && /opt/bin/az --version
+    && /opt/bin/az --version \
+    && /opt/bin/az aks install-cli --kubelogin-install-location=/opt/azure/bin/kubelogin
 
 
 #

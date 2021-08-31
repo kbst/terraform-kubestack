@@ -1,4 +1,8 @@
 module "gke_zero" {
+  providers = {
+    kubernetes = kubernetes.gke_zero
+  }
+
   source = "../google/cluster"
 
   configuration = {
@@ -6,7 +10,7 @@ module "gke_zero" {
     apps = {
       project_id  = "terraform-kubestack-testing"
       name_prefix = "kbstacctest"
-      base_domain = "infra.serverwolken.de"
+      base_domain = var.base_domain
 
       cluster_min_master_version = "1.19"
 

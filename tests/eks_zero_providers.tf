@@ -1,16 +1,16 @@
+
 provider "aws" {
   alias  = "eks_zero"
   region = "eu-west-1"
 }
 
-
 provider "kustomization" {
   alias          = "eks_zero"
-  kubeconfig_raw = module.eks_zero.kubeconfig
+  kubeconfig_raw = data.terraform_remote_state.current.outputs.eks_zero_kubeconfig
 }
 
 locals {
-  eks_zero_kubeconfig = yamldecode(module.eks_zero.kubeconfig)
+  eks_zero_kubeconfig = yamldecode(data.terraform_remote_state.current.outputs.eks_zero_kubeconfig)
 }
 
 provider "kubernetes" {

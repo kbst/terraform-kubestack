@@ -5,6 +5,11 @@ resource "google_compute_address" "current" {
   project = var.project
 
   name = var.metadata_name
+
+  # depend on node pool, to ensure
+  # ingress controller namespace
+  # is destroyed before node pool
+  depends_on = [module.node_pool]
 }
 
 resource "google_dns_managed_zone" "current" {

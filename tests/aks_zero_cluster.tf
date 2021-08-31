@@ -6,7 +6,7 @@ module "aks_zero" {
     apps = {
       resource_group = "terraform-kubestack-testing"
       name_prefix    = "kbstacctest"
-      base_domain    = "infra.serverwolken.de"
+      base_domain    = var.base_domain
 
       default_node_pool_vm_size   = "Standard_B2s"
       default_node_pool_min_count = 1

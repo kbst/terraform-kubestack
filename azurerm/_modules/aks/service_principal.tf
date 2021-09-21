@@ -14,5 +14,4 @@ resource "azuread_service_principal_password" "current" {
   count = var.disable_managed_identities == true ? 1 : 0
 
   service_principal_id = azuread_service_principal.current[0].id
-  end_date_relative    = var.service_principal_end_date_relative
 }

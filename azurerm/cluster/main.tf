@@ -56,8 +56,6 @@ module "cluster" {
 
   enable_azure_policy_agent = local.enable_azure_policy_agent
 
-  service_principal_end_date_relative = local.service_principal_end_date_relative
-
   disable_managed_identities = local.disable_managed_identities
   user_assigned_identity_id  = local.user_assigned_identity_id
 

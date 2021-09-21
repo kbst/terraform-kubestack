@@ -19,8 +19,12 @@ module "cluster" {
   metadata_labels = module.cluster_metadata.labels
 
   availability_zones = local.cluster_availability_zones
-  vpc_cidr           = local.cluster_vpc_cidr
-  vpc_subnet_newbits = local.cluster_vpc_subnet_newbits
+
+  vpc_cidr                      = local.cluster_vpc_cidr
+  vpc_control_subnet_newbits    = local.cluster_vpc_control_subnet_newbits
+  vpc_node_subnet_newbits       = local.cluster_vpc_node_subnet_newbits
+  vpc_node_subnet_number_offset = local.cluster_vpc_node_subnet_number_offset
+  vpc_legacy_node_subnets       = local.cluster_vpc_legacy_node_subnets
 
   instance_type    = local.cluster_instance_type
   desired_capacity = local.cluster_desired_capacity

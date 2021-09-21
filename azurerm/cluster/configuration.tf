@@ -49,8 +49,6 @@ locals {
 
   enable_azure_policy_agent = lookup(local.cfg, "enable_azure_policy_agent", false)
 
-  service_principal_end_date_relative = lookup(local.cfg, "service_principal_end_date_relative", "8766h")
-
   disable_managed_identities = lookup(local.cfg, "disable_managed_identities", false)
   user_assigned_identity_id  = lookup(local.cfg, "user_assigned_identity_id", null)
 

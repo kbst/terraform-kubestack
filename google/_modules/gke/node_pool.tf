@@ -23,5 +23,12 @@ module "node_pool" {
   image_type   = var.image_type
   machine_type = var.machine_type
 
+  # Whether to use preemptible nodes for this node pool
+  preemptible = var.preemptible
+  # Whether the nodes will be automatically repaired
+  auto_repair = var.auto_repair
+  # Whether the nodes will be automatically upgraded
+  auto_upgrade = var.auto_upgrade
+
   node_workload_metadata_config = var.node_workload_metadata_config
 }

@@ -23,8 +23,24 @@ variable "vpc_cidr" {
   type        = string
 }
 
-variable "vpc_subnet_newbits" {
-  description = "CIDR to use for the VPC."
+variable "vpc_legacy_node_subnets" {
+  description = "Whether to keep the legacy node subnets for backwards compatibility."
+  type        = bool
+  default     = false
+}
+
+variable "vpc_control_subnet_newbits" {
+  description = "CIDR newbits to use for the control plane subnets."
+  type        = string
+}
+
+variable "vpc_node_subnet_newbits" {
+  description = "CIDR newbits to use for the node pool subnets."
+  type        = string
+}
+
+variable "vpc_node_subnet_number_offset" {
+  description = "CIDR subnet number offset to use for the node pool subnets."
   type        = string
 }
 

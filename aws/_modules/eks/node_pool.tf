@@ -9,7 +9,7 @@ module "node_pool" {
 
   role_arn = aws_iam_role.node.arn
 
-  subnet_ids = aws_subnet.current.*.id
+  subnet_ids = var.vpc_legacy_node_subnets ? aws_subnet.current.*.id : aws_subnet.node_pool.*.id
 
   instance_type = var.instance_type
   desired_size  = var.desired_capacity

@@ -134,6 +134,11 @@ variable "cloud_nat_min_ports_per_vm" {
   description = "The min amount of ports per VM allowed for NAT mapping"
 }
 
+variable "cloud_nat_ip_count" {
+  type        = number
+  description = "The amount of IP addresses to attach to the NAT gateway, changes NAT to use MANUAL_ONLY"
+}
+
 variable "disable_workload_identity" {
   description = "Wheter to disable workload identity support."
   type        = bool

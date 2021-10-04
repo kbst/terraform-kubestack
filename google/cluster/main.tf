@@ -50,6 +50,7 @@ module "cluster" {
   master_cidr_block                      = local.master_cidr_block
   enable_cloud_nat                       = local.enable_cloud_nat
   cloud_nat_endpoint_independent_mapping = local.cloud_nat_endpoint_independent_mapping
+  cloud_nat_ip_count                     = local.cloud_nat_ip_count
 
   cloud_nat_min_ports_per_vm = local.cloud_nat_min_ports_per_vm
 

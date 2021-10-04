@@ -10,10 +10,10 @@ module "node_pool" {
 
   subnet_ids = local.vpc_subnet_newbits == null ? local.vpc_subnet_ids : aws_subnet.current.*.id
 
-  instance_type = local.instance_type
-  desired_size  = local.desired_capacity
-  max_size      = local.max_size
-  min_size      = local.min_size
+  instance_types = local.instance_types
+  desired_size   = local.desired_capacity
+  max_size       = local.max_size
+  min_size       = local.min_size
 
   disk_size = local.disk_size
 

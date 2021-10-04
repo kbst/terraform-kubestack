@@ -10,7 +10,7 @@ resource "aws_eks_node_group" "nodes" {
     min_size     = var.min_size
   }
 
-  instance_types = [var.instance_type]
+  instance_types = var.instance_types
   disk_size      = var.disk_size
 
   tags   = var.eks_metadata_tags

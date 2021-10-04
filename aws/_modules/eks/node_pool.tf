@@ -11,10 +11,10 @@ module "node_pool" {
 
   subnet_ids = var.vpc_legacy_node_subnets ? aws_subnet.current.*.id : aws_subnet.node_pool.*.id
 
-  instance_type = var.instance_type
-  desired_size  = var.desired_capacity
-  max_size      = var.max_size
-  min_size      = var.min_size
+  instance_types = var.instance_types
+  desired_size   = var.desired_capacity
+  max_size       = var.max_size
+  min_size       = var.min_size
 
   disk_size = var.root_device_volume_size
 

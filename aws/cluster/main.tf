@@ -26,7 +26,7 @@ module "cluster" {
   vpc_node_subnet_number_offset = local.cluster_vpc_node_subnet_number_offset
   vpc_legacy_node_subnets       = local.cluster_vpc_legacy_node_subnets
 
-  instance_type    = local.cluster_instance_type
+  instance_types   = local.cluster_instance_types
   desired_capacity = local.cluster_desired_capacity
   max_size         = local.cluster_max_size
   min_size         = local.cluster_min_size

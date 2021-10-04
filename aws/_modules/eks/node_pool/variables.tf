@@ -4,7 +4,7 @@ variable "metadata_labels" {
 }
 
 variable "eks_metadata_tags" {
-  type        = map
+  type        = map(any)
   description = "EKS metadata tags to use."
 }
 
@@ -23,9 +23,9 @@ variable "role_arn" {
   description = "ARN of the IAM role for worker nodes."
 }
 
-variable "instance_type" {
-  type        = string
-  description = "AWS instance type to use for nodes."
+variable "instance_types" {
+  type        = set(string)
+  description = "Set of AWS instance types to use for nodes."
 }
 
 variable "desired_size" {

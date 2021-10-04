@@ -44,9 +44,9 @@ variable "vpc_node_subnet_number_offset" {
   type        = string
 }
 
-variable "instance_type" {
-  description = "AWS instance type to use for worker nodes."
-  type        = string
+variable "instance_types" {
+  description = "Set of AWS instance types to use for nodes."
+  type        = set(string)
 }
 
 variable "desired_capacity" {

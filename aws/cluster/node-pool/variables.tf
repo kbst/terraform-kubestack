@@ -3,7 +3,7 @@ variable "configuration" {
 
     name = optional(string)
 
-    instance_type    = optional(string)
+    instance_types   = optional(string)
     desired_capacity = optional(string)
     min_size         = optional(string)
     max_size         = optional(string)

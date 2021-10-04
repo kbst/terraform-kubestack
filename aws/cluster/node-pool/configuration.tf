@@ -9,11 +9,12 @@ locals {
 
   name = local.cfg["name"]
 
-  instance_type    = lookup(local.cfg, "instance_type")
-  desired_capacity = lookup(local.cfg, "desired_capacity")
-  min_size         = lookup(local.cfg, "min_size")
-  max_size         = lookup(local.cfg, "max_size")
-  disk_size        = lookup(local.cfg, "disk_size", null)
+  instance_types_lookup = local.cfg["instance_types"] == null ? "" : local.cfg["instance_types"]
+  instance_types        = toset(split(",", local.instance_types_lookup))
+  desired_capacity      = lookup(local.cfg, "desired_capacity")
+  min_size              = lookup(local.cfg, "min_size")
+  max_size              = lookup(local.cfg, "max_size")
+  disk_size             = lookup(local.cfg, "disk_size", null)
 
   availability_zones_lookup = local.cfg["availability_zones"] == null ? "" : local.cfg["availability_zones"]
   availability_zones        = split(",", local.availability_zones_lookup)

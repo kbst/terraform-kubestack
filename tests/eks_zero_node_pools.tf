@@ -12,7 +12,7 @@ module "eks_zero_node_pool_existing_subnets" {
     apps = {
       name = "existing-subnets"
 
-      instance_type    = "t3a.medium"
+      instance_types   = "t3a.medium"
       desired_capacity = 1
       min_size         = 1
       max_size         = 3
@@ -39,7 +39,7 @@ module "eks_zero_node_pool_new_subnets" {
     apps = {
       name = "new-subnets"
 
-      instance_type    = "t3a.medium"
+      instance_types   = "t3a.medium,t3a.small"
       desired_capacity = 1
       min_size         = 1
       max_size         = 3
@@ -73,7 +73,7 @@ module "eks_zero_node_pool_new_subnets_secondary_cidr" {
     apps = {
       name = "new-subnets-secondary-cidr"
 
-      instance_type    = "t3a.medium"
+      instance_types   = "t3a.medium,t3a.small"
       desired_capacity = 1
       min_size         = 1
       max_size         = 3

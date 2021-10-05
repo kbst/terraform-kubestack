@@ -61,6 +61,7 @@ locals {
   enable_cloud_nat                       = lookup(local.cfg, "enable_cloud_nat", local.enable_private_nodes)
   cloud_nat_endpoint_independent_mapping = lookup(local.cfg, "cloud_nat_enable_endpoint_independent_mapping", null)
   cloud_nat_min_ports_per_vm             = lookup(local.cfg, "cloud_nat_min_ports_per_vm", null)
+  cloud_nat_ip_count                     = lookup(local.cfg, "cloud_nat_ip_count", 0)
 
   disable_workload_identity             = lookup(local.cfg, "disable_workload_identity", false)
   default_node_workload_metadata_config = tobool(local.disable_workload_identity) == false ? "GKE_METADATA_SERVER" : "UNSPECIFIED"

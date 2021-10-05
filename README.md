@@ -35,12 +35,6 @@
 
 [Kubestack is a Gitops framework](https://www.kubestack.com) for managed Kubernetes services based on Terraform and Kustomize.
 
-It is designed to:
- * provide full testability by clearly separating infrastructure and application environments through the ops- and apps-cluster pair
- * ensure K8s cluster config, surrounding infrastructure (e.g. DNS, IPs) and cluster services (e.g. Ingress) are maintained together
- * unify application environments across cloud providers
- * enable a sustainable and fully automated Gitops workflow
-
 Features:
 * Provides full testability of configuration changes
 * Clearly separates infrastructure and applications (`ops` & `apps` cluster pair)

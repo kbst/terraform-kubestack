@@ -82,7 +82,8 @@ For organizations interested in accelerating their GitOps journey, [professional
 ## Contributing
 Contributions to the Kubestack framework are welcome and encouraged. Before contributing, please read the [Contributing](./CONTRIBUTING.md) and [Code of Conduct](./CODE_OF_CONDUCT.md) Guidelines.
 
-One super simple way to contribute to the success of this project is to give it a ![GitHub Repo stars](https://img.shields.io/github/stars/kbst/terraform-kubestack?style=social)
+One super simple way to contribute to the success of this project is to give it a star.  
+👉 ![GitHub Repo stars](https://img.shields.io/github/stars/kbst/terraform-kubestack?style=social)
 
 
 ## Related Repositories

@@ -8,6 +8,7 @@
 
 <div align="center">
 
+![GitHub Repo stars](https://img.shields.io/github/stars/kbst/terraform-kubestack?style=social)
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
 [![GitHub Issues](https://img.shields.io/github/issues/kbst/terraform-kubestack.svg)](https://github.com/kbst/terraform-kubestack/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kbst/terraform-kubestack.svg)](https://github.com/kbst/terraform-kubestack/pulls)
@@ -15,6 +16,15 @@
 
 </div>
 
+<h3 align="center">Contributors</h3>
+
+<div align="center">
+
+<a href="https://github.com/kbst/terraform-kubestack/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=kbst/terraform-kubestack&max=36" />
+</a>
+
+</div>
 
 ## Introduction
 

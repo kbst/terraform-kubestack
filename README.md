@@ -16,7 +16,7 @@
 
 </div>
 
-<h3 align="center">Contributors</h3>
+<h3 align="center"><a href="#Contributing">Join Our Contributors!</a></h3>
 
 <div align="center">
 
@@ -79,15 +79,12 @@ Contributions to the Kubestack framework are welcome and encouraged. Before cont
 
 
 ## Related Repositories
-[kbst/terraform-kubestack](https://github.com/kbst/terraform-kubestack) (this repository)  
-> Terraform GitOps Framework - Everything you need to build reliable automation for AKS, EKS and GKE Kubernetes clusters in one free and open-source framework.
-
-[kbst/kbst](https://github.com/kbst/kbst)  
-> Kubestack framework CLI.
-
-[kbst/terraform-provider-kustomization](https://github.com/kbst/terraform-provider-kustomization)  
-> Terraform provider for Kustomize.
-
-[kbst/catalog](https://github.com/kbst/catalog)  
-> Catalog of cluster services as Kustomize bases.
+* [kbst/terraform-kubestack](https://github.com/kbst/terraform-kubestack) (this repository)  
+    * Terraform GitOps Framework - Everything you need to build reliable automation for AKS, EKS and GKE Kubernetes clusters in one free and open-source framework.
+* [kbst/kbst](https://github.com/kbst/kbst)  
+    * Kubestack Framework CLI - All-in-one CLI to scaffold your Infrastructure as Code repository and deploy your entire platform stack locally for faster iteration.
+* [kbst/terraform-provider-kustomization](https://github.com/kbst/terraform-provider-kustomization)  
+    * Kustomize Terraform Provider - A Kubestack maintained Terraform provider for Kustomize, available in the [Terraform registry](https://registry.terraform.io/providers/kbst/kustomization/latest).
+* [kbst/catalog](https://github.com/kbst/catalog)  
+    * Catalog of cluster services as Kustomize bases - Continuously tested and updated Kubernetes services, installed and customizable using native Terraform syntax.
 

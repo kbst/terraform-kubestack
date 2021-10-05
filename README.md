@@ -5,16 +5,21 @@
 <h1 align="center">Kubestack</h1>
 <h3 align="center">The Open Source Gitops Framework</h3>
 
+<div align="center">
+
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/kbst/terraform-kubestack.svg)](https://github.com/kbst/terraform-kubestack/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kbst/terraform-kubestack.svg)](https://github.com/kbst/terraform-kubestack/pulls)
+
+</div>
 
 <div align="center">
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/kbst/terraform-kubestack?style=social)
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/kbst/terraform-kubestack.svg)](https://github.com/kbst/terraform-kubestack/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kbst/terraform-kubestack.svg)](https://github.com/kbst/terraform-kubestack/pulls)
 ![Twitter Follow](https://img.shields.io/twitter/follow/kubestack?style=social)
 
 </div>
+
 
 <h3 align="center"><a href="#Contributing">Join Our Contributors!</a></h3>
 
@@ -76,6 +81,8 @@ For organizations interested in accelerating their GitOps journey, [professional
 
 ## Contributing
 Contributions to the Kubestack framework are welcome and encouraged. Before contributing, please read the [Contributing](./CONTRIBUTING.md) and [Code of Conduct](./CODE_OF_CONDUCT.md) Guidelines.
+
+One super simple way to contribute to the success of this project is to give it a ![GitHub Repo stars](https://img.shields.io/github/stars/kbst/terraform-kubestack?style=social)
 
 
 ## Related Repositories

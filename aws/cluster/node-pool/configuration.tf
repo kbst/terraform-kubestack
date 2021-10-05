@@ -24,4 +24,6 @@ locals {
   vpc_subnet_newbits       = lookup(local.cfg, "vpc_subnet_newbits", null)
   vpc_subnet_number_offset = local.cfg["vpc_subnet_number_offset"] == null ? 1 : local.cfg["vpc_subnet_number_offset"]
   vpc_subnet_map_public_ip = lookup(local.cfg, "vpc_subnet_map_public_ip", null)
+
+  taints = local.cfg["taints"] == null ? toset([]) : local.cfg["taints"]
 }

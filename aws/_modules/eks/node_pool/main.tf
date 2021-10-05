@@ -16,5 +16,15 @@ resource "aws_eks_node_group" "nodes" {
   tags   = var.eks_metadata_tags
   labels = var.metadata_labels
 
+  dynamic "taint" {
+    for_each = var.taints
+
+    content {
+      key    = taint.value["key"]
+      value  = taint.value["value"]
+      effect = taint.value["effect"]
+    }
+  }
+
   depends_on = [var.depends-on-aws-auth]
 }

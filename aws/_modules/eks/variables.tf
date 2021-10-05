@@ -76,6 +76,15 @@ variable "root_device_volume_size" {
   description = "Size in GB for root device volumes of worker nodes."
 }
 
+variable "taints" {
+  type = set(object({
+    key    = string
+    value  = string
+    effect = string
+  }))
+  description = "Kubernetes taints to set for node pool."
+}
+
 variable "aws_auth_map_roles" {
   description = "mapRoles entries added to aws-auth configmap"
   type        = string

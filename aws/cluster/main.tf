@@ -44,4 +44,9 @@ module "cluster" {
   enabled_cluster_log_types = local.enabled_cluster_log_types
 
   disable_openid_connect_provider = local.disable_openid_connect_provider
+
+  # cluster module configuration is still map(string)
+  # once module_variable_optional_attrs isn't experimental anymore
+  # we can migrate cluster module configuration to map(object(...))
+  taints = toset([])
 }

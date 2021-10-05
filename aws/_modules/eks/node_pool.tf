@@ -18,6 +18,8 @@ module "node_pool" {
 
   disk_size = var.root_device_volume_size
 
+  taints = var.taints
+
   # force node_pool to depend on aws-auth configmap
   depends-on-aws-auth = {
     name      = kubernetes_config_map.current.metadata[0].name

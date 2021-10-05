@@ -17,5 +17,7 @@ module "node_pool" {
 
   disk_size = local.disk_size
 
+  taints = local.taints
+
   depends-on-aws-auth = null
 }

@@ -22,6 +22,12 @@ variable "configuration" {
     desired_capacity = optional(string)
     max_size         = optional(string)
     min_size         = optional(string)
+
+    taints = optional(set(object({
+      key    = string
+      value  = string
+      effect = string
+    })))
   }))
   description = "Map with per workspace module configuration."
 }

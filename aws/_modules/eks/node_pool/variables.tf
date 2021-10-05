@@ -58,3 +58,12 @@ variable "depends-on-aws-auth" {
   type        = map(string)
   description = "Used as a depends_on shim to first create the aws-auth configmap before creating the node_pool."
 }
+
+variable "taints" {
+  type = set(object({
+    key    = string
+    value  = string
+    effect = string
+  }))
+  description = "Kubernetes taints to set for node pool."
+}

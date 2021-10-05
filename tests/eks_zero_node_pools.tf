@@ -49,6 +49,19 @@ module "eks_zero_node_pool_new_subnets" {
       # use the last three /18 subnets in the CIDR
       # https://www.davidc.net/sites/default/subnets/subnets.html?network=10.0.0.0&mask=16&division=23.ff4011
       vpc_subnet_newbits = 2
+
+      taints = [
+        {
+          key    = "taint-key1"
+          value  = "taint-value1"
+          effect = "NO_SCHEDULE"
+        },
+        {
+          key    = "taint-key2"
+          value  = "taint-value2"
+          effect = "PREFER_NO_SCHEDULE"
+        }
+      ]
     }
 
     # Settings for Ops-cluster
@@ -87,6 +100,14 @@ module "eks_zero_node_pool_new_subnets_secondary_cidr" {
       # with 3 zones we need at least 3 subnets, use the first three /18 subnets
       vpc_subnet_newbits       = 2
       vpc_subnet_number_offset = 0
+
+      taints = [
+        {
+          key    = "taint-key"
+          value  = "taint-value"
+          effect = "NO_SCHEDULE"
+        }
+      ]
     }
 
     # Settings for Ops-cluster

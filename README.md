@@ -41,6 +41,14 @@ It is designed to:
  * unify application environments across cloud providers
  * enable a sustainable and fully automated Gitops workflow
 
+Features:
+* Provides full testability of configuration changes
+* Clearly separates infrastructure and applications (`ops` & `apps` cluster pair)
+* Ensures K8s cluster config, surrounding infrastructure (e.g. DNS, IPs) and cluster services (e.g. Ingress) are maintained together
+* Unifies application environments across cloud providers
+* Increases deployment confidance through local deployments that accurately mirror cloud deployments
+* Enables a sustainable and fully automated GitOps workflow
+
 
 ## Getting Started
 

@@ -62,7 +62,7 @@ See the [`tests`](./tests) directory for an example of how to extend this toward
 
 This repository holds Terraform modules in directories matching the respective provider name, e.g. [`aws`](./aws), [`azurerm`](./azurerm), [`google`](./google). Additionally [`common`](./common) holds the modules that are used for all providers. Most notably the [`metadata`](./common/metadata) module that ensures a consistent naming scheme and the `cluster_services` module which integrates Kustomize into the Terraform apply.
 
-Each cloud provider specific module directory always has a `cluster` and a `_modules` directory. The cluster module is user facing and once Kubestack is out of beta the goal is to not change the module interface unless the major version changes. The cluster module then internally uses the module in `_modules` that holds the actual implementation.
+Each cloud provider specific module directory always has a `cluster`, `cluster-local`, and `_modules` directories. The cluster module is user facing and once Kubestack is out of beta the goal is to not change the module interface unless the major version changes. The cluster module then internally uses the module in `_modules` that holds the actual implementation. The cluster-local module is similar to the cluster module, but configured for local deployments.
 
 The [`quickstart`](./quickstart) directory is home to the source for the zip files that are used to bootstrap the user repositories when following the quickstart documentation.
 
@@ -93,7 +93,7 @@ One super simple way to contribute to the success of this project is to give it 
 </div>
 
 
-## Related Repositories
+## Kubestack Repositories
 * [kbst/terraform-kubestack](https://github.com/kbst/terraform-kubestack) (this repository)  
     * Terraform GitOps Framework - Everything you need to build reliable automation for AKS, EKS and GKE Kubernetes clusters in one free and open-source framework.
 * [kbst/kbst](https://github.com/kbst/kbst)  

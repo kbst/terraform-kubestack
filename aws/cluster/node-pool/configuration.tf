@@ -17,9 +17,11 @@ locals {
   disk_size             = lookup(local.cfg, "disk_size", null)
 
   availability_zones_lookup = local.cfg["availability_zones"] == null ? "" : local.cfg["availability_zones"]
-  availability_zones        = split(",", local.availability_zones_lookup)
+  availability_zones        = compact(split(",", local.availability_zones_lookup))
 
-  vpc_subnet_ids           = local.cfg["vpc_subnet_ids"] == null ? tolist(data.aws_eks_node_group.default.subnet_ids) : split(",", local.cfg["vpc_subnet_ids"])
+  az_subnet_ids            = length(data.aws_subnet_ids.current) == 1 ? data.aws_subnet_ids.current[0].ids : []
+  default_subnet_ids       = length(data.aws_subnet_ids.current) == 1 ? local.az_subnet_ids : tolist(data.aws_eks_node_group.default.subnet_ids)
+  vpc_subnet_ids           = local.cfg["vpc_subnet_ids"] == null ? local.default_subnet_ids : split(",", local.cfg["vpc_subnet_ids"])
   vpc_secondary_cidr       = lookup(local.cfg, "vpc_secondary_cidr", null)
   vpc_subnet_newbits       = lookup(local.cfg, "vpc_subnet_newbits", null)
   vpc_subnet_number_offset = local.cfg["vpc_subnet_number_offset"] == null ? 1 : local.cfg["vpc_subnet_number_offset"]

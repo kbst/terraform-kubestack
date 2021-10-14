@@ -25,6 +25,35 @@ module "eks_zero_node_pool_existing_subnets" {
   }
 }
 
+module "eks_zero_node_pool_existing_subnets_one_az_only" {
+  providers = {
+    aws = aws.eks_zero
+  }
+
+  source = "../aws/cluster/node-pool"
+
+  cluster_name = module.eks_zero.current_metadata["name"]
+
+  configuration = {
+    # Settings for Apps-cluster
+    apps = {
+      name = "existing-subnets-one-az-only"
+
+      availability_zones = "eu-west-1b"
+
+      instance_types   = "t3a.medium"
+      desired_capacity = 1
+      min_size         = 1
+      max_size         = 3
+    }
+
+    # Settings for Ops-cluster
+    ops = {
+      max_size = "1"
+    }
+  }
+}
+
 module "eks_zero_node_pool_new_subnets" {
   providers = {
     aws = aws.eks_zero

@@ -13,8 +13,8 @@ resource "aws_eks_node_group" "nodes" {
   instance_types = var.instance_types
   disk_size      = var.disk_size
 
-  tags   = var.eks_metadata_tags
-  labels = var.metadata_labels
+  tags   = merge(var.tags, var.eks_metadata_tags)
+  labels = merge(var.labels, var.metadata_labels)
 
   dynamic "taint" {
     for_each = var.taints

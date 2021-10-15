@@ -28,6 +28,10 @@ variable "configuration" {
       value  = string
       effect = string
     })))
+
+    tags = optional(map(string))
+
+    labels = optional(map(string))
   }))
   description = "Map with per workspace module configuration."
 }

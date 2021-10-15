@@ -19,5 +19,9 @@ module "node_pool" {
 
   taints = local.taints
 
+  tags = local.tags
+
+  labels = local.labels
+
   depends-on-aws-auth = null
 }

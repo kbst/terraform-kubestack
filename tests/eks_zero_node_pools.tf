@@ -16,6 +16,15 @@ module "eks_zero_node_pool_existing_subnets" {
       desired_capacity = 1
       min_size         = 1
       max_size         = 3
+
+      tags = {
+        "k8s.io/cluster-autoscaler/node-template/label/nvidia.com/gpu" = true
+        "k8s.io/cluster-autoscaler/node-template/taint/dedicated"      = "nvidia.com/gpu=true"
+      }
+
+      labels = {
+        "kubestack.com/test" = true
+      }
     }
 
     # Settings for Ops-cluster

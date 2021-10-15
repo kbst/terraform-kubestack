@@ -28,4 +28,8 @@ locals {
   vpc_subnet_map_public_ip = lookup(local.cfg, "vpc_subnet_map_public_ip", null)
 
   taints = local.cfg["taints"] == null ? toset([]) : local.cfg["taints"]
+
+  tags = local.cfg["tags"]
+
+  labels = local.cfg["labels"]
 }

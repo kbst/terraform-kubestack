@@ -67,3 +67,15 @@ variable "taints" {
   }))
   description = "Kubernetes taints to set for node pool."
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "AWS tags to set on the node pool. Merged with Kubestack default tags."
+  default     = {}
+}
+
+variable "labels" {
+  type        = map(string)
+  description = "Kubernetes labels to set on the nodes created by the node pool. Merged with Kubestack default labels."
+  default     = {}
+}

@@ -20,6 +20,8 @@ module "node_pool" {
 
   taints = var.taints
 
+  ami_type = null
+
   # force node_pool to depend on aws-auth configmap
   depends-on-aws-auth = {
     name      = kubernetes_config_map.current.metadata[0].name

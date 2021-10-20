@@ -16,6 +16,8 @@ locals {
   max_size              = lookup(local.cfg, "max_size")
   disk_size             = lookup(local.cfg, "disk_size", null)
 
+  ami_type = lookup(local.cfg, "ami_type")
+
   availability_zones_lookup = local.cfg["availability_zones"] == null ? "" : local.cfg["availability_zones"]
   availability_zones        = compact(split(",", local.availability_zones_lookup))
 

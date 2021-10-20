@@ -15,6 +15,8 @@ module "node_pool" {
   max_size       = local.max_size
   min_size       = local.min_size
 
+  ami_type = local.ami_type
+
   disk_size = local.disk_size
 
   taints = local.taints

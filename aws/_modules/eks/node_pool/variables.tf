@@ -79,3 +79,8 @@ variable "labels" {
   description = "Kubernetes labels to set on the nodes created by the node pool. Merged with Kubestack default labels."
   default     = {}
 }
+
+variable "ami_type" {
+  type        = string
+  description = "AMI type to use for nodes of the node pool."
+}

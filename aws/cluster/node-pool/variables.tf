@@ -9,6 +9,8 @@ variable "configuration" {
     max_size         = optional(string)
     disk_size        = optional(string)
 
+    ami_type = optional(string)
+
     availability_zones = optional(string)
 
     vpc_subnet_ids = optional(string)

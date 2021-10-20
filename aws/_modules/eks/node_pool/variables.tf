@@ -84,3 +84,8 @@ variable "ami_type" {
   type        = string
   description = "AMI type to use for nodes of the node pool."
 }
+
+variable "kubernetes_version" {
+  type        = string
+  description = "Kubernetes version to use for node pool."
+}

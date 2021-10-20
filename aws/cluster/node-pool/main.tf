@@ -17,6 +17,8 @@ module "node_pool" {
 
   ami_type = local.ami_type
 
+  kubernetes_version = data.aws_eks_cluster.current.version
+
   disk_size = local.disk_size
 
   taints = local.taints

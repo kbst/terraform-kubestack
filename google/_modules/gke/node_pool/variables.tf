@@ -3,14 +3,9 @@ variable "project" {
   description = "Project the cluster belongs to."
 }
 
-variable "metadata_name" {
+variable "cluster_name" {
   type        = string
-  description = "Metadata name to use."
-}
-
-variable "metadata_fqdn" {
-  type        = string
-  description = "DNS name of the zone. Requires dot at the end. E.g. example.com"
+  description = "Name of the cluster for this node pool."
 }
 
 variable "metadata_tags" {
@@ -51,6 +46,13 @@ variable "max_node_count" {
 variable "service_account_email" {
   description = "The service account email to use for this node pool."
   type        = string
+  default     = null
+}
+
+variable "disable_per_node_pool_service_account" {
+  description = "Skip creating a dedicated service account to use for this node pool."
+  type        = string
+  default     = false
 }
 
 variable "extra_oauth_scopes" {

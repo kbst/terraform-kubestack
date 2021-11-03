@@ -10,12 +10,7 @@ resource "google_container_cluster" "current" {
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = var.initial_node_count
 
-  # Disable basic and client certificate auth
-  # https://cloud.google.com/kubernetes-engine/docs/concepts/security-overview#control_plane_security
   master_auth {
-    username = ""
-    password = ""
-
     client_certificate_config {
       issue_client_certificate = false
     }
@@ -26,7 +21,7 @@ resource "google_container_cluster" "current" {
   dynamic "workload_identity_config" {
     for_each = var.disable_workload_identity == false ? toset([1]) : toset([])
     content {
-      identity_namespace = "${var.project}.svc.id.goog"
+      workload_pool = "${var.project}.svc.id.goog"
     }
   }
 

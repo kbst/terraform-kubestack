@@ -44,9 +44,9 @@ variable "vpc_node_subnet_number_offset" {
   type        = string
 }
 
-variable "instance_type" {
-  description = "AWS instance type to use for worker nodes."
-  type        = string
+variable "instance_types" {
+  description = "Set of AWS instance types to use for nodes."
+  type        = set(string)
 }
 
 variable "desired_capacity" {
@@ -74,6 +74,15 @@ variable "root_device_volume_size" {
   type        = number
   default     = 20
   description = "Size in GB for root device volumes of worker nodes."
+}
+
+variable "taints" {
+  type = set(object({
+    key    = string
+    value  = string
+    effect = string
+  }))
+  description = "Kubernetes taints to set for node pool."
 }
 
 variable "aws_auth_map_roles" {

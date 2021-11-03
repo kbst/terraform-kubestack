@@ -11,12 +11,18 @@ module "node_pool" {
 
   subnet_ids = var.vpc_legacy_node_subnets ? aws_subnet.current.*.id : aws_subnet.node_pool.*.id
 
-  instance_type = var.instance_type
-  desired_size  = var.desired_capacity
-  max_size      = var.max_size
-  min_size      = var.min_size
+  instance_types = var.instance_types
+  desired_size   = var.desired_capacity
+  max_size       = var.max_size
+  min_size       = var.min_size
 
   disk_size = var.root_device_volume_size
+
+  taints = var.taints
+
+  ami_type = null
+
+  kubernetes_version = aws_eks_cluster.current.version
 
   # force node_pool to depend on aws-auth configmap
   depends-on-aws-auth = {

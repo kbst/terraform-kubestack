@@ -4,7 +4,7 @@ variable "metadata_labels" {
 }
 
 variable "eks_metadata_tags" {
-  type        = map
+  type        = map(any)
   description = "EKS metadata tags to use."
 }
 
@@ -23,9 +23,9 @@ variable "role_arn" {
   description = "ARN of the IAM role for worker nodes."
 }
 
-variable "instance_type" {
-  type        = string
-  description = "AWS instance type to use for nodes."
+variable "instance_types" {
+  type        = set(string)
+  description = "Set of AWS instance types to use for nodes."
 }
 
 variable "desired_size" {
@@ -57,4 +57,35 @@ variable "subnet_ids" {
 variable "depends-on-aws-auth" {
   type        = map(string)
   description = "Used as a depends_on shim to first create the aws-auth configmap before creating the node_pool."
+}
+
+variable "taints" {
+  type = set(object({
+    key    = string
+    value  = string
+    effect = string
+  }))
+  description = "Kubernetes taints to set for node pool."
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "AWS tags to set on the node pool. Merged with Kubestack default tags."
+  default     = {}
+}
+
+variable "labels" {
+  type        = map(string)
+  description = "Kubernetes labels to set on the nodes created by the node pool. Merged with Kubestack default labels."
+  default     = {}
+}
+
+variable "ami_type" {
+  type        = string
+  description = "AMI type to use for nodes of the node pool."
+}
+
+variable "kubernetes_version" {
+  type        = string
+  description = "Kubernetes version to use for node pool."
 }

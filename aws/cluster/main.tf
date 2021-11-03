@@ -26,7 +26,7 @@ module "cluster" {
   vpc_node_subnet_number_offset = local.cluster_vpc_node_subnet_number_offset
   vpc_legacy_node_subnets       = local.cluster_vpc_legacy_node_subnets
 
-  instance_type    = local.cluster_instance_type
+  instance_types   = local.cluster_instance_types
   desired_capacity = local.cluster_desired_capacity
   max_size         = local.cluster_max_size
   min_size         = local.cluster_min_size
@@ -44,4 +44,9 @@ module "cluster" {
   enabled_cluster_log_types = local.enabled_cluster_log_types
 
   disable_openid_connect_provider = local.disable_openid_connect_provider
+
+  # cluster module configuration is still map(string)
+  # once module_variable_optional_attrs isn't experimental anymore
+  # we can migrate cluster module configuration to map(object(...))
+  taints = toset([])
 }

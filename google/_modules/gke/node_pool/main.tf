@@ -1,7 +1,7 @@
 resource "google_container_node_pool" "current" {
   name     = var.pool_name
   project  = var.project
-  cluster  = var.metadata_name
+  cluster  = var.cluster_name
   location = var.location
 
   initial_node_count = var.initial_node_count
@@ -17,7 +17,7 @@ resource "google_container_node_pool" "current" {
   #
   # Node config
   node_config {
-    service_account = var.service_account_email
+    service_account = var.disable_per_node_pool_service_account ? var.service_account_email : google_service_account.current[0].email
 
     oauth_scopes = local.oauth_scopes
 

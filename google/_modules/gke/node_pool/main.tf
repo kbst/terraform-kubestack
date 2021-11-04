@@ -33,7 +33,7 @@ resource "google_container_node_pool" "current" {
     tags = var.metadata_tags
 
     workload_metadata_config {
-      node_metadata = var.node_workload_metadata_config
+      mode = var.node_workload_metadata_config
     }
 
     taint = var.taint

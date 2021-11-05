@@ -161,3 +161,9 @@ variable "kubernetes_version" {
   type        = string
   description = "Version of Kubernetes to use when creating the cluster. If not specified, latest version will be used."
 }
+
+variable "enable_log_analytics" {
+  type        = bool
+  description = "whether to deploy the Azure Log analytics with the cluster"
+  default     = true
+}

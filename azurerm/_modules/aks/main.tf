@@ -73,8 +73,8 @@ resource "azurerm_kubernetes_cluster" "current" {
     }
 
     oms_agent {
-      enabled                    = true
-      log_analytics_workspace_id = azurerm_log_analytics_workspace.current.id
+      enabled                    = var.enable_log_analytics
+      log_analytics_workspace_id = var.enable_log_analytics ? azurerm_log_analytics_workspace.current[0].id : null
     }
   }
 

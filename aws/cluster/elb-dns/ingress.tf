@@ -12,6 +12,12 @@ data "aws_route53_zone" "current" {
 data "aws_elb_hosted_zone_id" "current" {
 }
 
+# this is a workaround as aws_elb_hosted_zone_id doesn't support NLBs 
+# ref: https://github.com/hashicorp/terraform-provider-aws/issues/7988
+data "aws_lb" "current" {
+  name = split("-", data.kubernetes_service.current.status[0].load_balancer[0].ingress[0].hostname).0
+}
+
 resource "aws_route53_record" "host" {
   zone_id = data.aws_route53_zone.current.zone_id
   name    = var.metadata_fqdn
@@ -19,7 +25,7 @@ resource "aws_route53_record" "host" {
 
   alias {
     name                   = data.kubernetes_service.current.status[0].load_balancer[0].ingress[0].hostname
-    zone_id                = data.aws_elb_hosted_zone_id.current.id
+    zone_id                = var.using_nlb ? data.aws_lb.current.zone_id : data.aws_elb_hosted_zone_id.current.id
     evaluate_target_health = true
   }
 }
@@ -31,7 +37,7 @@ resource "aws_route53_record" "wildcard" {
 
   alias {
     name                   = data.kubernetes_service.current.status[0].load_balancer[0].ingress[0].hostname
-    zone_id                = data.aws_elb_hosted_zone_id.current.id
+    zone_id                = var.using_nlb ? data.aws_lb.current.zone_id : data.aws_elb_hosted_zone_id.current.id
     evaluate_target_health = true
   }
 }

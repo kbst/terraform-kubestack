@@ -33,7 +33,7 @@ locals {
 
   extra_oauth_scopes = local.cfg["extra_oauth_scopes"] != null ? local.cfg["extra_oauth_scopes"] : []
 
-  node_workload_metadata_config = local.cfg["node_workload_metadata_config"] != null ? local.cfg["node_workload_metadata_config"] : "GKE_METADATA_SERVER"
+  node_workload_metadata_config = local.cfg["node_workload_metadata_config"] != null ? local.cfg["node_workload_metadata_config"] : "GKE_METADATA"
 
   service_account_email = local.cfg["service_account_email"]
 }

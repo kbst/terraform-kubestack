@@ -64,6 +64,6 @@ locals {
   cloud_nat_ip_count                     = lookup(local.cfg, "cloud_nat_ip_count", 0)
 
   disable_workload_identity             = lookup(local.cfg, "disable_workload_identity", false)
-  default_node_workload_metadata_config = tobool(local.disable_workload_identity) == false ? "GKE_METADATA_SERVER" : "UNSPECIFIED"
+  default_node_workload_metadata_config = tobool(local.disable_workload_identity) == false ? "GKE_METADATA" : "MODE_UNSPECIFIED"
   node_workload_metadata_config         = lookup(local.cfg, "node_workload_metadata_config", local.default_node_workload_metadata_config)
 }

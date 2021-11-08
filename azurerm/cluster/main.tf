@@ -60,4 +60,5 @@ module "cluster" {
   user_assigned_identity_id  = local.user_assigned_identity_id
 
   kubernetes_version = local.kubernetes_version
+  enable_log_analytics = local.enable_log_analytics
 }

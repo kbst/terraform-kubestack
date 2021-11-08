@@ -45,6 +45,10 @@ module "cluster" {
 
   disable_openid_connect_provider = local.disable_openid_connect_provider
 
+  cluster_endpoint_private_access = local.cluster_endpoint_private_access
+  cluster_endpoint_public_access  = local.cluster_endpoint_public_access
+  cluster_public_access_cidrs     = local.cluster_public_access_cidrs
+
   # cluster module configuration is still map(string)
   # once module_variable_optional_attrs isn't experimental anymore
   # we can migrate cluster module configuration to map(object(...))

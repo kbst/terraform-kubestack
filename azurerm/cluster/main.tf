@@ -49,8 +49,9 @@ module "cluster" {
   default_node_pool_max_count           = local.default_node_pool_max_count
   default_node_pool_node_count          = local.default_node_pool_node_count
 
-  default_node_pool_vm_size         = local.default_node_pool_vm_size
-  default_node_pool_os_disk_size_gb = local.default_node_pool_os_disk_size_gb
+  default_node_pool_only_critical_addons = local.default_node_pool_only_critical_addons
+  default_node_pool_vm_size              = local.default_node_pool_vm_size
+  default_node_pool_os_disk_size_gb      = local.default_node_pool_os_disk_size_gb
 
   disable_default_ingress = local.disable_default_ingress
 
@@ -59,6 +60,6 @@ module "cluster" {
   disable_managed_identities = local.disable_managed_identities
   user_assigned_identity_id  = local.user_assigned_identity_id
 
-  kubernetes_version = local.kubernetes_version
+  kubernetes_version   = local.kubernetes_version
   enable_log_analytics = local.enable_log_analytics
 }

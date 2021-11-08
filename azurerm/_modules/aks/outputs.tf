@@ -4,7 +4,7 @@ output "aks_vnet" {
 
 output "kubeconfig" {
   sensitive = true
-  value     = data.template_file.kubeconfig.rendered
+  value     = local.kubeconfig
 }
 
 output "default_ingress_ip" {

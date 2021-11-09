@@ -41,9 +41,9 @@ locals {
   default_node_pool_max_count           = lookup(local.cfg, "default_node_pool_max_count", "1")
   default_node_pool_node_count          = lookup(local.cfg, "default_node_pool_node_count", "1")
 
-  default_node_pool_vm_size = lookup(local.cfg, "default_node_pool_vm_size", "Standard_B2s")
-
-  default_node_pool_os_disk_size_gb = lookup(local.cfg, "default_node_pool_os_disk_size_gb", "30")
+  default_node_pool_vm_size              = lookup(local.cfg, "default_node_pool_vm_size", "Standard_B2s")
+  default_node_pool_only_critical_addons = lookup(local.cfg, "default_node_pool_only_critical_addons", false)
+  default_node_pool_os_disk_size_gb      = lookup(local.cfg, "default_node_pool_os_disk_size_gb", "30")
 
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 

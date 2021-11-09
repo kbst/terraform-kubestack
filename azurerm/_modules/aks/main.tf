@@ -32,6 +32,8 @@ resource "azurerm_kubernetes_cluster" "current" {
 
     vnet_subnet_id = var.network_plugin == "azure" ? azurerm_subnet.current[0].id : null
     max_pods       = var.max_pods
+
+    only_critical_addons_enabled = var.default_node_pool_only_critical_addons
   }
 
   network_profile {

@@ -128,6 +128,12 @@ variable "default_node_pool_os_disk_size_gb" {
   default     = "30"
 }
 
+variable "default_node_pool_only_critical_addons" {
+  type        = bool
+  description = "Enabling will taint default node pool with CriticalAddonsOnly=true:NoSchedule taint. Changing this forces a new resource to be created."
+  default     = false
+}
+
 variable "disable_default_ingress" {
   type        = bool
   description = "Whether to disable the default ingress."

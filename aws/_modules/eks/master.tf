@@ -3,8 +3,11 @@ resource "aws_eks_cluster" "current" {
   role_arn = aws_iam_role.master.arn
 
   vpc_config {
-    security_group_ids = [aws_security_group.masters.id]
-    subnet_ids         = aws_subnet.current.*.id
+    security_group_ids      = [aws_security_group.masters.id]
+    subnet_ids              = aws_subnet.current.*.id
+    endpoint_private_access = var.cluster_endpoint_private_access
+    endpoint_public_access  = var.cluster_endpoint_public_access
+    public_access_cidrs     = var.cluster_public_access_cidrs
   }
 
   depends_on = [

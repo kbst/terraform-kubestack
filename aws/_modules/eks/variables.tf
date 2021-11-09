@@ -120,3 +120,21 @@ variable "cluster_version" {
   default     = null
   description = "The version of the cluster (defaults to latest available)"
 }
+
+variable "cluster_endpoint_private_access" {
+  type        = bool
+  default     = false
+  description = "Whether the Amazon EKS private API server endpoint is enabled (making the kubernetes API endpoint accessible from the internal network)."
+}
+
+variable "cluster_endpoint_public_access" {
+  type        = bool
+  default     = true
+  description = "Whether the Amazon EKS public API server endpoint is enabled (making the kubernetes API endpoint accessible from the public internet)."
+}
+
+variable "cluster_public_access_cidrs" {
+  type        = list(string)
+  default     = null
+  description = "List of CIDR blocks which can access the Amazon EKS public API server endpoint. EKS defaults this to a list with 0.0.0.0/0."
+}

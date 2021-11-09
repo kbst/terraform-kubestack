@@ -148,3 +148,8 @@ variable "node_workload_metadata_config" {
   description = "How to expose the node metadata to the workload running on the node."
   type        = string
 }
+
+variable "master_authorized_networks_config_cidr_blocks" {
+  description = "The list of CIDR blocks of external networks that can access the Kubernetes cluster master through HTTPS. Setting cidr_blocks to an empty list disallows public access."
+  type        = list(string)
+}

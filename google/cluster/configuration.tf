@@ -66,4 +66,7 @@ locals {
   disable_workload_identity             = lookup(local.cfg, "disable_workload_identity", false)
   default_node_workload_metadata_config = tobool(local.disable_workload_identity) == false ? "GKE_METADATA" : "MODE_UNSPECIFIED"
   node_workload_metadata_config         = lookup(local.cfg, "node_workload_metadata_config", local.default_node_workload_metadata_config)
+
+  master_authorized_networks_config_cidr_blocks_lookup = lookup(local.cfg, "master_authorized_networks_config_cidr_blocks", null)
+  master_authorized_networks_config_cidr_blocks        = local.master_authorized_networks_config_cidr_blocks_lookup == null ? null : split(",", local.master_authorized_networks_config_cidr_blocks_lookup)
 }

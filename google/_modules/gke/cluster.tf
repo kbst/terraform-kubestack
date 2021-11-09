@@ -52,6 +52,21 @@ resource "google_container_cluster" "current" {
     }
   }
 
+  dynamic "master_authorized_networks_config" {
+    for_each = var.master_authorized_networks_config_cidr_blocks == null ? [] : ["1"]
+
+    content {
+      dynamic "cidr_blocks" {
+        for_each = var.master_authorized_networks_config_cidr_blocks
+
+        content {
+          cidr_block   = each.key
+          display_name = "master_authorized_networks_${each.key}"
+        }
+      }
+    }
+  }
+
   private_cluster_config {
     enable_private_nodes    = var.enable_private_nodes
     enable_private_endpoint = false

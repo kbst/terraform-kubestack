@@ -52,6 +52,8 @@ module "cluster" {
   cloud_nat_endpoint_independent_mapping = local.cloud_nat_endpoint_independent_mapping
   cloud_nat_ip_count                     = local.cloud_nat_ip_count
 
+  master_authorized_networks_config_cidr_blocks = local.master_authorized_networks_config_cidr_blocks
+
   cloud_nat_min_ports_per_vm = local.cloud_nat_min_ports_per_vm
 
   disable_workload_identity     = local.disable_workload_identity

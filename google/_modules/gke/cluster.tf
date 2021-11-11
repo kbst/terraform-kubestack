@@ -61,7 +61,7 @@ resource "google_container_cluster" "current" {
 
         content {
           cidr_block   = cidr_blocks.value
-          display_name = "master_authorized_networks_${cidr_blocks.value}"
+          display_name = "terraform-kubestack_${cidr_blocks.value}"
         }
       }
     }

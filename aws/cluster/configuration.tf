@@ -52,5 +52,6 @@ locals {
   cluster_endpoint_private_access    = lookup(local.cfg, "cluster_endpoint_private_access", false)
   cluster_endpoint_public_access     = lookup(local.cfg, "cluster_endpoint_public_access", true)
   cluster_public_access_cidrs_lookup = lookup(local.cfg, "cluster_public_access_cidrs", null)
-  cluster_public_access_cidrs        = local.cluster_public_access_cidrs_lookup == null ? null : split(",", local.cluster_public_access_cidrs_lookup)
+  # convert single IPs (like 1.2.3.4) are to CIDR (like 1.2.3.4//32)
+  cluster_public_access_cidrs = local.cluster_public_access_cidrs_lookup == null ? null : concat([for ip in split(",", local.cluster_public_access_cidrs_lookup) : ip if length(regexall("/", ip)) > 0], [for ip in split(",", local.cluster_public_access_cidrs_lookup) : "${ip}/32" if length(regexall("/", ip)) == 0])
 }

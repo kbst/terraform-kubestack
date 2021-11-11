@@ -68,5 +68,6 @@ locals {
   node_workload_metadata_config         = lookup(local.cfg, "node_workload_metadata_config", local.default_node_workload_metadata_config)
 
   master_authorized_networks_config_cidr_blocks_lookup = lookup(local.cfg, "master_authorized_networks_config_cidr_blocks", null)
-  master_authorized_networks_config_cidr_blocks        = local.master_authorized_networks_config_cidr_blocks_lookup == null ? null : split(",", local.master_authorized_networks_config_cidr_blocks_lookup)
+  # convert single IPs (like 1.2.3.4) are to CIDR (like 1.2.3.4//32)
+  master_authorized_networks_config_cidr_blocks = local.master_authorized_networks_config_cidr_blocks_lookup == null ? null : concat([for ip in split(",", local.master_authorized_networks_config_cidr_blocks_lookup) : ip if length(regexall("/", ip)) > 0], [for ip in split(",", local.master_authorized_networks_config_cidr_blocks_lookup) : "${ip}/32" if length(regexall("/", ip)) == 0])
 }

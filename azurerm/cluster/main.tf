@@ -60,6 +60,7 @@ module "cluster" {
   disable_managed_identities = local.disable_managed_identities
   user_assigned_identity_id  = local.user_assigned_identity_id
 
-  kubernetes_version   = local.kubernetes_version
-  enable_log_analytics = local.enable_log_analytics
+  kubernetes_version        = local.kubernetes_version
+  automatic_channel_upgrade = local.automatic_channel_upgrade
+  enable_log_analytics      = local.enable_log_analytics
 }

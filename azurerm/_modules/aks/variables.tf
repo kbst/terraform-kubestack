@@ -168,6 +168,12 @@ variable "kubernetes_version" {
   description = "Version of Kubernetes to use when creating the cluster. If not specified, latest version will be used."
 }
 
+variable "automatic_channel_upgrade" {
+  type        = string
+  description = "The upgrade channel for this Kubernetes Cluster. Possible values are 'none', 'patch', 'rapid', 'node-image' and 'stable'. Defaults to 'none'."
+  default     = "none"
+}
+
 variable "enable_log_analytics" {
   type        = bool
   description = "whether to deploy the Azure Log analytics with the cluster"

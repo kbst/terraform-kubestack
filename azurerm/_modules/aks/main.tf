@@ -3,12 +3,13 @@ data "azurerm_resource_group" "current" {
 }
 
 resource "azurerm_kubernetes_cluster" "current" {
-  name                = var.metadata_name
-  location            = data.azurerm_resource_group.current.location
-  resource_group_name = data.azurerm_resource_group.current.name
-  dns_prefix          = var.dns_prefix
-  sku_tier            = var.sku_tier
-  kubernetes_version  = var.kubernetes_version
+  name                      = var.metadata_name
+  location                  = data.azurerm_resource_group.current.location
+  resource_group_name       = data.azurerm_resource_group.current.name
+  dns_prefix                = var.dns_prefix
+  sku_tier                  = var.sku_tier
+  kubernetes_version        = var.kubernetes_version
+  automatic_channel_upgrade = var.automatic_channel_upgrade
 
   role_based_access_control {
     enabled = true

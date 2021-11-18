@@ -55,5 +55,5 @@ locals {
   enable_log_analytics = lookup(local.cfg, "enable_log_analytics", true)
 
   kubernetes_version        = lookup(local.cfg, "kubernetes_version", null)
-  automatic_channel_upgrade = lookup(local.cfg, "automatic_channel_upgrade", "none")
+  automatic_channel_upgrade = lookup(local.cfg, "automatic_channel_upgrade", null)
 }

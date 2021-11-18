@@ -170,8 +170,7 @@ variable "kubernetes_version" {
 
 variable "automatic_channel_upgrade" {
   type        = string
-  description = "The upgrade channel for this Kubernetes Cluster. Possible values are 'none', 'patch', 'rapid', 'node-image' and 'stable'. Defaults to 'none'."
-  default     = "none"
+  description = "The upgrade channel for this Kubernetes Cluster. Possible values are 'patch', 'rapid', 'node-image' and 'stable'."
 }
 
 variable "enable_log_analytics" {

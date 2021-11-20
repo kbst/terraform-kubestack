@@ -26,6 +26,4 @@ module "eks_zero_dns_zone" {
   ingress_service_namespace = "ingress-nginx"
 
   metadata_fqdn = module.eks_zero.current_metadata["fqdn"]
-
-  depends_on = [module.eks_zero, module.eks_zero_nginx]
 }

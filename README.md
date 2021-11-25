@@ -72,7 +72,7 @@ The [`tests`](./tests) directory holds a set of happy path tests that also act a
 ## Getting Help
 
 **Official Documentation**  
-Refer to the [official documentation](https://www.kubestack.com/framework/documentation) for a deeper dive into how to use and configure Kubetack.
+Refer to the [official documentation](https://www.kubestack.com/framework/documentation) for a deeper dive into how to use and configure Kubestack.
 
 **Community Help**  
 If you have any questions while following the tutorial, join the [#kubestack](https://app.slack.com/client/T09NY5SBT/CMBCT7XRQ) channel on the Kubernetes community. To create an account request an [invitation](https://slack.k8s.io/).

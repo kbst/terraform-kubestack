@@ -153,3 +153,8 @@ variable "master_authorized_networks_config_cidr_blocks" {
   description = "The list of CIDR blocks of external networks that can access the Kubernetes cluster master through HTTPS. Setting cidr_blocks to an empty list disallows public access."
   type        = list(string)
 }
+
+variable "enable_tpu" {
+  description = "Whether to enable GKE cloud TPU support."
+  type        = bool
+}

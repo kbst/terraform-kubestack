@@ -78,5 +78,6 @@ resource "google_container_cluster" "current" {
 
     content {}
   }
-}
 
+  enable_tpu = var.enable_tpu
+}

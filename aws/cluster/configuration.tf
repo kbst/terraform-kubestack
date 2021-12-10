@@ -22,6 +22,7 @@ locals {
   cluster_vpc_node_subnet_newbits       = lookup(local.cfg, "cluster_vpc_node_subnet_newbits", "4")
   cluster_vpc_node_subnet_number_offset = lookup(local.cfg, "cluster_vpc_node_subnet_number_offset", "1")
   cluster_vpc_legacy_node_subnets       = lookup(local.cfg, "cluster_vpc_legacy_node_subnets", false)
+  cluster_vpc_subnet_map_public_ip      = lookup(local.cfg, "cluster_vpc_subnet_map_public_ip", true)
 
   cluster_instance_type_lookup  = lookup(local.cfg, "cluster_instance_type", "")
   cluster_instance_types_lookup = lookup(local.cfg, "cluster_instance_types", local.cluster_instance_type_lookup)

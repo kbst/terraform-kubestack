@@ -44,6 +44,11 @@ variable "vpc_node_subnet_number_offset" {
   type        = string
 }
 
+variable "vpc_subnet_map_public_ip" {
+  description = "Whether nodes should have public IPs."
+  type        = bool
+}
+
 variable "instance_types" {
   description = "Set of AWS instance types to use for nodes."
   type        = set(string)

@@ -25,6 +25,7 @@ module "cluster" {
   vpc_node_subnet_newbits       = local.cluster_vpc_node_subnet_newbits
   vpc_node_subnet_number_offset = local.cluster_vpc_node_subnet_number_offset
   vpc_legacy_node_subnets       = local.cluster_vpc_legacy_node_subnets
+  vpc_subnet_map_public_ip      = local.cluster_vpc_subnet_map_public_ip
 
   instance_types   = local.cluster_instance_types
   desired_capacity = local.cluster_desired_capacity

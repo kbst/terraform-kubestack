@@ -46,7 +46,10 @@ resource "aws_nat_gateway" "current" {
   allocation_id = aws_eip.nat_gw[count.index].id
   subnet_id     = aws_subnet.current[count.index].id
 
-  tags = local.eks_metadata_tags
+  tags = merge(
+    local.eks_metadata_tags,
+    { "kubestack.com/cluster_provider_zone" = var.availability_zones[count.index] }
+  )
 
   depends_on = [aws_internet_gateway.current]
 }

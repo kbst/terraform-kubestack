@@ -30,6 +30,22 @@ data "aws_subnet_ids" "current" {
   }
 }
 
-data "aws_route_table" "current" {
-  subnet_id = local.vpc_subnet_ids[0]
+data "aws_internet_gateway" "current" {
+  count = local.vpc_subnet_newbits == null ? 0 : 1
+
+  filter {
+    name   = "attachment.vpc-id"
+    values = [data.aws_vpc.current.id]
+  }
+}
+
+data "aws_nat_gateway" "current" {
+  count = local.vpc_subnet_newbits == null ? 0 : length(local.availability_zones)
+
+  vpc_id = data.aws_vpc.current.id
+
+  tags = {
+    "kubestack.com/cluster_name"          = data.aws_eks_cluster.current.name
+    "kubestack.com/cluster_provider_zone" = local.availability_zones[count.index]
+  }
 }

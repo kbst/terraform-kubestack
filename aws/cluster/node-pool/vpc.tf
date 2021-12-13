@@ -24,9 +24,25 @@ resource "aws_subnet" "current" {
   tags = data.aws_eks_node_group.default.tags
 }
 
+resource "aws_route_table" "current" {
+  count = local.vpc_subnet_newbits == null ? 0 : length(local.availability_zones)
+
+  vpc_id = data.aws_vpc.current.id
+}
+
+resource "aws_route" "current" {
+  count = local.vpc_subnet_newbits == null ? 0 : length(local.availability_zones)
+
+  route_table_id = aws_route_table.current[count.index].id
+
+  gateway_id             = local.vpc_subnet_map_public_ip == false ? null : data.aws_internet_gateway.current[0].id
+  nat_gateway_id         = local.vpc_subnet_map_public_ip == false ? data.aws_nat_gateway.current[count.index].id : null
+  destination_cidr_block = "0.0.0.0/0"
+}
+
 resource "aws_route_table_association" "current" {
   count = local.vpc_subnet_newbits == null ? 0 : length(local.availability_zones)
 
   subnet_id      = aws_subnet.current[count.index].id
-  route_table_id = data.aws_route_table.current.id
+  route_table_id = aws_route_table.current[count.index].id
 }

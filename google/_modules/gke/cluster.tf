@@ -76,7 +76,10 @@ resource "google_container_cluster" "current" {
   dynamic "ip_allocation_policy" {
     for_each = var.enable_private_nodes ? toset([1]) : []
 
-    content {}
+    content {
+      cluster_ipv4_cidr_block  = var.cluster_ipv4_cidr_block
+      services_ipv4_cidr_block = var.services_ipv4_cidr_block
+    }
   }
 
   enable_tpu = var.enable_tpu

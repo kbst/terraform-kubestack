@@ -46,8 +46,12 @@ module "cluster" {
 
   disable_default_ingress = local.disable_default_ingress
 
-  enable_private_nodes                   = local.enable_private_nodes
-  master_cidr_block                      = local.master_cidr_block
+  enable_private_nodes = local.enable_private_nodes
+  master_cidr_block    = local.master_cidr_block
+
+  cluster_ipv4_cidr_block  = local.cluster_ipv4_cidr_block
+  services_ipv4_cidr_block = local.services_ipv4_cidr_block
+
   enable_cloud_nat                       = local.enable_cloud_nat
   cloud_nat_endpoint_independent_mapping = local.cloud_nat_endpoint_independent_mapping
   cloud_nat_ip_count                     = local.cloud_nat_ip_count

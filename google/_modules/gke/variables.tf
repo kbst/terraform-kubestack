@@ -119,6 +119,16 @@ variable "master_cidr_block" {
   description = "The IP range for the master network"
 }
 
+variable "cluster_ipv4_cidr_block" {
+  type        = string
+  description = "The CIDR block used for Kubernetes pods."
+}
+
+variable "services_ipv4_cidr_block" {
+  type        = string
+  description = "The CIDR block used for Kubernetes services."
+}
+
 variable "enable_cloud_nat" {
   type        = bool
   description = "Whether to enable cloud nat and allow internet access for private nodes."

@@ -27,6 +27,7 @@ locals {
   cluster_instance_type_lookup  = lookup(local.cfg, "cluster_instance_type", "")
   cluster_instance_types_lookup = lookup(local.cfg, "cluster_instance_types", local.cluster_instance_type_lookup)
   cluster_instance_types        = toset(split(",", local.cluster_instance_types_lookup))
+  cluster_additional_node_tags  = lookup(local.cfg, "cluster_additional_node_tags", {})
 
   cluster_desired_capacity = local.cfg["cluster_desired_capacity"]
 

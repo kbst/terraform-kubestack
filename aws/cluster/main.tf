@@ -36,6 +36,8 @@ module "cluster" {
   root_device_encrypted   = local.worker_root_device_encrypted
   root_device_volume_size = local.worker_root_device_volume_size
 
+  additional_node_tags = local.cluster_additional_node_tags
+
   aws_auth_map_roles    = local.cluster_aws_auth_map_roles
   aws_auth_map_users    = local.cluster_aws_auth_map_users
   aws_auth_map_accounts = local.cluster_aws_auth_map_accounts

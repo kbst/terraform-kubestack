@@ -22,6 +22,8 @@ module "node_pool" {
 
   ami_type = null
 
+  tags = var.additional_node_tags
+
   kubernetes_version = aws_eks_cluster.current.version
 
   # force node_pool to depend on aws-auth configmap

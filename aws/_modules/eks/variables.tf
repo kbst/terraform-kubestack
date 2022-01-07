@@ -90,6 +90,12 @@ variable "taints" {
   description = "Kubernetes taints to set for node pool."
 }
 
+variable "additional_node_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Additional AWS tags to set on the node pool."
+}
+
 variable "aws_auth_map_roles" {
   description = "mapRoles entries added to aws-auth configmap"
   type        = string

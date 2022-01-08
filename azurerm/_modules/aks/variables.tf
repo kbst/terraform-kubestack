@@ -178,3 +178,9 @@ variable "enable_log_analytics" {
   description = "whether to deploy the Azure Log analytics with the cluster"
   default     = true
 }
+
+variable "availability_zones" {
+  type        = list(string)
+  description = "The list of availability zones to create the node pool in"
+  default     = []
+}

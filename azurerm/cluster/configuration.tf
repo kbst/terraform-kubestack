@@ -56,4 +56,7 @@ locals {
 
   kubernetes_version        = lookup(local.cfg, "kubernetes_version", null)
   automatic_channel_upgrade = lookup(local.cfg, "automatic_channel_upgrade", null)
+
+  availability_zones_list = local.cfg["availability_zones"] != null ? local.cfg["availability_zones"] : []
+  availability_zones      = length(local.availability_zones_list) == 0 ? null : local.availability_zones_list
 }

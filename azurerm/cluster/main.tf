@@ -63,4 +63,6 @@ module "cluster" {
   kubernetes_version        = local.kubernetes_version
   automatic_channel_upgrade = local.automatic_channel_upgrade
   enable_log_analytics      = local.enable_log_analytics
+
+  availability_zones = local.availability_zones
 }

@@ -35,6 +35,8 @@ resource "azurerm_kubernetes_cluster" "current" {
     max_pods       = var.max_pods
 
     only_critical_addons_enabled = var.default_node_pool_only_critical_addons
+
+    availability_zones = var.availability_zones
   }
 
   network_profile {

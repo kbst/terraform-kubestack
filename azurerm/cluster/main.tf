@@ -33,6 +33,7 @@ module "cluster" {
   vnet_address_space       = local.vnet_address_space
   subnet_address_prefixes  = local.subnet_address_prefixes
   subnet_service_endpoints = local.subnet_service_endpoints
+  existing_vnet_name       = local.existing_vnet_name
 
   network_plugin = local.network_plugin
   network_policy = local.network_policy

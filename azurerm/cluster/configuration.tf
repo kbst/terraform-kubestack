@@ -26,6 +26,8 @@ locals {
   subnet_service_endpoints_lookup = lookup(local.cfg, "subnet_service_endpoints", "")
   subnet_service_endpoints        = local.subnet_service_endpoints_lookup != "" ? split(",", local.subnet_service_endpoints_lookup) : []
 
+  existing_vnet_name = lookup(local.cfg, "existing_vnet_name", null)
+
   network_plugin = lookup(local.cfg, "network_plugin", "kubenet")
   network_policy = lookup(local.cfg, "network_policy", "calico")
   service_cidr   = lookup(local.cfg, "service_cidr", "10.0.0.0/16")

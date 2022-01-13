@@ -29,11 +29,12 @@ module "cluster" {
 
   sku_tier = local.sku_tier
 
-  legacy_vnet_name         = local.legacy_vnet_name
-  vnet_address_space       = local.vnet_address_space
-  subnet_address_prefixes  = local.subnet_address_prefixes
-  subnet_service_endpoints = local.subnet_service_endpoints
-  existing_vnet_name       = local.existing_vnet_name
+  legacy_vnet_name             = local.legacy_vnet_name
+  vnet_address_space           = local.vnet_address_space
+  subnet_address_prefixes      = local.subnet_address_prefixes
+  subnet_service_endpoints     = local.subnet_service_endpoints
+  existing_vnet                = local.existing_vnet
+  existing_vnet_resource_group = local.existing_vnet_resource_group
 
   network_plugin = local.network_plugin
   network_policy = local.network_policy

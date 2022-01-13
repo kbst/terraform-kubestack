@@ -49,7 +49,7 @@ build:
 		--progress plain \
 		--target ${DOCKER_TARGET} \
 		-t kubestack/framework-dev:test-$(GIT_SHA)-${DOCKER_TARGET} \
-		. 
+		.
 
 validate: .init
 	docker exec \

@@ -44,7 +44,7 @@ variable "subnet_service_endpoints" {
   description = "List of service endpoints to expose on the subnet."
 }
 
-variable " existing_vnet_name" {
+variable "existing_vnet_name" {
   type        = string
   description = "Name of existing vnet to use."
   default     = null

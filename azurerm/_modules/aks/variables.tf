@@ -47,7 +47,7 @@ variable "subnet_service_endpoints" {
 variable "existing_vnet_name" {
   type        = string
   description = "Name of existing vnet to use."
-  default     = null
+  default     = ""
 }
 
 variable "network_plugin" {

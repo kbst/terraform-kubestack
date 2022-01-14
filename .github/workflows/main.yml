@@ -217,18 +217,14 @@ jobs:
         password: ${{ secrets.DOCKER_AUTH }}
 
     - name: 'Docker push'
-      # pull the image built for testing
-      # retag it as the image specified in the artifact
-      # push the new image with the new tag
-      #
       # cosign copy copies the images and the signature from one place to another
       # then we dont need to sign again the same image
       env:
         COSIGN_EXPERIMENTAL: true
       run: |
         SOURCE_IMAGE=kubestack/framework-dev:test-${{ github.sha }}-${{ matrix.starter }}
-        docker pull $SOURCE_IMAGE
         TARGET_IMAGE=$(cat quickstart/_dist/kubestack-starter-${{ matrix.starter }}/Dockerfile | sed 's/FROM //')
+        echo "Source image $SOURCE_IMAGE will be pushed to $TARGET_IMAGE"
         cosign copy $SOURCE_IMAGE $TARGET_IMAGE
 
   publish-starter:

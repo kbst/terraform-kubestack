@@ -237,6 +237,9 @@ jobs:
     # because publishing the starter is what makes a release public
     needs: [test, publish-image]
 
+    permissions:
+      id-token: write # needed for keyless signing
+
     strategy:
       matrix:
         starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
@@ -248,19 +251,31 @@ jobs:
         name: test-artifacts
         path: ./quickstart/_dist
 
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@116dc6872c0a067bcb78758f18955414cdbf918f #v1.4.1
+
     - name: 'Setup gcloud'
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
         service_account_key: ${{ secrets.GCLOUD_AUTH }}
 
     - name: 'Publish ${{ matrix.starter }} starter'
+      env:
+        COSIGN_EXPERIMENTAL: true
       run: |
         SOURCE_FILE=quickstart/_dist/kubestack-starter-${{ matrix.starter }}-${{ github.sha }}.zip
+        COSIGN_OUTPUT=kubestack-starter-${{ matrix.starter }}-${{ github.sha }}
         TARGET_BUCKET=dev.quickstart.kubestack.com
         if [[ $GITHUB_REF = refs/tags/v* ]]
         then
           VERSION=$(echo $GITHUB_REF | sed -e "s#^refs/tags/##")
           SOURCE_FILE=quickstart/_dist/kubestack-starter-${{ matrix.starter }}-${VERSION}.zip
+          COSIGN_OUTPUT=kubestack-starter-${{ matrix.starter }}-${VERSION}
           TARGET_BUCKET=quickstart.kubestack.com
         fi
+
+        cosign sign-blob --output-certificate $COSIGN_OUTPUT.pem --output-signature $COSIGN_OUTPUT.sig $SOURCE_FILE
+
         gsutil -m cp $SOURCE_FILE gs://$TARGET_BUCKET
+        gsutil -m cp $COSIGN_OUTPUT.pem gs://$TARGET_BUCKET
+        gsutil -m cp $COSIGN_OUTPUT.sig gs://$TARGET_BUCKET

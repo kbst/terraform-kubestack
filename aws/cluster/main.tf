@@ -38,10 +38,6 @@ module "cluster" {
 
   additional_node_tags = local.cluster_additional_node_tags
 
-  aws_auth_map_roles    = local.cluster_aws_auth_map_roles
-  aws_auth_map_users    = local.cluster_aws_auth_map_users
-  aws_auth_map_accounts = local.cluster_aws_auth_map_accounts
-
   disable_default_ingress = local.disable_default_ingress
 
   enabled_cluster_log_types = local.enabled_cluster_log_types

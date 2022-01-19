@@ -15,13 +15,6 @@ module "eks_zero" {
       cluster_min_size           = "1"
       cluster_max_size           = "1"
       cluster_availability_zones = "eu-west-1a,eu-west-1b,eu-west-1c"
-
-      cluster_aws_auth_map_users = <<MAPUSERS
-      - userarn: arn:aws:iam::694714331404:user/pst
-        username: pst
-        groups:
-        - system:masters
-      MAPUSERS
     }
 
     # Settings for Ops-cluster

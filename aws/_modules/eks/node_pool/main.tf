@@ -38,8 +38,6 @@ resource "aws_eks_node_group" "nodes" {
     }
   }
 
-  depends_on = [var.depends-on-aws-auth]
-
   # when autoscaler is enabled, desired_size needs to be ignored
   # better would be to handle this in the resource and not require
   # desired_size, min_size and max_size in scaling_config

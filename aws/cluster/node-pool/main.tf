@@ -26,6 +26,4 @@ module "node_pool" {
   tags = local.tags
 
   labels = local.labels
-
-  depends-on-aws-auth = null
 }

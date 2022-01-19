@@ -25,10 +25,4 @@ module "node_pool" {
   tags = var.additional_node_tags
 
   kubernetes_version = aws_eks_cluster.current.version
-
-  # force node_pool to depend on aws-auth configmap
-  depends-on-aws-auth = {
-    name      = kubernetes_config_map.current.metadata[0].name
-    namespace = kubernetes_config_map.current.metadata[0].namespace
-  }
 }

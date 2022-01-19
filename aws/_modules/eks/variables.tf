@@ -96,21 +96,6 @@ variable "additional_node_tags" {
   description = "Additional AWS tags to set on the node pool."
 }
 
-variable "aws_auth_map_roles" {
-  description = "mapRoles entries added to aws-auth configmap"
-  type        = string
-}
-
-variable "aws_auth_map_users" {
-  description = "mapUsers entries added to aws-auth configmap"
-  type        = string
-}
-
-variable "aws_auth_map_accounts" {
-  description = "mapAccounts entries added to aws-auth configmap"
-  type        = string
-}
-
 variable "disable_default_ingress" {
   type        = bool
   description = "Whether to disable the default ingress."

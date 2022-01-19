@@ -40,10 +40,6 @@ locals {
   worker_root_device_volume_size = lookup(local.cfg, "worker_root_device_volume_size", null)
   worker_root_device_encrypted   = lookup(local.cfg, "worker_root_device_encrypted", null)
 
-  cluster_aws_auth_map_roles    = lookup(local.cfg, "cluster_aws_auth_map_roles", "")
-  cluster_aws_auth_map_users    = lookup(local.cfg, "cluster_aws_auth_map_users", "")
-  cluster_aws_auth_map_accounts = lookup(local.cfg, "cluster_aws_auth_map_accounts", "")
-
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
   enabled_cluster_log_types_lookup = lookup(local.cfg, "enabled_cluster_log_types", "api,audit,authenticator,controllerManager,scheduler")

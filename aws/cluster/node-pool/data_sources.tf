@@ -31,7 +31,7 @@ data "aws_subnet_ids" "current" {
 }
 
 data "aws_internet_gateway" "current" {
-  count = local.vpc_subnet_newbits == null ? 0 : 1
+  count = local.vpc_subnet_newbits == null ? 0 : local.vpc_subnet_map_public_ip == false ? 0 : 1
 
   filter {
     name   = "attachment.vpc-id"
@@ -40,7 +40,7 @@ data "aws_internet_gateway" "current" {
 }
 
 data "aws_nat_gateway" "current" {
-  count = local.vpc_subnet_newbits == null ? 0 : length(local.availability_zones)
+  count = local.vpc_subnet_newbits == null ? 0 : local.vpc_subnet_map_public_ip == false ? length(local.availability_zones) : 0
 
   vpc_id = data.aws_vpc.current.id
 

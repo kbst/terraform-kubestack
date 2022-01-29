@@ -113,7 +113,7 @@ FROM builder as kind-builder
 # https://docs.docker.com/engine/release-notes/
 ARG DOCKER_CLI_VERSION=20.10.10
 
-RUN mkdir -p /opt/bin   
+RUN mkdir -p /opt/bin
 
 # kind requires docker client
 RUN echo "DOCKER_CLI_VERSION: ${DOCKER_CLI_VERSION}" \

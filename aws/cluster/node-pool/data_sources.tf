@@ -7,6 +7,8 @@ data "aws_eks_node_group" "default" {
   node_group_name = var.cluster_default_node_pool_name
 }
 
+data "aws_default_tags" "current" {}
+
 data "aws_vpc" "current" {
   id = data.aws_eks_cluster.current.vpc_config[0].vpc_id
 }

@@ -1,9 +1,19 @@
+locals {
+  // if provider level tags are set, the node_group data source tags attr
+  // includes the resource level and provider level tags
+  // we have to exclude the provider level tags when setting them for node pools below
+  node_group_tag_keys        = toset(keys(data.aws_eks_node_group.default.tags))
+  provider_level_tag_keys    = toset(keys(data.aws_default_tags.current.tags))
+  tags_without_all_tags_keys = setsubtract(local.node_group_tag_keys, local.provider_level_tag_keys)
+  tags_without_all_tags      = { for k in local.tags_without_all_tags_keys : k => data.aws_eks_node_group.default.tags[k] }
+}
+
 module "node_pool" {
   source = "../../_modules/eks/node_pool"
 
   cluster_name      = data.aws_eks_cluster.current.name
   metadata_labels   = data.aws_eks_node_group.default.labels
-  eks_metadata_tags = data.aws_eks_node_group.default.tags
+  eks_metadata_tags = local.tags_without_all_tags
   role_arn          = data.aws_eks_node_group.default.node_role_arn
 
   node_group_name = local.name

@@ -19,6 +19,8 @@ locals {
   cluster_vpc_cidr                      = lookup(local.cfg, "cluster_vpc_cidr", "10.0.0.0/16")
   cluster_vpc_subnet_newbits            = lookup(local.cfg, "cluster_vpc_subnet_newbits", "8") # kept for backward compatibility
   cluster_vpc_control_subnet_newbits    = lookup(local.cfg, "cluster_vpc_control_subnet_newbits", local.cluster_vpc_subnet_newbits)
+  cluster_vpc_dns_hostnames             = lookup(local.cfg, "cluster_vpc_dns_hostnames", false)
+  cluster_vpc_dns_support               = lookup(local.cfg, "cluster_vpc_dns_support", false)
   cluster_vpc_node_subnet_newbits       = lookup(local.cfg, "cluster_vpc_node_subnet_newbits", "4")
   cluster_vpc_node_subnet_number_offset = lookup(local.cfg, "cluster_vpc_node_subnet_number_offset", "1")
   cluster_vpc_legacy_node_subnets       = lookup(local.cfg, "cluster_vpc_legacy_node_subnets", false)

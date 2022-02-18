@@ -62,6 +62,9 @@ test: validate
 		entrypoint terraform apply --target module.aks_zero --target module.eks_zero --target module.gke_zero --input=false --auto-approve
 	docker exec \
 		test-container-$(GIT_SHA) \
+		entrypoint terraform apply --target module.eks_zero_nginx --input=false --auto-approve
+	docker exec \
+		test-container-$(GIT_SHA) \
 		entrypoint terraform apply --input=false --auto-approve
 
 cleanup: .init

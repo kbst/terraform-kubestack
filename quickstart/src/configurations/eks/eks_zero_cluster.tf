@@ -37,8 +37,6 @@ module "eks_zero" {
     ops = {}
 
     # loc environment, inherits from apps
-    loc = {
-      node_image = "ghcr.io/kbst/kind-eks-d:v1.21.2-kbst.0"
-    }
+    loc = {}
   }
 }

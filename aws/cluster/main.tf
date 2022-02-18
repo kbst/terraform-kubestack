@@ -22,6 +22,8 @@ module "cluster" {
 
   vpc_cidr                      = local.cluster_vpc_cidr
   vpc_control_subnet_newbits    = local.cluster_vpc_control_subnet_newbits
+  vpc_dns_hostnames             = local.cluster_vpc_dns_hostnames
+  vpc_dns_support               = local.cluster_vpc_dns_support
   vpc_node_subnet_newbits       = local.cluster_vpc_node_subnet_newbits
   vpc_node_subnet_number_offset = local.cluster_vpc_node_subnet_number_offset
   vpc_legacy_node_subnets       = local.cluster_vpc_legacy_node_subnets

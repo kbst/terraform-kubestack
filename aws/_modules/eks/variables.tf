@@ -37,13 +37,11 @@ variable "vpc_control_subnet_newbits" {
 variable "vpc_dns_hostnames" {
   description = "Enable DNS hostnames in the VPC."
   type        = bool
-  default     = false
 }
 
 variable "vpc_dns_support" {
   description = "Enable DNS support in the VPC."
   type        = bool
-  default     = false
 }
 
 variable "vpc_node_subnet_newbits" {

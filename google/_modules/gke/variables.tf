@@ -168,3 +168,8 @@ variable "enable_tpu" {
   description = "Whether to enable GKE cloud TPU support."
   type        = bool
 }
+
+variable "cluster_database_encryption_key_name" {
+  type        = string
+  description = "Cloud KMS key name for enabling cluster database encryption."
+}

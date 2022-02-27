@@ -159,3 +159,9 @@ variable "cluster_public_access_cidrs" {
   default     = null
   description = "List of CIDR blocks which can access the Amazon EKS public API server endpoint. EKS defaults this to a list with 0.0.0.0/0."
 }
+
+variable "cluster_encryption_key_arn" {
+  type        = string
+  default     = null
+  description = "Arn of an AWS KMS symmetric key to be used for encryption of kubernetes resources."
+}

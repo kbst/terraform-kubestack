@@ -54,6 +54,8 @@ module "cluster" {
   cluster_endpoint_public_access  = local.cluster_endpoint_public_access
   cluster_public_access_cidrs     = local.cluster_public_access_cidrs
 
+  cluster_encryption_key_arn = local.cluster_encryption_key_arn
+
   # cluster module configuration is still map(string)
   # once module_variable_optional_attrs isn't experimental anymore
   # we can migrate cluster module configuration to map(object(...))

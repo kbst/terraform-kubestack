@@ -65,5 +65,6 @@ module "cluster" {
 
   cluster_database_encryption_key_name = local.cluster_database_encryption_key_name
 
-  enable_tpu = local.enable_tpu
+  enable_intranode_visibility = local.enable_intranode_visibility
+  enable_tpu                  = local.enable_tpu
 }

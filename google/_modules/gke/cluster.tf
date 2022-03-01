@@ -90,5 +90,6 @@ resource "google_container_cluster" "current" {
     }
   }
 
-  enable_tpu = var.enable_tpu
+  enable_intranode_visibility = var.enable_intranode_visibility
+  enable_tpu                  = var.enable_tpu
 }

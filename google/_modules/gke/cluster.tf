@@ -28,7 +28,7 @@ resource "google_container_cluster" "current" {
   dynamic "database_encryption" {
     for_each = var.cluster_database_encryption_key_name != null ? toset([1]) : toset([])
     content {
-      state = "ENCRYPTED"
+      state    = "ENCRYPTED"
       key_name = var.cluster_database_encryption_key_name
     }
   }

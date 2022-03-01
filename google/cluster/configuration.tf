@@ -57,10 +57,10 @@ locals {
   enable_private_nodes = lookup(local.cfg, "enable_private_nodes", true)
   master_cidr_block    = lookup(local.cfg, "master_cidr_block", "172.16.0.32/28")
 
-  cluster_ipv4_cidr_block = lookup(local.cfg, "cluster_ipv4_cidr_block", null)
+  cluster_ipv4_cidr_block  = lookup(local.cfg, "cluster_ipv4_cidr_block", null)
   services_ipv4_cidr_block = lookup(local.cfg, "services_ipv4_cidr_block", null)
 
-  cluster_database_encryption_key_name = lookup(local.cfg, "cluster_database_encryption_key_name", false)
+  cluster_database_encryption_key_name = lookup(local.cfg, "cluster_database_encryption_key_name", null)
 
   # by default include cloud_nat when private nodes are enabled
   enable_cloud_nat                       = lookup(local.cfg, "enable_cloud_nat", local.enable_private_nodes)
@@ -75,6 +75,6 @@ locals {
   master_authorized_networks_config_cidr_blocks_lookup = lookup(local.cfg, "master_authorized_networks_config_cidr_blocks", null)
   master_authorized_networks_config_cidr_blocks        = local.master_authorized_networks_config_cidr_blocks_lookup == null ? null : split(",", local.master_authorized_networks_config_cidr_blocks_lookup)
 
-  enable_intranode_visibility = lookup(local.cfg, "enable_intranode_visibility", false )
+  enable_intranode_visibility = lookup(local.cfg, "enable_intranode_visibility", false)
   enable_tpu                  = lookup(local.cfg, "enable_tpu", false)
 }

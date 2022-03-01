@@ -60,6 +60,8 @@ locals {
   cluster_ipv4_cidr_block = lookup(local.cfg, "cluster_ipv4_cidr_block", null)
   services_ipv4_cidr_block = lookup(local.cfg, "services_ipv4_cidr_block", null)
 
+  cluster_database_encryption_key_name = lookup(local.cfg, "cluster_database_encryption_key_name", false)
+
   # by default include cloud_nat when private nodes are enabled
   enable_cloud_nat                       = lookup(local.cfg, "enable_cloud_nat", local.enable_private_nodes)
   cloud_nat_endpoint_independent_mapping = lookup(local.cfg, "cloud_nat_enable_endpoint_independent_mapping", null)

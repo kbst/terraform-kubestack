@@ -73,5 +73,6 @@ locals {
   master_authorized_networks_config_cidr_blocks_lookup = lookup(local.cfg, "master_authorized_networks_config_cidr_blocks", null)
   master_authorized_networks_config_cidr_blocks        = local.master_authorized_networks_config_cidr_blocks_lookup == null ? null : split(",", local.master_authorized_networks_config_cidr_blocks_lookup)
 
-  enable_tpu = lookup(local.cfg, "enable_tpu", false)
+  enable_intranode_visibility = lookup(local.cfg, "enable_intranode_visibility", false )
+  enable_tpu                  = lookup(local.cfg, "enable_tpu", false)
 }

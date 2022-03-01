@@ -63,5 +63,6 @@ module "cluster" {
   disable_workload_identity     = local.disable_workload_identity
   node_workload_metadata_config = local.node_workload_metadata_config
 
-  enable_tpu = local.enable_tpu
+  enable_intranode_visibility = local.enable_intranode_visibility
+  enable_tpu                  = local.enable_tpu
 }

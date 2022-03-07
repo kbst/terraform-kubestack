@@ -164,7 +164,17 @@ variable "master_authorized_networks_config_cidr_blocks" {
   type        = list(string)
 }
 
+variable "enable_intranode_visibility" {
+  description = "Whether to enable GKE intranode visibility."
+  type        = bool
+}
+
 variable "enable_tpu" {
   description = "Whether to enable GKE cloud TPU support."
   type        = bool
+}
+
+variable "cluster_database_encryption_key_name" {
+  type        = string
+  description = "Cloud KMS key name for enabling cluster database encryption."
 }

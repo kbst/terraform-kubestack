@@ -20,7 +20,7 @@ locals {
   cluster_vpc_subnet_newbits            = lookup(local.cfg, "cluster_vpc_subnet_newbits", "8") # kept for backward compatibility
   cluster_vpc_control_subnet_newbits    = lookup(local.cfg, "cluster_vpc_control_subnet_newbits", local.cluster_vpc_subnet_newbits)
   cluster_vpc_dns_hostnames             = lookup(local.cfg, "cluster_vpc_dns_hostnames", false)
-  cluster_vpc_dns_support               = lookup(local.cfg, "cluster_vpc_dns_support", false)
+  cluster_vpc_dns_support               = lookup(local.cfg, "cluster_vpc_dns_support", true)
   cluster_vpc_node_subnet_newbits       = lookup(local.cfg, "cluster_vpc_node_subnet_newbits", "4")
   cluster_vpc_node_subnet_number_offset = lookup(local.cfg, "cluster_vpc_node_subnet_number_offset", "1")
   cluster_vpc_legacy_node_subnets       = lookup(local.cfg, "cluster_vpc_legacy_node_subnets", false)
@@ -32,7 +32,7 @@ locals {
 
   cluster_additional_node_tags_lookup = lookup(local.cfg, "cluster_additional_node_tags", "")
   cluster_additional_node_tags_tuples = [for t in split(",", local.cluster_additional_node_tags_lookup) : split("=", t)]
-  cluster_additional_node_tags        = {for t in local.cluster_additional_node_tags_tuples : t[0] => t[1] if length(t) == 2}
+  cluster_additional_node_tags        = { for t in local.cluster_additional_node_tags_tuples : t[0] => t[1] if length(t) == 2 }
 
   cluster_desired_capacity = local.cfg["cluster_desired_capacity"]
 
@@ -52,7 +52,7 @@ locals {
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
   enabled_cluster_log_types_lookup = lookup(local.cfg, "enabled_cluster_log_types", "api,audit,authenticator,controllerManager,scheduler")
-  enabled_cluster_log_types        = split(",", local.enabled_cluster_log_types_lookup)
+  enabled_cluster_log_types        = compact(split(",", local.enabled_cluster_log_types_lookup))
 
   disable_openid_connect_provider = lookup(local.cfg, "disable_openid_connect_provider", false)
 
@@ -60,4 +60,6 @@ locals {
   cluster_endpoint_public_access     = lookup(local.cfg, "cluster_endpoint_public_access", true)
   cluster_public_access_cidrs_lookup = lookup(local.cfg, "cluster_public_access_cidrs", null)
   cluster_public_access_cidrs        = local.cluster_public_access_cidrs_lookup == null ? null : split(",", local.cluster_public_access_cidrs_lookup)
+
+  cluster_encryption_key_arn = lookup(local.cfg, "cluster_encryption_key_arn", null)
 }

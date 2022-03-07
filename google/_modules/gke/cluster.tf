@@ -25,6 +25,14 @@ resource "google_container_cluster" "current" {
     }
   }
 
+  dynamic "database_encryption" {
+    for_each = var.cluster_database_encryption_key_name != null ? toset([1]) : toset([])
+    content {
+      state    = "ENCRYPTED"
+      key_name = var.cluster_database_encryption_key_name
+    }
+  }
+
   #
   #
   # Addon config
@@ -82,5 +90,6 @@ resource "google_container_cluster" "current" {
     }
   }
 
-  enable_tpu = var.enable_tpu
+  enable_intranode_visibility = var.enable_intranode_visibility
+  enable_tpu                  = var.enable_tpu
 }

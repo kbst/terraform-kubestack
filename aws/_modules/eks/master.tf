@@ -10,6 +10,17 @@ resource "aws_eks_cluster" "current" {
     public_access_cidrs     = var.cluster_public_access_cidrs
   }
 
+  dynamic "encryption_config" {
+    for_each = var.cluster_encryption_key_arn != null ? toset([1]) : toset([])
+    content {
+      resources = ["secrets"]
+
+      provider {
+        key_arn = var.cluster_encryption_key_arn
+      }
+    }
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.master_cluster_policy,
     aws_iam_role_policy_attachment.master_service_policy,

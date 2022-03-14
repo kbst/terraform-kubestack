@@ -77,4 +77,7 @@ locals {
 
   enable_intranode_visibility = lookup(local.cfg, "enable_intranode_visibility", false)
   enable_tpu                  = lookup(local.cfg, "enable_tpu", false)
+
+  router_advertise_config = lookup(local.cfg, "router_advertise_config", null)
+  router_asn              = lookup(local.cfg, "router_asn", null)
 }

@@ -67,4 +67,7 @@ module "cluster" {
 
   enable_intranode_visibility = local.enable_intranode_visibility
   enable_tpu                  = local.enable_tpu
+
+  router_advertise_config = local.router_advertise_config
+  router_asn              = local.router_asn
 }

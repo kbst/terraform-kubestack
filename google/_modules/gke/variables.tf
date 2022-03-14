@@ -178,3 +178,19 @@ variable "cluster_database_encryption_key_name" {
   type        = string
   description = "Cloud KMS key name for enabling cluster database encryption."
 }
+
+variable "router_advertise_config" {
+  description = "Router custom advertisement configuration, ip_ranges is a map of address ranges and descriptions."
+  type = object({
+    groups    = list(string)
+    ip_ranges = map(string)
+    mode      = string
+  })
+  default = null
+}
+
+variable "router_asn" {
+  description = "Router ASN used for auto-created router."
+  type        = number
+  default     = null
+}

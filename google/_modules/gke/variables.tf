@@ -186,11 +186,9 @@ variable "router_advertise_config" {
     ip_ranges = map(string)
     mode      = string
   })
-  default = null
 }
 
 variable "router_asn" {
   description = "Router ASN used for auto-created router."
   type        = number
-  default     = null
 }

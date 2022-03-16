@@ -78,6 +78,10 @@ locals {
   enable_intranode_visibility = lookup(local.cfg, "enable_intranode_visibility", false)
   enable_tpu                  = lookup(local.cfg, "enable_tpu", false)
 
-  router_advertise_config = lookup(local.cfg, "router_advertise_config", null)
-  router_asn              = lookup(local.cfg, "router_asn", null)
+  router_advertise_config_groups_lookup    = lookup(local.cfg, "router_advertise_config_groups", "")
+  router_advertise_config_groups           = compact(split(",", local.router_advertise_config_groups_lookup))
+  router_advertise_config_ip_ranges_lookup = lookup(local.cfg, "router_advertise_config_ip_ranges", "")
+  router_advertise_config_ip_ranges        = compact(split(",", local.router_advertise_config_ip_ranges_lookup))
+  router_advertise_config_mode             = lookup(local.cfg, "router_advertise_config_mode", null)
+  router_asn                               = lookup(local.cfg, "router_asn", null)
 }

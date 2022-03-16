@@ -49,7 +49,11 @@ resource "google_compute_router" "current" {
         description = range.value
       }
     }
-    asn = var.router_asn
+
+    # expected "bgp.0.asn" to be a RFC6996-compliant Local ASN:
+    # must be either in the private ASN ranges: [64512..65534], [4200000000..4294967294];
+    # or be the value of [16550]
+    asn = var.router_asn != null ? var.router_asn : 16550
   }
 }
 

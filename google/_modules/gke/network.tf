@@ -21,6 +21,40 @@ resource "google_compute_router" "current" {
   region  = google_container_cluster.current.location
 
   network = google_compute_network.current.name
+
+  bgp {
+    advertise_mode = (
+      var.router_advertise_config == null
+      ? null
+      : var.router_advertise_config.mode
+    )
+    advertised_groups = (
+      var.router_advertise_config == null ? null : (
+        var.router_advertise_config.mode != "CUSTOM"
+        ? null
+        : var.router_advertise_config.groups
+      )
+    )
+    dynamic "advertised_ip_ranges" {
+      for_each = (
+        var.router_advertise_config == null ? {} : (
+          var.router_advertise_config.mode != "CUSTOM"
+          ? {}
+          : var.router_advertise_config.ip_ranges
+        )
+      )
+      iterator = range
+      content {
+        range       = range.key
+        description = range.value
+      }
+    }
+
+    # expected "bgp.0.asn" to be a RFC6996-compliant Local ASN:
+    # must be either in the private ASN ranges: [64512..65534], [4200000000..4294967294];
+    # or be the value of [16550]
+    asn = var.router_asn != null ? var.router_asn : 16550
+  }
 }
 
 resource "google_compute_router_nat" "nat" {

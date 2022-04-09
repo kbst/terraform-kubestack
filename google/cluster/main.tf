@@ -67,4 +67,11 @@ module "cluster" {
 
   enable_intranode_visibility = local.enable_intranode_visibility
   enable_tpu                  = local.enable_tpu
+
+  router_advertise_config = {
+    groups    = local.router_advertise_config_groups
+    ip_ranges = { for ip in local.router_advertise_config_ip_ranges : ip => null }
+    mode      = local.router_advertise_config_mode
+  }
+  router_asn = local.router_asn
 }

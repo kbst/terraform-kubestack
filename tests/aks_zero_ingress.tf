@@ -3,7 +3,7 @@ module "aks_zero_nginx" {
     kustomization = kustomization.aks_zero
   }
   source  = "test.kbst.xyz/catalog/nginx/kustomization"
-  version = "0.46.0-kbst.1"
+  version = "1.1.3-kbst.1"
 
   configuration = {
     apps = {

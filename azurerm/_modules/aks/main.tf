@@ -11,9 +11,7 @@ resource "azurerm_kubernetes_cluster" "current" {
   kubernetes_version        = var.kubernetes_version
   automatic_channel_upgrade = var.automatic_channel_upgrade
 
-  role_based_access_control {
-    enabled = true
-  }
+  role_based_access_control_enabled = true
 
   default_node_pool {
     name = var.default_node_pool_name
@@ -36,7 +34,7 @@ resource "azurerm_kubernetes_cluster" "current" {
 
     only_critical_addons_enabled = var.default_node_pool_only_critical_addons
 
-    availability_zones = var.availability_zones
+    zones = var.availability_zones
   }
 
   network_profile {
@@ -55,7 +53,7 @@ resource "azurerm_kubernetes_cluster" "current" {
     content {
       type = var.user_assigned_identity_id == null ? "SystemAssigned" : "UserAssigned"
 
-      user_assigned_identity_id = var.user_assigned_identity_id
+      identity_ids = var.user_assigned_identity_id == null ? null : [var.user_assigned_identity_id]
     }
   }
 
@@ -68,17 +66,12 @@ resource "azurerm_kubernetes_cluster" "current" {
     }
   }
 
-  addon_profile {
-    azure_policy {
-      enabled = var.enable_azure_policy_agent
-    }
+  azure_policy_enabled = var.enable_azure_policy_agent
 
-    kube_dashboard {
-      enabled = false
-    }
+  dynamic "oms_agent" {
+    for_each = var.enable_log_analytics ? toset([1]) : toset([])
 
-    oms_agent {
-      enabled                    = var.enable_log_analytics
+    content {
       log_analytics_workspace_id = var.enable_log_analytics ? azurerm_log_analytics_workspace.current[0].id : null
     }
   }

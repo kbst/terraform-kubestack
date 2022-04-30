@@ -12,18 +12,6 @@ terraform {
       source  = "hashicorp/azuread"
       version = ">= 1.3.0"
     }
-
-    external = {
-      # https://registry.terraform.io/providers/hashicorp/external/latest
-      source  = "hashicorp/external"
-      version = ">= 2.0.0"
-    }
-
-    random = {
-      # https://registry.terraform.io/providers/hashicorp/random/latest
-      source  = "hashicorp/random"
-      version = ">= 3.0.1"
-    }
   }
 
   required_version = ">= 0.13"

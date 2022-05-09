@@ -23,14 +23,14 @@ RUN mkdir -p /opt/bin
 # Common builder
 FROM builder AS common-builder
 
-# https://kubernetes.io/docs/setup/release/notes/
-ARG KUBECTL_VERSION=v1.22.3
+# https://github.com/kubernetes/kubernetes/releases
+ARG KUBECTL_VERSION=v1.23.6
 
 # https://github.com/kubernetes-sigs/kustomize/releases
-ARG KUSTOMIZE_VERSION=v4.4.1
+ARG KUSTOMIZE_VERSION=v4.5.4
 
 # https://www.terraform.io/downloads.html
-ARG TERRAFORM_VERSION=1.0.11
+ARG TERRAFORM_VERSION=1.1.9
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && curl -Lo /opt/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
@@ -58,7 +58,7 @@ COPY oci/entrypoint oci/entrypoint_user /opt/bin/
 FROM builder AS aws-builder
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
-ARG AWS_CLI_VERSION=2.3.6
+ARG AWS_CLI_VERSION=2.6.0
 
 RUN mkdir -p /opt/aws/bin
 
@@ -75,7 +75,7 @@ RUN echo "AWS_CLI_VERSION: ${AWS_CLI_VERSION}" \
 FROM builder AS gcp-builder
 
 # https://cloud.google.com/sdk/docs/release-notes
-ARG GOOGLE_CLOUD_SDK_VERSION=364.0.0
+ARG GOOGLE_CLOUD_SDK_VERSION=383.0.1
 
 RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
@@ -90,7 +90,7 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
 FROM builder AS azure-builder
 
 # https://docs.microsoft.com/en-us/cli/azure/release-notes-azure-cli?tabs=azure-cli
-ARG AZURE_CLI_VERSION=2.30.0
+ARG AZURE_CLI_VERSION=2.36.0
 
 RUN apt-get update && apt-get install -y \
     libffi-dev
@@ -111,7 +111,7 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 FROM builder as kind-builder
 
 # https://docs.docker.com/engine/release-notes/
-ARG DOCKER_CLI_VERSION=20.10.10
+ARG DOCKER_CLI_VERSION=20.10.14
 
 RUN mkdir -p /opt/bin
 

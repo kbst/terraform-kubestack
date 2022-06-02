@@ -13,10 +13,13 @@ data "aws_vpc" "current" {
   id = data.aws_eks_cluster.current.vpc_config[0].vpc_id
 }
 
-data "aws_subnet_ids" "current" {
+data "aws_subnets" "current" {
   count = length(local.availability_zones) > 0 ? 1 : 0
 
-  vpc_id = data.aws_vpc.current.id
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.current.id]
+  }
 
   # if the node pool is in one or more specific AZs
   # only link subnet_ids belonging to these AZs

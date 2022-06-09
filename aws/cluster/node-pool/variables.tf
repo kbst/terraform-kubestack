@@ -21,10 +21,6 @@ variable "configuration" {
     vpc_subnet_number_offset = optional(string)
     vpc_subnet_map_public_ip = optional(bool)
 
-    desired_capacity = optional(string)
-    max_size         = optional(string)
-    min_size         = optional(string)
-
     taints = optional(set(object({
       key    = string
       value  = string

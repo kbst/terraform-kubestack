@@ -1,4 +1,8 @@
 module "gke_zero" {
+  providers = {
+    kubernetes = kubernetes.gke_zero
+  }
+
   source = "../google/cluster"
 
   configuration = {

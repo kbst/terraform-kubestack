@@ -30,7 +30,7 @@ ARG KUBECTL_VERSION=v1.23.8
 ARG KUSTOMIZE_VERSION=v4.5.5
 
 # https://www.terraform.io/downloads.html
-ARG TERRAFORM_VERSION=1.2.3
+ARG TERRAFORM_VERSION=1.1.9
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && curl -Lo /opt/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \

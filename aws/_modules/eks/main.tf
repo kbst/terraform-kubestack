@@ -10,3 +10,8 @@ locals {
   eks_metadata_tags = merge(var.metadata_labels, local.eks_tags)
 }
 
+data "aws_partition" "current" {}
+
+data "aws_eks_cluster_auth" "current" {
+  name = aws_eks_cluster.current.name
+}

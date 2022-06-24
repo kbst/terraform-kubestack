@@ -1,6 +1,4 @@
 resource "kubernetes_config_map" "current" {
-  provider = kubernetes.eks
-
   metadata {
     name      = "aws-auth"
     namespace = "kube-system"

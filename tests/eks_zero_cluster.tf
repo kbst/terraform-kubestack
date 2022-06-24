@@ -1,6 +1,7 @@
 module "eks_zero" {
   providers = {
     aws = aws.eks_zero
+    kubernetes = kubernetes.eks_zero
   }
 
   source = "../aws/cluster"

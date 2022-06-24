@@ -15,15 +15,4 @@ preferences: {}
 users:
 - name: ${cluster_name}
   user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1alpha1
-      command: aws
-      args:
-        - "eks"
-        - "get-token"
-        - "--cluster-name"
-        - "${cluster_name}"
-        %{ if caller_id_arn_type == "role" }
-        - "--role"
-        - "${caller_id_arn}"
-        %{ endif }
+    token: ${token}

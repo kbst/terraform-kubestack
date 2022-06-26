@@ -1,4 +1,8 @@
 module "gke_zero" {
+  providers = {
+    kubernetes = kubernetes.gke_zero
+  }
+
   source = "github.com/kbst/terraform-kubestack//google/cluster?ref={{version}}"
 
   configuration = {
@@ -20,7 +24,7 @@ module "gke_zero" {
       base_domain = ""
 
       # Initial desired K8s version, will be upgraded automatically
-      cluster_min_master_version = "1.16"
+      cluster_min_master_version = "1.22"
 
       # Initial number of desired nodes per zone
       cluster_initial_node_count = 1

@@ -21,10 +21,5 @@ provider "kubernetes" {
 
   host                   = local.eks_zero_kubeconfig["clusters"][0]["cluster"]["server"]
   cluster_ca_certificate = base64decode(local.eks_zero_kubeconfig["clusters"][0]["cluster"]["certificate-authority-data"])
-
-  exec {
-    api_version = local.eks_zero_kubeconfig["users"][0]["user"]["exec"]["apiVersion"]
-    args        = local.eks_zero_kubeconfig["users"][0]["user"]["exec"]["args"]
-    command     = local.eks_zero_kubeconfig["users"][0]["user"]["exec"]["command"]
-  }
+  token                  = local.eks_zero_kubeconfig["users"][0]["user"]["token"]
 }

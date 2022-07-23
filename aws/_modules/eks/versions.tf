@@ -16,7 +16,7 @@ terraform {
     tls = {
       # https://registry.terraform.io/providers/hashicorp/tls/latest
       source  = "hashicorp/tls"
-      version = ">= 3.1.0"
+      version = "3.4.0"
     }
   }
 

@@ -35,6 +35,10 @@ module "node_pool" {
 
   tags = local.tags
 
+  launch_template_id      = local.launch_template_id
+  launch_template_name    = local.launch_template_name
+  launch_template_version = local.launch_template_version
+
   labels = local.labels
 
   depends-on-aws-auth = null

@@ -89,3 +89,21 @@ variable "kubernetes_version" {
   type        = string
   description = "Kubernetes version to use for node pool."
 }
+
+variable "launch_template_id" {
+  type        = string
+  default     = null
+  description = "Identifier of the EC2 Launch Template. Conflicts with launch_template_name."
+}
+
+variable "launch_template_name" {
+  type        = string
+  default     = null
+  description = "Name of the EC2 Launch Template. Conflicts with launch_template_id."
+}
+
+variable "launch_template_version" {
+  type        = string
+  default     = null
+  description = "EC2 Launch Template version number."
+}

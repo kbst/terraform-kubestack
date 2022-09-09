@@ -31,6 +31,10 @@ locals {
 
   taints = local.cfg["taints"] == null ? toset([]) : local.cfg["taints"]
 
+  launch_template_id      = lookup(local.cfg, "launch_template_id", null)
+  launch_template_name    = lookup(local.cfg, "launch_template_name", null)
+  launch_template_version = lookup(local.cfg, "launch_template_version", null)
+
   tags = local.cfg["tags"]
 
   labels = local.cfg["labels"]

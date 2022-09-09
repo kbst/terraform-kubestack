@@ -27,6 +27,10 @@ variable "configuration" {
       effect = string
     })))
 
+    launch_template_id      = optional(string)
+    launch_template_name    = optional(string)
+    launch_template_version = optional(string)
+
     tags = optional(map(string))
 
     labels = optional(map(string))

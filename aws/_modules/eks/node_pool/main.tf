@@ -38,6 +38,12 @@ resource "aws_eks_node_group" "nodes" {
     }
   }
 
+  launch_template {
+    id      = var.launch_template_id
+    name    = var.launch_template_name
+    version = var.launch_template_version
+  }
+
   depends_on = [var.depends-on-aws-auth]
 
   # when autoscaler is enabled, desired_size needs to be ignored

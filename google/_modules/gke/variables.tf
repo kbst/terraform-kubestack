@@ -81,7 +81,7 @@ variable "disk_type" {
 variable "image_type" {
   description = "The image type for nodes in this pool."
   type        = string
-  default     = "COS"
+  default     = "COS_containerd"
 }
 
 variable "machine_type" {

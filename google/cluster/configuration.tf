@@ -42,7 +42,7 @@ locals {
 
   cluster_disk_type = lookup(local.cfg, "cluster_disk_type", "pd-standard")
 
-  cluster_image_type = lookup(local.cfg, "cluster_image_type", "COS")
+  cluster_image_type = lookup(local.cfg, "cluster_image_type", null)
 
   cluster_machine_type = lookup(local.cfg, "cluster_machine_type", "")
 

@@ -47,6 +47,9 @@ locals {
 
   disable_default_ingress = lookup(local.cfg, "disable_default_ingress", false)
 
+  default_ingress_ip_zones_lookup = lookup(local.cfg, "default_ingress_ip_zones", "")
+  default_ingress_ip_zones        = local.default_ingress_ip_zones_lookup != "" ? split(",", local.default_ingress_ip_zones_lookup) : []
+
   enable_azure_policy_agent = lookup(local.cfg, "enable_azure_policy_agent", false)
 
   disable_managed_identities = lookup(local.cfg, "disable_managed_identities", false)

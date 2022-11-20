@@ -17,7 +17,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "current" {
   vm_size               = var.vm_size
   node_labels           = var.node_labels
   node_taints           = var.node_taints
-  availability_zones    = var.availability_zones
+  zones                 = var.availability_zones
   max_pods              = var.max_pods
   os_disk_type          = var.os_disk_type
   os_disk_size_gb       = var.os_disk_size_gb

@@ -139,6 +139,11 @@ variable "disable_default_ingress" {
   description = "Whether to disable the default ingress."
 }
 
+variable "default_ingress_ip_zones" {
+  type        = list(string)
+  description = "Explicit list of zones for the ingress public IP."
+}
+
 variable "enable_azure_policy_agent" {
   type        = bool
   description = "whether to deploy the Azure policy agent to the cluster"

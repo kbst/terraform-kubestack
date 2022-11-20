@@ -53,7 +53,8 @@ module "cluster" {
   default_node_pool_vm_size              = local.default_node_pool_vm_size
   default_node_pool_os_disk_size_gb      = local.default_node_pool_os_disk_size_gb
 
-  disable_default_ingress = local.disable_default_ingress
+  disable_default_ingress  = local.disable_default_ingress
+  default_ingress_ip_zones = local.default_ingress_ip_zones
 
   enable_azure_policy_agent = local.enable_azure_policy_agent
 

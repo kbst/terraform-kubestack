@@ -7,6 +7,8 @@ resource "azurerm_public_ip" "current" {
   allocation_method   = "Static"
   sku                 = "Standard"
 
+  zones = var.default_ingress_ip_zones
+
   tags = var.metadata_labels
 
   depends_on = [azurerm_kubernetes_cluster.current]

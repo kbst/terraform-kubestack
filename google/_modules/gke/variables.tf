@@ -192,3 +192,8 @@ variable "router_asn" {
   description = "Router ASN used for auto-created router."
   type        = number
 }
+
+variable "logging_config" {
+  description = "Logging configuration."
+  type        = list(string)
+}

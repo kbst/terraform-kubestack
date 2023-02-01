@@ -87,4 +87,7 @@ locals {
 
   logging_config_enable_components_lookup = lookup(local.cfg, "logging_config_enable_components", "SYSTEM_COMPONENTS,WORKLOADS")
   logging_config_enable_components        = compact(split(",", local.logging_config_enable_components_lookup))
+
+  monitoring_config_enable_components_lookup = lookup(local.cfg, "monitoring_config_enable_components", "SYSTEM_COMPONENTS")
+  monitoring_config_enable_components        = compact(split(",", local.monitoring_config_enable_components_lookup))
 }

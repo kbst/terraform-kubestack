@@ -75,6 +75,21 @@ resource "google_container_cluster" "current" {
     }
   }
 
+  dynamic "monitoring_config" {
+    for_each = var.monitoring_config != null ? [""] : []
+    content {
+      enable_components = var.monitoring_config
+      dynamic "managed_prometheus" {
+        for_each = (
+          try(var.monitoring_config_managed_prometheus, null) == true ? [""] : []
+        )
+        content {
+          enabled = true
+        }
+      }
+    }
+  }
+
   private_cluster_config {
     enable_private_nodes    = var.enable_private_nodes
     enable_private_endpoint = false

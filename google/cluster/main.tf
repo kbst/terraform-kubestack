@@ -74,4 +74,7 @@ module "cluster" {
     mode      = local.router_advertise_config_mode
   }
   router_asn = local.router_asn
+
+  monitoring_config                    = local.monitoring_config_enabled_components
+  monitoring_config_managed_prometheus = local.monitoring_config_managed_prometheus
 }

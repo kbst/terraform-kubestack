@@ -84,4 +84,8 @@ locals {
   router_advertise_config_ip_ranges        = compact(split(",", local.router_advertise_config_ip_ranges_lookup))
   router_advertise_config_mode             = lookup(local.cfg, "router_advertise_config_mode", null)
   router_asn                               = lookup(local.cfg, "router_asn", null)
+
+  monitoring_config_enabled_components_lookup = lookup(local.cfg, "monitoring_config_enabled_components", "")
+  monitoring_config_enabled_components        = compact(split(",", local.monitoring_config_enabled_components_lookup))
+  monitoring_config_managed_prometheus        = lookup(local.cfg, "monitoring_config_managed_prometheus", null)
 }

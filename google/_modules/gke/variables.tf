@@ -192,3 +192,14 @@ variable "router_asn" {
   description = "Router ASN used for auto-created router."
   type        = number
 }
+
+
+variable "monitoring_config" {
+  description = "Monitoring configuration."
+  type        = list(string)
+}
+
+variable "monitoring_config_managed_prometheus" {
+  description = "Monitoring configuration managed prometheus."
+  type        = bool
+}

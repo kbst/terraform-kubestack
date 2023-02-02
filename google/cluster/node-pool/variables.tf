@@ -4,8 +4,9 @@ variable "configuration" {
 
     name = optional(string)
 
-    location       = optional(string)
-    node_locations = optional(list(string))
+    location        = optional(string)
+    node_locations  = optional(list(string))
+    location_policy = optional(string)
 
     initial_node_count = optional(string)
     min_node_count     = optional(string)

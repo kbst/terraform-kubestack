@@ -30,6 +30,7 @@ module "cluster" {
   initial_node_count = local.cluster_initial_node_count
   min_node_count     = local.cluster_min_node_count
   max_node_count     = local.cluster_max_node_count
+  location_policy    = local.cluster_node_location_policy
 
   extra_oauth_scopes = local.cluster_extra_oauth_scopes
 

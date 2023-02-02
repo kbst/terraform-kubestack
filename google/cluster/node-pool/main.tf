@@ -15,6 +15,7 @@ module "node_pool" {
   initial_node_count = local.initial_node_count
   min_node_count     = local.min_node_count
   max_node_count     = local.max_node_count
+  location_policy    = local.location_policy
 
   extra_oauth_scopes = local.extra_oauth_scopes
 

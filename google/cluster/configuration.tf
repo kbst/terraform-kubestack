@@ -32,8 +32,9 @@ locals {
 
   cluster_initial_node_count = lookup(local.cfg, "cluster_initial_node_count", 1)
 
-  cluster_min_node_count = lookup(local.cfg, "cluster_min_node_count", 1)
-  cluster_max_node_count = lookup(local.cfg, "cluster_max_node_count", 1)
+  cluster_min_node_count       = lookup(local.cfg, "cluster_min_node_count", 1)
+  cluster_max_node_count       = lookup(local.cfg, "cluster_max_node_count", 1)
+  cluster_node_location_policy = lookup(local.cfg, "cluster_node_location_policy", null)
 
   cluster_extra_oauth_scopes_lookup = lookup(local.cfg, "cluster_extra_oauth_scopes", "")
   cluster_extra_oauth_scopes        = split(",", local.cluster_extra_oauth_scopes_lookup)

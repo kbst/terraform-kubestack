@@ -39,7 +39,7 @@ resource "aws_eks_node_group" "nodes" {
   labels = merge(var.labels, var.metadata_labels)
 
   dynamic "taint" {
-    for_each = var.taints
+    for_each = var.taints != null ? var.taints : toset([])
 
     content {
       key    = taint.value["key"]

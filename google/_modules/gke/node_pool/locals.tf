@@ -8,6 +8,6 @@ locals {
     "https://www.googleapis.com/auth/trace.append",
   ]
 
-  oauth_scopes = compact(concat(local.base_oauth_scopes, var.extra_oauth_scopes))
+  oauth_scopes = compact(concat(local.base_oauth_scopes, var.extra_oauth_scopes != null ? var.extra_oauth_scopes : []))
 }
 

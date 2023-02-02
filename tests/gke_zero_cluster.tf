@@ -25,7 +25,7 @@ module "gke_zero" {
       cluster_max_node_count = 1
 
       region                 = "europe-west1"
-      cluster_node_locations = "europe-west1-b,europe-west1-c,europe-west1-d"
+      cluster_node_locations = ["europe-west1-b", "europe-west1-c", "europe-west1-d"]
     }
 
     # Settings for Ops-cluster

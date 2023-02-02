@@ -1,12 +1,12 @@
 data "azurerm_resource_group" "current" {
-  name = local.resource_group
+  name = local.cfg["resource_group"]
 }
 
 module "cluster_metadata" {
   source = "../../common/metadata"
 
-  name_prefix = local.name_prefix
-  base_domain = local.base_domain
+  name_prefix = local.cfg["name_prefix"]
+  base_domain = local.cfg["base_domain"]
 
   provider_name   = "azure"
   provider_region = data.azurerm_resource_group.current.location
@@ -18,52 +18,56 @@ module "cluster_metadata" {
 module "cluster" {
   source = "../_modules/aks"
 
-  resource_group = local.resource_group
+  resource_group = local.cfg["resource_group"]
 
   metadata_name            = module.cluster_metadata.name
   metadata_fqdn            = module.cluster_metadata.fqdn
-  metadata_labels          = merge(module.cluster_metadata.labels, local.additional_metadata_labels)
+  metadata_labels          = merge(module.cluster_metadata.labels, local.cfg["additional_metadata_labels"])
   metadata_label_namespace = module.cluster_metadata.label_namespace
 
-  dns_prefix = local.dns_prefix
+  dns_prefix = local.cfg["dns_prefix"] != null ? local.cfg["dns_prefix"] : "api"
 
-  sku_tier = local.sku_tier
+  sku_tier = local.cfg["sku_tier"] != null ? local.cfg["sku_tier"] : "Free"
 
-  legacy_vnet_name         = local.legacy_vnet_name
-  vnet_address_space       = local.vnet_address_space
-  subnet_address_prefixes  = local.subnet_address_prefixes
-  subnet_service_endpoints = local.subnet_service_endpoints
+  legacy_vnet_name         = local.cfg["legacy_vnet_name"] != null ? local.cfg["legacy_vnet_name"] : false
+  vnet_address_space       = local.cfg["vnet_address_space"] != null ? local.cfg["vnet_address_space"] : ["10.0.0.0/8"]
+  subnet_address_prefixes  = local.cfg["subnet_address_prefixes"] != null ? local.cfg["subnet_address_prefixes"] : ["10.1.0.0/16"]
+  subnet_service_endpoints = local.cfg["subnet_service_endpoints"]
 
-  network_plugin = local.network_plugin
-  network_policy = local.network_policy
-  service_cidr   = local.service_cidr
-  dns_service_ip = local.dns_service_ip
-  pod_cidr       = local.pod_cidr
-  max_pods       = local.max_pods
+  network_plugin = local.cfg["network_plugin"] != null ? local.cfg["network_plugin"] : "kubenet"
+  network_policy = local.cfg["network_policy"] != null ? local.cfg["network_policy"] : "calico"
 
-  default_node_pool_name = local.default_node_pool_name
-  default_node_pool_type = local.default_node_pool_type
+  dns_service_ip = local.cfg["dns_service_ip"] != null ? local.cfg["dns_service_ip"] : "10.0.0.10"
 
-  default_node_pool_enable_auto_scaling = local.default_node_pool_enable_auto_scaling
-  default_node_pool_min_count           = local.default_node_pool_min_count
-  default_node_pool_max_count           = local.default_node_pool_max_count
-  default_node_pool_node_count          = local.default_node_pool_node_count
+  service_cidr = local.cfg["service_cidr"] != null ? local.cfg["service_cidr"] : "10.0.0.0/16"
+  pod_cidr     = local.cfg["pod_cidr"] != null ? local.cfg["pod_cidr"] : "10.244.0.0/16"
 
-  default_node_pool_only_critical_addons = local.default_node_pool_only_critical_addons
-  default_node_pool_vm_size              = local.default_node_pool_vm_size
-  default_node_pool_os_disk_size_gb      = local.default_node_pool_os_disk_size_gb
+  max_pods = local.cfg["max_pods"]
 
-  disable_default_ingress  = local.disable_default_ingress
-  default_ingress_ip_zones = local.default_ingress_ip_zones
+  default_node_pool_name = local.cfg["default_node_pool_name"] != null ? local.cfg["default_node_pool_name"] : "default"
+  default_node_pool_type = local.cfg["default_node_pool_type"] != null ? local.cfg["default_node_pool_type"] : "VirtualMachineScaleSets"
 
-  enable_azure_policy_agent = local.enable_azure_policy_agent
+  default_node_pool_enable_auto_scaling = local.cfg["default_node_pool_enable_auto_scaling"] != null ? local.cfg["default_node_pool_enable_auto_scaling"] : true
+  default_node_pool_min_count           = local.cfg["default_node_pool_min_count"] != null ? local.cfg["default_node_pool_min_count"] : 1
+  default_node_pool_max_count           = local.cfg["default_node_pool_max_count"] != null ? local.cfg["default_node_pool_max_count"] : 1
+  default_node_pool_node_count          = local.cfg["default_node_pool_node_count"] != null ? local.cfg["default_node_pool_node_count"] : 1
 
-  disable_managed_identities = local.disable_managed_identities
-  user_assigned_identity_id  = local.user_assigned_identity_id
+  default_node_pool_vm_size              = local.cfg["default_node_pool_vm_size"] != null ? local.cfg["default_node_pool_vm_size"] : "Standard_B2s"
+  default_node_pool_only_critical_addons = local.cfg["default_node_pool_only_critical_addons"] != null ? local.cfg["default_node_pool_only_critical_addons"] : false
+  default_node_pool_os_disk_size_gb      = local.cfg["default_node_pool_os_disk_size_gb"] != null ? local.cfg["default_node_pool_os_disk_size_gb"] : 30
 
-  kubernetes_version        = local.kubernetes_version
-  automatic_channel_upgrade = local.automatic_channel_upgrade
-  enable_log_analytics      = local.enable_log_analytics
+  disable_default_ingress  = local.cfg["disable_default_ingress"] != null ? local.cfg["disable_default_ingress"] : false
+  default_ingress_ip_zones = local.cfg["default_ingress_ip_zones"]
 
-  availability_zones = local.availability_zones
+  enable_azure_policy_agent = local.cfg["enable_azure_policy_agent"] != null ? local.cfg["enable_azure_policy_agent"] : false
+
+  disable_managed_identities = local.cfg["disable_managed_identities"] != null ? local.cfg["disable_managed_identities"] : false
+  user_assigned_identity_id  = local.cfg["user_assigned_identity_id"]
+
+  enable_log_analytics = local.cfg["enable_log_analytics"] != null ? local.cfg["enable_log_analytics"] : true
+
+  kubernetes_version        = local.cfg["kubernetes_version"]
+  automatic_channel_upgrade = local.cfg["automatic_channel_upgrade"]
+
+  availability_zones = local.cfg["availability_zones"]
 }

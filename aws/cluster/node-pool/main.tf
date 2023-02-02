@@ -16,28 +16,28 @@ module "node_pool" {
   eks_metadata_tags = local.tags_without_all_tags
   role_arn          = data.aws_eks_node_group.default.node_role_arn
 
-  node_group_name = local.name
+  node_group_name = local.cfg["name"]
 
   subnet_ids = local.vpc_subnet_newbits == null ? local.vpc_subnet_ids : aws_subnet.current.*.id
 
-  instance_types = local.instance_types
-  desired_size   = local.desired_capacity
-  max_size       = local.max_size
-  min_size       = local.min_size
+  instance_types = local.cfg["instance_types"]
+  desired_size   = local.cfg["desired_size"]
+  max_size       = local.cfg["max_size"]
+  min_size       = local.cfg["min_size"]
 
-  ami_type = local.ami_type
+  ami_type = local.cfg["ami_type"]
 
   kubernetes_version = data.aws_eks_cluster.current.version
 
-  disk_size = local.disk_size
+  disk_size = local.cfg["disk_size"]
 
-  metadata_options = local.metadata_options
+  metadata_options = local.cfg["metadata_options"]
 
-  taints = local.taints
+  taints = local.cfg["taints"]
 
-  tags = local.tags
+  tags = local.cfg["tags"]
 
-  labels = local.labels
+  labels = local.cfg["labels"]
 
   depends-on-aws-auth = null
 }

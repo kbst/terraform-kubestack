@@ -16,5 +16,5 @@ resource "azurerm_subnet" "current" {
   resource_group_name  = data.azurerm_resource_group.current.name
   virtual_network_name = azurerm_virtual_network.current[0].name
 
-  service_endpoints = length(var.subnet_service_endpoints) > 0 ? var.subnet_service_endpoints : null
+  service_endpoints = var.subnet_service_endpoints
 }

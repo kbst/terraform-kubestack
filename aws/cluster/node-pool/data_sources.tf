@@ -14,7 +14,7 @@ data "aws_vpc" "current" {
 }
 
 data "aws_subnets" "current" {
-  count = length(local.availability_zones) > 0 ? 1 : 0
+  count = try(length(local.cfg["availability_zones"]), 0) > 0 ? 1 : 0
 
   filter {
     name   = "vpc-id"
@@ -25,7 +25,7 @@ data "aws_subnets" "current" {
   # only link subnet_ids belonging to these AZs
   filter {
     name   = "availability-zone"
-    values = local.availability_zones
+    values = local.cfg["availability_zones"]
   }
 
   # exclude control plane subnets
@@ -45,12 +45,12 @@ data "aws_internet_gateway" "current" {
 }
 
 data "aws_nat_gateway" "current" {
-  count = local.vpc_subnet_newbits == null ? 0 : local.vpc_subnet_map_public_ip == false ? length(local.availability_zones) : 0
+  count = local.vpc_subnet_newbits == null ? 0 : local.vpc_subnet_map_public_ip == false ? length(local.cfg["availability_zones"]) : 0
 
   vpc_id = data.aws_vpc.current.id
 
   tags = {
     "kubestack.com/cluster_name"          = data.aws_eks_cluster.current.name
-    "kubestack.com/cluster_provider_zone" = local.availability_zones[count.index]
+    "kubestack.com/cluster_provider_zone" = local.cfg["availability_zones"][count.index]
   }
 }

@@ -3,11 +3,11 @@ variable "configuration" {
 
     name = optional(string)
 
-    instance_types   = optional(string)
-    desired_capacity = optional(string)
-    min_size         = optional(string)
-    max_size         = optional(string)
-    disk_size        = optional(string)
+    instance_types = optional(list(string))
+    desired_size   = optional(string)
+    min_size       = optional(string)
+    max_size       = optional(string)
+    disk_size      = optional(string)
 
     ami_type = optional(string)
 
@@ -19,9 +19,9 @@ variable "configuration" {
       instance_metadata_tags      = optional(string)
     }))
 
-    availability_zones = optional(string)
+    availability_zones = optional(list(string))
 
-    vpc_subnet_ids = optional(string)
+    vpc_subnet_ids = optional(list(string))
 
     vpc_secondary_cidr = optional(string)
 

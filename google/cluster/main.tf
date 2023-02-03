@@ -74,4 +74,6 @@ module "cluster" {
     mode      = local.router_advertise_config_mode
   }
   router_asn = local.router_asn
+
+  logging_config_enable_components = local.logging_config_enable_components
 }

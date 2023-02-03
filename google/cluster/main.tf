@@ -75,5 +75,5 @@ module "cluster" {
   }
   router_asn = local.router_asn
 
-  logging_config = local.logging_config_enabled_components
+  logging_config_enable_components = local.logging_config_enable_components
 }

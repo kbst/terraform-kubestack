@@ -75,11 +75,8 @@ resource "google_container_cluster" "current" {
     }
   }
 
-  dynamic "logging_config" {
-    for_each = var.logging_config != null ? [""] : []
-    content {
-      enable_components = var.logging_config
-    }
+  logging_config {
+    enable_components = var.logging_config_enable_components
   }
 
   private_cluster_config {

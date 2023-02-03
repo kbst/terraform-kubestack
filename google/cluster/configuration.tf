@@ -85,6 +85,6 @@ locals {
   router_advertise_config_mode             = lookup(local.cfg, "router_advertise_config_mode", null)
   router_asn                               = lookup(local.cfg, "router_asn", null)
 
-  logging_config_enabled_components_lookup = lookup(local.cfg, "logging_config_enabled_components", "")
-  logging_config_enabled_components        = compact(split(",", local.logging_config_enabled_components_lookup))
+  logging_config_enable_components_lookup = lookup(local.cfg, "logging_config_enable_components", "SYSTEM_COMPONENTS,WORKLOADS")
+  logging_config_enable_components        = compact(split(",", local.logging_config_enable_components_lookup))
 }

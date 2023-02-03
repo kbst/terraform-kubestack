@@ -193,7 +193,7 @@ variable "router_asn" {
   type        = number
 }
 
-variable "logging_config" {
-  description = "Logging configuration."
+variable "logging_config_enable_components" {
+  description = "Logging config components to enable."
   type        = list(string)
 }

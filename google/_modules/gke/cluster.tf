@@ -79,6 +79,10 @@ resource "google_container_cluster" "current" {
     enable_components = var.logging_config_enable_components
   }
 
+  monitoring_config {
+    enable_components = var.monitoring_config_enable_components
+  }
+
   private_cluster_config {
     enable_private_nodes    = var.enable_private_nodes
     enable_private_endpoint = false

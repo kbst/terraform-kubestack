@@ -197,3 +197,8 @@ variable "logging_config_enable_components" {
   description = "Logging config components to enable."
   type        = list(string)
 }
+
+variable "monitoring_config_enable_components" {
+  description = "Monitoring config components to enable."
+  type        = list(string)
+}

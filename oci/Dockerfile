@@ -83,6 +83,8 @@ RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && mv google-cloud-sdk /opt/google \
     && /opt/google/bin/gcloud --version
 
+RUN /opt/google/bin/gcloud components install gke-gcloud-auth-plugin
+
 
 #
 #

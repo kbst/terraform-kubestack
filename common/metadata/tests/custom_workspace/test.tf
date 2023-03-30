@@ -13,12 +13,12 @@ module "mut" {
   base_domain     = "testd.example.com"
   provider_name   = "testp"
   provider_region = "testr"
-  workspace = "testw"
+  workspace       = "testw"
 }
 
 locals {
   exp_workspace = "testw"
-  exp_name = "testn-${local.exp_workspace}-testr"
+  exp_name      = "testn-${local.exp_workspace}-testr"
 }
 
 resource "test_assertions" "name" {
@@ -46,6 +46,6 @@ resource "test_assertions" "workspace_tag" {
 
   check "contains" {
     description = "check the workspace is one of the tags"
-    condition = contains(module.mut.tags, local.exp_workspace)
+    condition   = contains(module.mut.tags, local.exp_workspace)
   }
 }

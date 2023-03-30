@@ -17,11 +17,11 @@ module "mut" {
 }
 
 locals {
-  exp_name = "testn-test_custom_label_namespace-testr"
-  exp_domain = "testp.testd.example.com"
-  exp_fqdn = "testn-test_custom_label_namespace-testr.testp.testd.example.com"
-  exp_workspace = "test_custom_label_namespace"
-  exp_provider_name = "testp"
+  exp_name            = "testn-test_custom_label_namespace-testr"
+  exp_domain          = "testp.testd.example.com"
+  exp_fqdn            = "testn-test_custom_label_namespace-testr.testp.testd.example.com"
+  exp_workspace       = "test_custom_label_namespace"
+  exp_provider_name   = "testp"
   exp_provider_region = "testr"
   exp_label_namespace = "testlns-"
 }
@@ -32,7 +32,7 @@ resource "test_assertions" "labels" {
   equal "scheme" {
     description = "labels have correct key/value pairs"
     got         = module.mut.labels
-    want        = {
+    want = {
       "${local.exp_label_namespace}cluster_name"            = local.exp_name
       "${local.exp_label_namespace}cluster_domain"          = local.exp_domain
       "${local.exp_label_namespace}cluster_fqdn"            = local.exp_fqdn

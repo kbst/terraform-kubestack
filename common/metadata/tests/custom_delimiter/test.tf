@@ -13,15 +13,15 @@ module "mut" {
   base_domain     = "testd.example.com"
   provider_name   = "testp"
   provider_region = "testr"
-  delimiter = ""
+  delimiter       = ""
 }
 
 locals {
-  exp_name = "testntest_custom_delimitertestr"
-  exp_domain = "testp.testd.example.com"
-  exp_fqdn = "testntest_custom_delimitertestr.testp.testd.example.com"
-  exp_workspace = "test_custom_delimiter"
-  exp_provider_name = "testp"
+  exp_name            = "testntest_custom_delimitertestr"
+  exp_domain          = "testp.testd.example.com"
+  exp_fqdn            = "testntest_custom_delimitertestr.testp.testd.example.com"
+  exp_workspace       = "test_custom_delimiter"
+  exp_provider_name   = "testp"
   exp_provider_region = "testr"
 }
 
@@ -61,7 +61,7 @@ resource "test_assertions" "labels" {
   equal "scheme" {
     description = "labels have correct key/value pairs"
     got         = module.mut.labels
-    want        = {
+    want = {
       "kubestack.com/cluster_name"            = local.exp_name
       "kubestack.com/cluster_domain"          = local.exp_domain
       "kubestack.com/cluster_fqdn"            = local.exp_fqdn
@@ -88,7 +88,7 @@ resource "test_assertions" "tags" {
   equal "scheme" {
     description = "returns the used label_namespace"
     got         = module.mut.tags
-    want        = [
+    want = [
       local.exp_name,
       local.exp_workspace,
       local.exp_provider_name,

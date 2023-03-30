@@ -16,11 +16,11 @@ module "mut" {
 }
 
 locals {
-  exp_name = "testn-test_defaults-testr"
-  exp_domain = "testp.testd.example.com"
-  exp_fqdn = "testn-test_defaults-testr.testp.testd.example.com"
-  exp_workspace = "test_defaults"
-  exp_provider_name = "testp"
+  exp_name            = "testn-test_defaults-testr"
+  exp_domain          = "testp.testd.example.com"
+  exp_fqdn            = "testn-test_defaults-testr.testp.testd.example.com"
+  exp_workspace       = "test_defaults"
+  exp_provider_name   = "testp"
   exp_provider_region = "testr"
 }
 
@@ -60,7 +60,7 @@ resource "test_assertions" "labels" {
   equal "scheme" {
     description = "labels have correct key/value pairs"
     got         = module.mut.labels
-    want        = {
+    want = {
       "kubestack.com/cluster_name"            = local.exp_name
       "kubestack.com/cluster_domain"          = local.exp_domain
       "kubestack.com/cluster_fqdn"            = local.exp_fqdn
@@ -87,7 +87,7 @@ resource "test_assertions" "tags" {
   equal "scheme" {
     description = "returns the used label_namespace"
     got         = module.mut.tags
-    want        = [
+    want = [
       local.exp_name,
       local.exp_workspace,
       local.exp_provider_name,

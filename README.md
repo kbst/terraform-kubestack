@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">Kubestack</h1>
-<h3 align="center">The Open Source Gitops Framework</h3>
+<h3 align="center">The Open Source Terraform framework for Kubernetes Platform Engineering</h3>
 
 <div align="center">
 
@@ -33,41 +33,18 @@
 
 ## Introduction
 
-[Kubestack is a Gitops framework](https://www.kubestack.com) for managed Kubernetes services based on Terraform and Kustomize.
+[Kubestack is a Terraform framework for Kubernetes Platform Engineering](https://www.kubestack.com) teams to define the entire cloud native stack in one Terraform code base and continuously evolve the platform safely through GitOps.
 
-### Features
-* Provides full testability of configuration changes
-* Clearly separates infrastructure and applications (`ops` & `apps` cluster pair)
-* Ensures K8s cluster config, surrounding infrastructure (e.g. DNS, IPs) and cluster services (e.g. Ingress) are maintained together
-* Unifies application environments across cloud providers
-* Increases deployment confidance through local deployments that accurately mirror cloud deployments
-* Enables a sustainable and fully automated GitOps workflow
+### Highlights
 
+* [Convention over configuration platform engineering framework](https://www.kubestack.com/framework/documentation/) that makes the power of platforms accessible to your whole engineering team
+* [Platform architecture](https://www.kubestack.com/framework/documentation/platform-architecture/) and [GitOps workflow](https://www.kubestack.com/framework/documentation/gitops-process/) enabling all team members to safely iterate while protecting your application environments
+* [Extendable, future-proof, low-maintenance Terraform code base](https://www.kubestack.com/framework/documentation/extending-kubestack/) and robust automation even for complex Kubernetes platforms
 
 ## Getting Started
 
-For the easiest way to get started, [visit the official Kubestack quickstart](https://www.kubestack.com/infrastructure/documentation/quickstart). This tutorial will help you get started with the Kubestack GitOps framework. It is divided into three steps.
-
-1. Develop Locally
-    * Scaffold your repository and tweak your config in a local development environment that simulates your actual cloud configuration using Kubernetes in Docker (KinD).
-3. Provision Infrastructure
-    * Set-up cloud prerequisites and bootstrap Kubestack's environment and clusters on your cloud provider for the first time.
-4. Set-up Automation
-    * Integrate CI/CD to automate changes following Kubestack's GitOps workflow.
-
-See the [`tests`](./tests) directory for an example of how to extend this towards multi-cluster and/or multi-cloud.
-
-
-## Repository Layout
-
-This repository holds Terraform modules in directories matching the respective provider name, e.g. [`aws`](./aws), [`azurerm`](./azurerm), [`google`](./google). Additionally [`common`](./common) holds the modules that are used for all providers. Most notably the [`metadata`](./common/metadata) module that ensures a consistent naming scheme and the `cluster_services` module which integrates Kustomize into the Terraform apply.
-
-Each cloud provider specific module directory always has a `cluster`, `cluster-local`, and `_modules` directories. The cluster module is user facing and once Kubestack is out of beta the goal is to not change the module interface unless the major version changes. The cluster module then internally uses the module in `_modules` that holds the actual implementation. The cluster-local module is similar to the cluster module, but configured for local deployments.
-
-The [`quickstart`](./quickstart) directory is home to the source for the zip files that are used to bootstrap the user repositories when following the quickstart documentation.
-
-The [`tests`](./tests) directory holds a set of happy path tests that also act as a example of how to do multiple cluster pairs across multiple clouds from one repository.
-
+For the easiest way to get started, [follow the Kubestack tutorial](https://www.kubestack.com/framework/tutorial/).
+The tutorial will help you get started with the Kubestack framework and build a Kubernetes platform application teams love.
 
 ## Getting Help
 
@@ -77,11 +54,19 @@ Refer to the [official documentation](https://www.kubestack.com/framework/docume
 **Community Help**  
 If you have any questions while following the tutorial, join the [#kubestack](https://app.slack.com/client/T09NY5SBT/CMBCT7XRQ) channel on the Kubernetes community. To create an account request an [invitation](https://slack.k8s.io/).
 
-**Professional Services**  
-For organizations interested in accelerating their GitOps journey, [professional services](https://www.kubestack.com/lp/professional-services) are available.
-
-
 ## Contributing
+
+This repository holds Terraform modules in directories matching the respective provider name, e.g. [`aws`](./aws), [`azurerm`](./azurerm), [`google`](./google). Additionally [`common`](./common) holds the modules that are used for all providers.
+Most notably the [`metadata`](./common/metadata) module that ensures a consistent naming scheme and the `cluster_services` module which integrates Kustomize into the Terraform apply.
+
+Each cloud provider specific module directory always has a `cluster` and `_modules` directories.
+The cluster module is user facing and once Kubestack is out of beta the goal is to not change the module interface unless the major version changes.
+The cluster module then internally uses the module in `_modules` that holds the actual implementation.
+
+The [`quickstart`](./quickstart) directory is home to the source for the zip files that are used to bootstrap the user repositories when following the tutorial.
+
+The [`tests`](./tests) directory holds a set of happy path tests.
+
 Contributions to the Kubestack framework are welcome and encouraged. Before contributing, please read the [Contributing](./CONTRIBUTING.md) and [Code of Conduct](./CODE_OF_CONDUCT.md) Guidelines.
 
 One super simple way to contribute to the success of this project is to give it a star.  
@@ -92,14 +77,13 @@ One super simple way to contribute to the success of this project is to give it 
 
 </div>
 
-
 ## Kubestack Repositories
-* [kbst/terraform-kubestack](https://github.com/kbst/terraform-kubestack) (this repository)  
-    * Terraform GitOps Framework - Everything you need to build reliable automation for AKS, EKS and GKE Kubernetes clusters in one free and open-source framework.
-* [kbst/kbst](https://github.com/kbst/kbst)  
-    * Kubestack Framework CLI - All-in-one CLI to scaffold your Infrastructure as Code repository and deploy your entire platform stack locally for faster iteration.
-* [kbst/terraform-provider-kustomization](https://github.com/kbst/terraform-provider-kustomization)  
-    * Kustomize Terraform Provider - A Kubestack maintained Terraform provider for Kustomize, available in the [Terraform registry](https://registry.terraform.io/providers/kbst/kustomization/latest).
-* [kbst/catalog](https://github.com/kbst/catalog)  
-    * Catalog of cluster services as Kustomize bases - Continuously tested and updated Kubernetes services, installed and customizable using native Terraform syntax.
 
+* [kbst/terraform-kubestack](https://github.com/kbst/terraform-kubestack) (this repository)  
+  * [Terraform framework for Kubernetes Platform Engineering](https://www.kubestack.com/) teams - Define your entire cloud native Kubernetes stack in one Terraform code base and continuously evolve the platform safely through GitOps.
+* [kbst/kbst](https://github.com/kbst/kbst)  
+  * Kubestack CLI `kbst` - The CLI helps you scaffold the Terraform code that defines the clusters, node pools or services of your platform. The CLI works on local files only, you can see any change it makes with git status.
+* [kbst/terraform-provider-kustomization](https://github.com/kbst/terraform-provider-kustomization)  
+  * Kustomize Terraform Provider - A Kubestack maintained Terraform provider for Kustomize, available in the [Terraform registry](https://registry.terraform.io/providers/kbst/kustomization/latest).
+* [kbst/catalog](https://github.com/kbst/catalog)  
+  * Catalog of Terraform modules for Kubernetes platforms - The [Kubestack Terraform modules](https://www.kubestack.com/catalog/) make it easy for platform engineering teams to deliver common platform features in production ready configurations.

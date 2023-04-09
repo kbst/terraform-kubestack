@@ -7,10 +7,12 @@ DOCKER_PUSH ?= false
 DOCKER_TARGET ?= multi-cloud
 
 ifeq ("${DOCKER_PUSH}", "true")
+BUILD_PLATFORM := --platform linux/arm64,linux/amd64
 BUILD_CACHE_DIST := --cache-to type=registry,mode=max,ref=kubestack/framework-dev:buildcache-dist-helper,push=${DOCKER_PUSH}
 BUILD_OUTPUT := --output type=registry,push=${DOCKER_PUSH}
 BUILD_CACHE := --cache-to type=registry,mode=max,ref=kubestack/framework-dev:buildcache-${DOCKER_TARGET},push=${DOCKER_PUSH}
 else
+BUILD_PLATFORM := 
 BUILD_OUTPUT := --output type=docker
 endif
 
@@ -40,6 +42,7 @@ dist:
 
 build:
 	docker buildx build \
+		${BUILD_PLATFORM} \
 		--build-arg GIT_REF=${GIT_REF} \
 		--build-arg GIT_SHA=${GIT_SHA} \
 		--file oci/Dockerfile \

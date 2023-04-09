@@ -23,6 +23,8 @@ RUN mkdir -p /opt/bin
 # Common builder
 FROM builder AS common-builder
 
+ARG TARGETARCH
+
 # https://github.com/kubernetes/kubernetes/releases
 ARG KUBECTL_VERSION=v1.26.1
 
@@ -33,19 +35,19 @@ ARG KUSTOMIZE_VERSION=v5.0.0
 ARG TERRAFORM_VERSION=1.3.7
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
-    && curl -Lo /opt/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+    && curl -Lo /opt/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl \
     && chmod +x /opt/bin/kubectl \
     && /opt/bin/kubectl version --client=true
 
 RUN echo "KUSTOMIZE_VERSION: ${KUSTOMIZE_VERSION}" \
-    && curl -LO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz \
-    && tar -xf kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz \
+    && curl -LO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_${TARGETARCH}.tar.gz \
+    && tar -xf kustomize_${KUSTOMIZE_VERSION}_linux_${TARGETARCH}.tar.gz \
     && mv kustomize /opt/bin/kustomize \
     && /opt/bin/kustomize version
 
 RUN echo "TERRAFORM_VERSION: ${TERRAFORM_VERSION}" \
-    && curl -LO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
-    && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /opt/bin \
+    && curl -LO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
+    && unzip terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip -d /opt/bin \
     && chmod +x /opt/bin/terraform \
     && /opt/bin/terraform version
 
@@ -57,13 +59,16 @@ COPY oci/entrypoint oci/entrypoint_user /opt/bin/
 # AWS builder
 FROM builder AS aws-builder
 
+ARG TARGETARCH
+
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
 ARG AWS_CLI_VERSION=2.9.21
 
 RUN mkdir -p /opt/aws/bin
 
 RUN echo "AWS_CLI_VERSION: ${AWS_CLI_VERSION}" \
-    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" \
+    && arch=`echo ${TARGETARCH} | sed -e 's/amd64/x86_64/' -e 's/arm64/aarch64/'` \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-${arch}-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install -i /opt/aws -b /opt/aws/bin \
     && /opt/aws/bin/aws --version
@@ -74,12 +79,15 @@ RUN echo "AWS_CLI_VERSION: ${AWS_CLI_VERSION}" \
 # GCP builder
 FROM builder AS gcp-builder
 
+ARG TARGETARCH
+
 # https://cloud.google.com/sdk/docs/release-notes
 ARG GOOGLE_CLOUD_SDK_VERSION=416.0.0
 
 RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
-    && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
-    && tar zxvf google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz google-cloud-sdk \
+    && arch=`echo ${TARGETARCH} | sed -e 's/amd64/x86_64/' -e 's/arm64/arm/'` \
+    && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-${arch}.tar.gz \
+    && tar zxvf google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-${arch}.tar.gz google-cloud-sdk \
     && mv google-cloud-sdk /opt/google \
     && /opt/google/bin/gcloud --version
 
@@ -112,6 +120,8 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 # KinD builder
 FROM builder as kind-builder
 
+ARG TARGETARCH
+
 # https://docs.docker.com/engine/release-notes/
 ARG DOCKER_CLI_VERSION=23.0.0
 
@@ -119,7 +129,8 @@ RUN mkdir -p /opt/bin
 
 # kind requires docker client
 RUN echo "DOCKER_CLI_VERSION: ${DOCKER_CLI_VERSION}" \
-    && curl -O https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_CLI_VERSION}.tgz \
+    && arch=`echo ${TARGETARCH} | sed -e 's/amd64/x86_64/' -e 's/arm64/aarch64/'` \
+    && curl -O https://download.docker.com/linux/static/stable/${arch}/docker-${DOCKER_CLI_VERSION}.tgz \
     && tar zxvf docker-${DOCKER_CLI_VERSION}.tgz -C . docker/docker \
     && mv docker/docker /opt/bin/docker \
     && /opt/bin/docker --help

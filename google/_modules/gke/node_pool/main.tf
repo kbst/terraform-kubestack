@@ -36,6 +36,18 @@ resource "google_container_node_pool" "current" {
       mode = var.node_workload_metadata_config
     }
 
+    dynamic "guest_accelerator" {
+      # Make sure to generate this only once
+      for_each = var.guest_accelerator == null ? [] : [1]
+
+      content {
+        type               = guest_accelerator.value.type
+        count              = guest_accelerator.value.count
+        gpu_partition_size = guest_accelerator.value.gpu_partition_size
+        gpu_sharing_config = guest_accelerator.value.gpu_sharing_config
+      }
+    }
+
     taint = var.taint
   }
 

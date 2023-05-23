@@ -115,3 +115,17 @@ variable "node_locations" {
   description = "List of zones in the cluster's region to start worker nodes in. Defaults to cluster's node locations."
   default     = null
 }
+
+variable "guest_accelerator" {
+  type = object({
+    type               = string
+    count              = number
+    gpu_partition_size = optional(string)
+    gpu_sharing_config = optional(object({
+      gpu_sharing_strategy       = string
+      max_shared_clients_per_gpu = number
+    }))
+  })
+  description = "`guest_accelerator` block supports during node_group creation, useful to provision GPU-capable nodes. Default to `null` or `{}` which will disable GPUs."
+  default     = null
+}

@@ -22,7 +22,7 @@ module "cluster" {
 
   metadata_name            = module.cluster_metadata.name
   metadata_fqdn            = module.cluster_metadata.fqdn
-  metadata_labels          = module.cluster_metadata.labels
+  metadata_labels          = merge(module.cluster_metadata.labels, local.additional_metadata_labels)
   metadata_label_namespace = module.cluster_metadata.label_namespace
 
   dns_prefix = local.dns_prefix

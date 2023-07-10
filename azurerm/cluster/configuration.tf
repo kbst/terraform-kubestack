@@ -62,4 +62,8 @@ locals {
 
   availability_zones_lookup = lookup(local.cfg, "availability_zones", "")
   availability_zones        = local.availability_zones_lookup != "" ? split(",", local.availability_zones_lookup) : []
+
+  additional_metadata_labels_lookup = lookup(local.cfg, "additional_metadata_labels", "")
+  additional_metadata_labels_tuples = [for t in split(",", local.additional_metadata_labels_lookup) : split("=", t)]
+  additional_metadata_labels        = { for t in local.additional_metadata_labels_tuples : t[0] => t[1] if length(t) == 2 }
 }

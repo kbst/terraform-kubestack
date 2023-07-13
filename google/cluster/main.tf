@@ -78,4 +78,6 @@ module "cluster" {
 
   logging_config_enable_components    = local.logging_config_enable_components
   monitoring_config_enable_components = local.monitoring_config_enable_components
+
+  enable_gcs_fuse_csi_driver = local.enable_gcs_fuse_csi_driver
 }

@@ -202,3 +202,8 @@ variable "monitoring_config_enable_components" {
   description = "Monitoring config components to enable."
   type        = list(string)
 }
+
+variable "enable_gcs_fuse_csi_driver" {
+  description = "Whether to enable GCSFuse CSI driver addon."
+  type        = bool
+}

@@ -18,6 +18,8 @@ module "node_pool" {
 
   disk_size = var.root_device_volume_size
 
+  metadata_options = var.metadata_options
+
   taints = var.taints
 
   ami_type = null

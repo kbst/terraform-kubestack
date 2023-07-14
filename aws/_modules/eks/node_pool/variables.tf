@@ -89,3 +89,14 @@ variable "kubernetes_version" {
   type        = string
   description = "Kubernetes version to use for node pool."
 }
+
+variable "metadata_options" {
+  description = "EC2 metadata service options."
+  type = object({
+    http_endpoint               = optional(string)
+    http_tokens                 = optional(string)
+    http_put_response_hop_limit = optional(number)
+    http_protocol_ipv6          = optional(string)
+    instance_metadata_tags      = optional(string)
+  })
+}

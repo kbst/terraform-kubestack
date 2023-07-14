@@ -23,7 +23,17 @@ resource "aws_eks_node_group" "nodes" {
   version        = var.kubernetes_version
   ami_type       = var.ami_type == null ? local.ami_type : var.ami_type
   instance_types = var.instance_types
-  disk_size      = var.disk_size
+
+  disk_size = local.create_launch_template ? null : var.disk_size
+
+  dynamic "launch_template" {
+    for_each = local.create_launch_template ? toset([1]) : toset([])
+
+    content {
+      id      = aws_launch_template.current[0].id
+      version = aws_launch_template.current[0].latest_version
+    }
+  }
 
   tags   = merge(var.tags, var.eks_metadata_tags)
   labels = merge(var.labels, var.metadata_labels)

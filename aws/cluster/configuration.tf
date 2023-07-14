@@ -30,6 +30,28 @@ locals {
   cluster_instance_types_lookup = lookup(local.cfg, "cluster_instance_types", local.cluster_instance_type_lookup)
   cluster_instance_types        = toset(split(",", local.cluster_instance_types_lookup))
 
+  metadata_options_http_endpoint               = lookup(local.cfg, "metadata_options_http_endpoint", null)
+  metadata_options_http_tokens                 = lookup(local.cfg, "metadata_options_http_tokens", null)
+  metadata_options_http_put_response_hop_limit = lookup(local.cfg, "metadata_options_http_put_response_hop_limit", null)
+  metadata_options_http_protocol_ipv6          = lookup(local.cfg, "metadata_options_http_protocol_ipv6", null)
+  metadata_options_instance_metadata_tags      = lookup(local.cfg, "metadata_options_instance_metadata_tags", null)
+
+  metadata_options = (
+    local.metadata_options_http_endpoint != null ||
+    local.metadata_options_http_tokens != null ||
+    local.metadata_options_http_put_response_hop_limit != null ||
+    local.metadata_options_http_protocol_ipv6 != null ||
+    local.metadata_options_instance_metadata_tags != null
+    ? {
+      http_endpoint               = local.metadata_options_http_endpoint
+      http_tokens                 = local.metadata_options_http_tokens
+      http_put_response_hop_limit = local.metadata_options_http_put_response_hop_limit
+      http_protocol_ipv6          = local.metadata_options_http_protocol_ipv6
+      instance_metadata_tags      = local.metadata_options_instance_metadata_tags
+    }
+    : null
+  )
+
   cluster_additional_node_tags_lookup = lookup(local.cfg, "cluster_additional_node_tags", "")
   cluster_additional_node_tags_tuples = [for t in split(",", local.cluster_additional_node_tags_lookup) : split("=", t)]
   cluster_additional_node_tags        = { for t in local.cluster_additional_node_tags_tuples : t[0] => t[1] if length(t) == 2 }

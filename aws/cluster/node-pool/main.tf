@@ -31,6 +31,8 @@ module "node_pool" {
 
   disk_size = local.disk_size
 
+  metadata_options = local.metadata_options
+
   taints = local.taints
 
   tags = local.tags

@@ -18,6 +18,8 @@ locals {
 
   ami_type = lookup(local.cfg, "ami_type")
 
+  metadata_options = lookup(local.cfg, "metadata_options", null)
+
   availability_zones_lookup = local.cfg["availability_zones"] == null ? "" : local.cfg["availability_zones"]
   availability_zones        = compact(split(",", local.availability_zones_lookup))
 

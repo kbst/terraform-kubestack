@@ -35,6 +35,8 @@ module "cluster" {
   min_size         = local.cluster_min_size
   cluster_version  = local.cluster_version
 
+  metadata_options = local.metadata_options
+
   root_device_encrypted   = local.worker_root_device_encrypted
   root_device_volume_size = local.worker_root_device_volume_size
 

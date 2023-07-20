@@ -165,3 +165,14 @@ variable "cluster_encryption_key_arn" {
   default     = null
   description = "Arn of an AWS KMS symmetric key to be used for encryption of kubernetes resources."
 }
+
+variable "metadata_options" {
+  description = "EC2 metadata service options."
+  type = object({
+    http_endpoint               = optional(string)
+    http_tokens                 = optional(string)
+    http_put_response_hop_limit = optional(number)
+    http_protocol_ipv6          = optional(string)
+    instance_metadata_tags      = optional(string)
+  })
+}

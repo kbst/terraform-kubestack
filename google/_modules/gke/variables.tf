@@ -28,9 +28,9 @@ variable "location" {
   description = "Location accepts a region or zone and starts a regional or zonal cluster respectively. Kubestack is only supported for regional clusters."
 }
 
-variable "node_locations" {
-  type        = list(string)
-  description = "List of zones in the cluster's region to start worker nodes in."
+variable "location_policy" {
+  type        = string
+  description = "Location policy specifies the algorithm used when scaling-up the node pool."
 }
 
 variable "min_master_version" {
@@ -61,6 +61,11 @@ variable "min_node_count" {
 variable "max_node_count" {
   description = "Max number of nodes for this node pool."
   type        = string
+}
+
+variable "node_locations" {
+  type        = list(string)
+  description = "List of zones in the cluster's region to start worker nodes in."
 }
 
 variable "extra_oauth_scopes" {

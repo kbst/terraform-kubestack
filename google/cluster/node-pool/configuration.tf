@@ -19,6 +19,7 @@ locals {
   initial_node_count = local.cfg["initial_node_count"]
   min_node_count     = local.cfg["min_node_count"]
   max_node_count     = local.cfg["max_node_count"]
+  location_policy    = local.cfg["location_policy"] != null ? local.cfg["location_policy"] : "BALANCED"
 
   disk_size_gb = local.cfg["disk_size_gb"]
   disk_type    = local.cfg["disk_type"]

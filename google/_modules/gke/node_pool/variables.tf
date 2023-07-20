@@ -43,6 +43,11 @@ variable "max_node_count" {
   type        = string
 }
 
+variable "location_policy" {
+  type        = string
+  description = "Location policy specifies the algorithm used when scaling-up the node pool."
+}
+
 variable "service_account_email" {
   description = "The service account email to use for this node pool."
   type        = string

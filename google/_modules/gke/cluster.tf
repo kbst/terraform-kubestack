@@ -48,6 +48,10 @@ resource "google_container_cluster" "current" {
     network_policy_config {
       disabled = false
     }
+
+    gcs_fuse_csi_driver_config {
+      enabled = var.enable_gcs_fuse_csi_driver
+    }
   }
 
   network_policy {

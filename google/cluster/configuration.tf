@@ -91,4 +91,6 @@ locals {
 
   monitoring_config_enable_components_lookup = lookup(local.cfg, "monitoring_config_enable_components", "SYSTEM_COMPONENTS")
   monitoring_config_enable_components        = compact(split(",", local.monitoring_config_enable_components_lookup))
+
+  enable_gcs_fuse_csi_driver = lookup(local.cfg, "enable_gcs_fuse_csi_driver", false)
 }

@@ -4,7 +4,7 @@ terraform {
     google = {
       # https://registry.terraform.io/providers/hashicorp/google/latest
       source  = "hashicorp/google"
-      version = ">= 4.0.0"
+      version = ">= 4.76.0"
     }
 
     kubernetes = {

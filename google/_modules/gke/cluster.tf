@@ -49,8 +49,12 @@ resource "google_container_cluster" "current" {
       disabled = false
     }
 
-    gcs_fuse_csi_driver_config {
-      enabled = var.enable_gcs_fuse_csi_driver
+    dynamic "gcs_fuse_csi_driver_config" {
+      for_each = var.enable_gcs_fuse_csi_driver != null ? [1] : []
+
+      content {
+        enabled = var.enable_gcs_fuse_csi_driver
+      }
     }
   }
 

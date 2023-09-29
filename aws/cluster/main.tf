@@ -55,6 +55,7 @@ module "cluster" {
   cluster_endpoint_private_access = local.cluster_endpoint_private_access
   cluster_endpoint_public_access  = local.cluster_endpoint_public_access
   cluster_public_access_cidrs     = local.cluster_public_access_cidrs
+  cluster_service_cidr            = local.cluster_service_cidr
 
   cluster_encryption_key_arn = local.cluster_encryption_key_arn
 

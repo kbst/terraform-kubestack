@@ -10,6 +10,13 @@ resource "aws_eks_cluster" "current" {
     public_access_cidrs     = var.cluster_public_access_cidrs
   }
 
+  dynamic "kubernetes_network_config" {
+    for_each = var.cluster_service_cidr != null ? toset([1]) : toset([])
+    content {
+      service_ipv4_cidr = var.cluster_service_cidr
+    }
+  }
+
   dynamic "encryption_config" {
     for_each = var.cluster_encryption_key_arn != null ? toset([1]) : toset([])
     content {

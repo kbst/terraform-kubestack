@@ -160,6 +160,12 @@ variable "cluster_public_access_cidrs" {
   description = "List of CIDR blocks which can access the Amazon EKS public API server endpoint. EKS defaults this to a list with 0.0.0.0/0."
 }
 
+variable "cluster_service_cidr" {
+  type        = string
+  default     = null
+  description = "Sets the Service CIDR for the EKS cluster."
+}
+
 variable "cluster_encryption_key_arn" {
   type        = string
   default     = null

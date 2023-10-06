@@ -50,6 +50,14 @@ jobs:
       id-token: write # needed for keyless signing
 
     steps:
+    - name: 'Free disk space'
+      # https://github.com/actions/runner-images/issues/2840#issuecomment-790492173
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf $AGENT_TOOLSDIRECTORY
+
     - name: 'Checkout'
       uses: actions/checkout@v3
 

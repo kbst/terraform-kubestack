@@ -82,6 +82,7 @@ locals {
   cluster_endpoint_public_access     = lookup(local.cfg, "cluster_endpoint_public_access", true)
   cluster_public_access_cidrs_lookup = lookup(local.cfg, "cluster_public_access_cidrs", null)
   cluster_public_access_cidrs        = local.cluster_public_access_cidrs_lookup == null ? null : split(",", local.cluster_public_access_cidrs_lookup)
+  cluster_service_cidr               = lookup(local.cfg, "cluster_service_cidr", null)
 
   cluster_encryption_key_arn = lookup(local.cfg, "cluster_encryption_key_arn", null)
 }

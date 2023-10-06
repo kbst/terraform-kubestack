@@ -163,7 +163,7 @@ variable "cluster_public_access_cidrs" {
 variable "cluster_service_cidr" {
   type        = string
   default     = null
-  description = "Sets the Service CIDR for the EKS cluster. EKS defaults this to 172.20.0.0/0."
+  description = "Sets the Service CIDR for the EKS cluster."
 }
 
 variable "cluster_encryption_key_arn" {

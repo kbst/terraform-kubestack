@@ -172,6 +172,12 @@ variable "cluster_encryption_key_arn" {
   description = "Arn of an AWS KMS symmetric key to be used for encryption of kubernetes resources."
 }
 
+variable "worker_ami_release_version" {
+  type        = string
+  default     = null
+  description = "AMI version of the EKS Node Group. Defaults to latest version for Kubernetes version"
+}
+
 variable "metadata_options" {
   description = "EC2 metadata service options."
   type = object({

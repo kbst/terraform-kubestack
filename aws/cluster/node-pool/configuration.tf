@@ -11,6 +11,7 @@ locals {
 
   instance_types_lookup = local.cfg["instance_types"] == null ? "" : local.cfg["instance_types"]
   instance_types        = toset(split(",", local.instance_types_lookup))
+  ami_release_version   = lookup(local.cfg, "ami_release_version")
   desired_capacity      = lookup(local.cfg, "desired_capacity")
   min_size              = lookup(local.cfg, "min_size")
   max_size              = lookup(local.cfg, "max_size")

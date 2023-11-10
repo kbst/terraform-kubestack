@@ -59,6 +59,8 @@ module "cluster" {
 
   cluster_encryption_key_arn = local.cluster_encryption_key_arn
 
+  worker_ami_release_version = local.worker_ami_release_version
+
   # cluster module configuration is still map(string)
   # once module_variable_optional_attrs isn't experimental anymore
   # we can migrate cluster module configuration to map(object(...))

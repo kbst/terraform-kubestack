@@ -20,9 +20,10 @@ resource "aws_eks_node_group" "nodes" {
     min_size     = var.min_size
   }
 
-  version        = var.kubernetes_version
-  ami_type       = var.ami_type == null ? local.ami_type : var.ami_type
-  instance_types = var.instance_types
+  version         = var.kubernetes_version
+  ami_type        = var.ami_type == null ? local.ami_type : var.ami_type
+  release_version = var.ami_release_version
+  instance_types  = var.instance_types
 
   disk_size = local.create_launch_template ? null : var.disk_size
 

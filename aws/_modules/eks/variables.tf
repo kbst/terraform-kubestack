@@ -175,7 +175,7 @@ variable "cluster_encryption_key_arn" {
 variable "worker_ami_release_version" {
   type        = string
   default     = null
-  description = "AMI version of the EKS Node Group. Defaults to latest version for Kubernetes version"
+  description = "AMI version of the EKS Node Group. Defaults to latest version for Kubernetes version. A list of release versions can be found in https://github.com/awslabs/amazon-eks-ami/blob/master/CHANGELOG.md"
 }
 
 variable "metadata_options" {

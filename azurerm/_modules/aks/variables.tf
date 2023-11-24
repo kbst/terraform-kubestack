@@ -189,3 +189,16 @@ variable "availability_zones" {
   description = "The list of availability zones to create the node pool in"
   default     = []
 }
+
+
+variable "keda_enabled" {
+  type        = bool
+  description = "Whether KEDA Autoscaler should be enabled for the cluster."
+  default     = false
+}
+
+variable "vertical_pod_autoscaler_enabled" {
+  type        = bool
+  description = "Whether Vertical Pod Autoscaler should be enabled for the cluster."
+  default     = false
+}

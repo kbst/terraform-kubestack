@@ -41,7 +41,6 @@ resource "azurerm_kubernetes_cluster" "current" {
     network_plugin = var.network_plugin
     network_policy = var.network_policy
 
-    docker_bridge_cidr = "172.17.0.1/16"
     service_cidr       = var.service_cidr
     dns_service_ip     = var.dns_service_ip
     pod_cidr           = var.network_plugin == "azure" ? null : var.pod_cidr
@@ -74,6 +73,11 @@ resource "azurerm_kubernetes_cluster" "current" {
     content {
       log_analytics_workspace_id = var.enable_log_analytics ? azurerm_log_analytics_workspace.current[0].id : null
     }
+  }
+
+  workload_autoscaler_profile {
+      keda_enabled                    = var.keda_enabled
+      vertical_pod_autoscaler_enabled = var.vertical_pod_autoscaler_enabled
   }
 
   tags = var.metadata_labels

@@ -66,4 +66,7 @@ module "cluster" {
   enable_log_analytics      = local.enable_log_analytics
 
   availability_zones = local.availability_zones
+
+  keda_enabled = local.keda_enabled
+  vertical_pod_autoscaler_enabled = local.vertical_pod_autoscaler_enabled
 }

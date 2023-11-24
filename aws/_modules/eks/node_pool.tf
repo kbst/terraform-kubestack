@@ -22,7 +22,8 @@ module "node_pool" {
 
   taints = var.taints
 
-  ami_type = null
+  ami_type            = null
+  ami_release_version = var.worker_ami_release_version
 
   tags = var.additional_node_tags
 

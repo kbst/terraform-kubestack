@@ -85,6 +85,12 @@ variable "ami_type" {
   description = "AMI type to use for nodes of the node pool."
 }
 
+variable "ami_release_version" {
+  type        = string
+  description = "AMI version of the EKS Node Group. Defaults to latest version for Kubernetes version"
+  default     = null
+}
+
 variable "kubernetes_version" {
   type        = string
   description = "Kubernetes version to use for node pool."

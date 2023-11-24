@@ -3,11 +3,12 @@ variable "configuration" {
 
     name = optional(string)
 
-    instance_types   = optional(string)
-    desired_capacity = optional(string)
-    min_size         = optional(string)
-    max_size         = optional(string)
-    disk_size        = optional(string)
+    instance_types      = optional(string)
+    ami_release_version = optional(string)
+    desired_capacity    = optional(string)
+    min_size            = optional(string)
+    max_size            = optional(string)
+    disk_size           = optional(string)
 
     ami_type = optional(string)
 

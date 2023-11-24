@@ -66,4 +66,7 @@ locals {
   additional_metadata_labels_lookup = lookup(local.cfg, "additional_metadata_labels", "")
   additional_metadata_labels_tuples = [for t in split(",", local.additional_metadata_labels_lookup) : split("=", t)]
   additional_metadata_labels        = { for t in local.additional_metadata_labels_tuples : t[0] => t[1] if length(t) == 2 }
+
+  keda_enabled = lookup(local.cfg, "keda_enabled", false)
+  vertical_pod_autoscaler_enabled = lookup(local.cfg, "vertical_pod_autoscaler_enabled", false)
 }

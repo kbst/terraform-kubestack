@@ -30,7 +30,7 @@ locals {
   auto_repair  = local.cfg["auto_repair"] != null ? local.cfg["auto_repair"] : true
   auto_upgrade = local.cfg["auto_upgrade"] != null ? local.cfg["auto_upgrade"] : true
 
-  taint = local.cfg["taint"]
+  taints = local.cfg["taints"]
 
   extra_oauth_scopes = local.cfg["extra_oauth_scopes"] != null ? local.cfg["extra_oauth_scopes"] : []
 

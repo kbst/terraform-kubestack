@@ -30,7 +30,7 @@ module "node_pool" {
 
   node_workload_metadata_config = local.node_workload_metadata_config
 
-  taint = local.taint
+  taints = local.taints
 
   service_account_email                 = local.service_account_email
   disable_per_node_pool_service_account = local.service_account_email == null ? false : true

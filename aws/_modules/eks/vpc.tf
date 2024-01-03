@@ -40,7 +40,7 @@ resource "aws_eip" "nat_gw" {
 
   tags = local.eks_metadata_tags
 
-  vpc = true
+  domain = "vpc"
 }
 
 resource "aws_nat_gateway" "current" {

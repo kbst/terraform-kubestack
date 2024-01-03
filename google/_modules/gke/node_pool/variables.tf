@@ -109,10 +109,14 @@ variable "node_workload_metadata_config" {
   type        = string
 }
 
-variable "taint" {
+variable "taints" {
+  type = set(object({
+    key    = string
+    value  = string
+    effect = string
+  }))
   description = "Taints to configure for the node pool."
-  type        = list(any)
-  default     = []
+  default     = null
 }
 
 variable "node_locations" {

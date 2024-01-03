@@ -7,7 +7,7 @@ resource "azuread_application" "current" {
 resource "azuread_service_principal" "current" {
   count = var.disable_managed_identities == true ? 1 : 0
 
-  application_id = azuread_application.current[0].application_id
+  client_id = azuread_application.current[0].client_id
 }
 
 resource "azuread_service_principal_password" "current" {

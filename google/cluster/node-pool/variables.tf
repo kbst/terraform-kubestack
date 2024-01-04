@@ -21,7 +21,7 @@ variable "configuration" {
     auto_repair  = optional(bool)
     auto_upgrade = optional(bool)
 
-    taint = optional(set(object({
+    taints = optional(set(object({
       key    = string
       value  = string
       effect = string

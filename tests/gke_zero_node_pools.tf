@@ -17,7 +17,7 @@ module "gke_zero_node_pool" {
       location       = module.gke_zero.current_config["region"]
       node_locations = ["europe-west1-c", "europe-west1-d"]
 
-      taint = [
+      taints = [
         {
           effect = "NO_SCHEDULE"
           key    = "nvidia.com/gpu"

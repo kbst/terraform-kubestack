@@ -13,6 +13,8 @@ module "cluster" {
 
   project = local.project_id
 
+  deletion_protection = local.deletion_protection
+
   metadata_name   = module.cluster_metadata.name
   metadata_fqdn   = module.cluster_metadata.fqdn
   metadata_tags   = module.cluster_metadata.tags

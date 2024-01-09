@@ -17,6 +17,8 @@ locals {
 
   region = local.cfg["region"]
 
+  deletion_protection = lookup(local.cfg, "deletion_protection", null)
+
   cluster_node_locations_lookup = lookup(local.cfg, "cluster_node_locations", "")
   cluster_node_locations        = split(",", local.cluster_node_locations_lookup)
 

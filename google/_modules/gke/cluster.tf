@@ -2,6 +2,8 @@ resource "google_container_cluster" "current" {
   project = var.project
   name    = var.metadata_name
 
+  deletion_protection = var.deletion_protection
+
   location       = var.location
   node_locations = var.node_locations
 

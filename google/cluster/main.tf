@@ -22,6 +22,7 @@ module "cluster" {
   node_locations = local.cluster_node_locations
 
   min_master_version = local.cluster_min_master_version
+  release_channel    = local.cluster_release_channel
 
   daily_maintenance_window_start_time = local.cluster_daily_maintenance_window_start_time
 

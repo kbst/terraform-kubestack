@@ -7,6 +7,10 @@ resource "google_container_cluster" "current" {
 
   min_master_version = var.min_master_version
 
+  release_channel {
+    channel = var.release_channel
+  }
+
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = var.initial_node_count
 

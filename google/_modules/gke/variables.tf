@@ -3,6 +3,11 @@ variable "project" {
   description = "Project the cluster belongs to."
 }
 
+variable "deletion_protection" {
+  type        = bool
+  description = "Must be set to false to destroy clusters."
+}
+
 variable "metadata_name" {
   type        = string
   description = "Metadata name to use."

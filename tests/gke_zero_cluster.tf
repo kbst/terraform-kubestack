@@ -14,6 +14,8 @@ module "gke_zero" {
   configuration = {
     # Settings for Apps-cluster
     apps = {
+      deletion_protection = false
+
       project_id  = "terraform-kubestack-testing"
       name_prefix = "kbstacctest"
       base_domain = "infra.serverwolken.de"

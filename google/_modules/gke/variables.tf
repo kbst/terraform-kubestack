@@ -38,6 +38,11 @@ variable "min_master_version" {
   description = "Minimum GKE master version."
 }
 
+variable "release_channel" {
+  type        = string
+  description = "The selected release channel. Accepted values are: UNSPECIFIED, RAPID, REGULAR, STABLE"
+}
+
 variable "daily_maintenance_window_start_time" {
   type        = string
   description = "Start time of the daily maintenance window."

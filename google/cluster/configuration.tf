@@ -21,6 +21,7 @@ locals {
   cluster_node_locations        = split(",", local.cluster_node_locations_lookup)
 
   cluster_min_master_version = local.cfg["cluster_min_master_version"]
+  cluster_release_channel    = lookup(local.cfg, "cluster_release_channel", "STABLE")
 
   cluster_daily_maintenance_window_start_time = lookup(
     local.cfg,

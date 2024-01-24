@@ -32,6 +32,10 @@ variable "configuration" {
     node_workload_metadata_config = optional(string)
 
     service_account_email = optional(string)
+
+    ephemeral_storage_local_ssd_config = optional(object({
+      local_ssd_count = number
+    }))
   }))
   description = "Map with per workspace cluster configuration."
 }

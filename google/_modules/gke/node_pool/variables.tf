@@ -166,5 +166,12 @@ variable "network_config" {
     pod_ipv4_cidr_block  = string
   })
   description = "Additional network configuration for the node pool."
+}
+
+variable "ephemeral_storage_local_ssd_config" {
+  type = object({
+    local_ssd_count = number
+  })
+  description = "`ephemeral_storage_local_ssd_config` block, useful for node groups with local SSD. Defaults to `null`"
   default     = null
 }

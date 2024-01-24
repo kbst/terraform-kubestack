@@ -46,4 +46,6 @@ locals {
   network_config    = local.cfg["network_config"]
 
   instance_tags = local.cfg["instance_tags"]
+
+  ephemeral_storage_local_ssd_config = local.cfg["ephemeral_storage_local_ssd_config"]
 }

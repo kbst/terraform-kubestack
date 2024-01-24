@@ -56,6 +56,10 @@ variable "configuration" {
     }))
 
     instance_tags = optional(list(string))
+
+    ephemeral_storage_local_ssd_config = optional(object({
+      local_ssd_count = number
+    }))
   }))
 
   description = "Map with per workspace cluster configuration."

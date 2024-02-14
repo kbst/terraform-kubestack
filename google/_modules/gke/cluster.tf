@@ -72,6 +72,20 @@ resource "google_container_cluster" "current" {
     daily_maintenance_window {
       start_time = var.daily_maintenance_window_start_time
     }
+
+    dynamic "maintenance_exclusion" {
+      for_each = var.maintenance_exclusions
+
+      content {
+        start_time     = maintenance_exclusion.value.start_time
+        end_time       = maintenance_exclusion.value.end_time
+        exclusion_name = maintenance_exclusion.value.exclusion_name
+
+        exclusion_options {
+          scope = maintenance_exclusion.value.scope
+        }
+      }
+    }
   }
 
   dynamic "master_authorized_networks_config" {

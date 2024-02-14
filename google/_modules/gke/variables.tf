@@ -53,6 +53,16 @@ variable "daily_maintenance_window_start_time" {
   description = "Start time of the daily maintenance window."
 }
 
+variable "maintenance_exclusions" {
+  type = list(object({
+    start_time     = string
+    end_time       = string
+    exclusion_name = string
+    scope          = string
+  }))
+  description = "List of maintenance exclusion configuration to be set on the cluster."
+}
+
 variable "remove_default_node_pool" {
   type        = string
   description = "Whether to remove the default node pool. Leave true, except for upgrading from Kubestack v0.2.0-beta.0."

@@ -138,3 +138,11 @@ variable "guest_accelerator" {
   description = "`guest_accelerator` block supports during node_group creation, useful to provision GPU-capable nodes. Default to `null` or `{}` which will disable GPUs."
   default     = null
 }
+
+variable "ephemeral_storage_local_ssd_config" {
+  type = object({
+    local_ssd_count = number
+  })
+  description = "`ephemeral_storage_local_ssd_config` block, useful for node groups with local SSD. Defaults to `null`"
+  default     = null
+}

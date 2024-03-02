@@ -58,6 +58,14 @@ resource "google_container_node_pool" "current" {
         effect = taint.value["effect"]
       }
     }
+
+    dynamic "ephemeral_storage_local_ssd_config" {
+      for_each = var.ephemeral_storage_local_ssd_config == null ? [] : [1]
+
+      content {
+        local_ssd_count = var.ephemeral_storage_local_ssd_config.local_ssd_count
+      }
+    }
   }
 
   management {

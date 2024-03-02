@@ -30,6 +30,7 @@ locals {
     "cluster_daily_maintenance_window_start_time",
     "03:00",
   )
+  cluster_maintenance_exclusions = lookup(local.cfg, "cluster_maintenance_exclusions", [])
 
   remove_default_node_pool = lookup(local.cfg, "remove_default_node_pool", true)
 

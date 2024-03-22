@@ -53,14 +53,24 @@ variable "daily_maintenance_window_start_time" {
   description = "Start time of the daily maintenance window."
 }
 
-variable "maintenance_exclusions" {
-  type = list(object({
-    start_time     = string
-    end_time       = string
-    exclusion_name = string
-    scope          = string
-  }))
-  description = "List of maintenance exclusion configuration to be set on the cluster."
+variable "maintenance_exclusion_start_time" {
+  type = string
+  description = "Maintenance exclusion start time"
+}
+
+variable "maintenance_exclusion_end_time" {
+  type = string
+  description = "Maintenance exclusion end time"
+}
+
+variable "maintenance_exclusion_name" {
+  type = string
+  description = "Maintenance exclusion name"
+}
+
+variable "maintenance_exclusion_scope" {
+  type = string
+  description = "Maintenance exclusion scope"
 }
 
 variable "remove_default_node_pool" {

@@ -29,7 +29,7 @@ resource "google_container_node_pool" "current" {
     machine_type = var.machine_type
     preemptible  = var.preemptible
 
-    labels = var.metadata_labels
+    labels = merge(var.labels, var.metadata_labels)
 
     tags = var.metadata_tags
 

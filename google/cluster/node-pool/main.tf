@@ -32,6 +32,8 @@ module "node_pool" {
 
   taints = local.taints
 
+  labels = local.labels
+
   service_account_email                 = local.service_account_email
   disable_per_node_pool_service_account = local.service_account_email == null ? false : true
 

@@ -26,6 +26,8 @@ variable "configuration" {
       value  = string
       effect = string
     })))
+    
+    labels = optional(map(string))
 
     extra_oauth_scopes = optional(list(string))
 

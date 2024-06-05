@@ -146,3 +146,9 @@ variable "ephemeral_storage_local_ssd_config" {
   description = "`ephemeral_storage_local_ssd_config` block, useful for node groups with local SSD. Defaults to `null`"
   default     = null
 }
+
+variable "labels" {
+  type        = map(string)
+  description = "Kubernetes labels to set on the nodes created by the node pool. Merged with Kubestack default labels."
+  default     = {}
+}

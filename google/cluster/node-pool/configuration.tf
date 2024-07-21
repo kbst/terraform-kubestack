@@ -48,4 +48,6 @@ locals {
   instance_tags = local.cfg["instance_tags"]
 
   ephemeral_storage_local_ssd_config = local.cfg["ephemeral_storage_local_ssd_config"]
+
+  guest_accelerator = local.cfg["guest_accelerator"]
 }

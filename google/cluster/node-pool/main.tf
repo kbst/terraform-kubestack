@@ -45,4 +45,6 @@ module "node_pool" {
   network_config = local.network_config
 
   ephemeral_storage_local_ssd_config = local.ephemeral_storage_local_ssd_config
+
+  guest_accelerator = local.guest_accelerator
 }

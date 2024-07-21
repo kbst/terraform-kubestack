@@ -131,8 +131,8 @@ variable "guest_accelerator" {
     count              = number
     gpu_partition_size = optional(string)
     gpu_sharing_config = optional(object({
-      gpu_sharing_strategy       = string
-      max_shared_clients_per_gpu = number
+      gpu_sharing_strategy       = optional(string)
+      max_shared_clients_per_gpu = optional(number)
     }))
   })
   description = "`guest_accelerator` block supports during node_group creation, useful to provision GPU-capable nodes. Default to `null` or `{}` which will disable GPUs."

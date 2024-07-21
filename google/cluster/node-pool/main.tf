@@ -38,4 +38,6 @@ module "node_pool" {
   disable_per_node_pool_service_account = local.service_account_email == null ? false : true
 
   ephemeral_storage_local_ssd_config = local.ephemeral_storage_local_ssd_config
+
+  guest_accelerator = local.guest_accelerator
 }

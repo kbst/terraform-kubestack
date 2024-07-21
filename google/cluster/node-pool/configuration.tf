@@ -41,4 +41,6 @@ locals {
   service_account_email = local.cfg["service_account_email"]
 
   ephemeral_storage_local_ssd_config = local.cfg["ephemeral_storage_local_ssd_config"]
+
+  guest_accelerator = local.cfg["guest_accelerator"]
 }

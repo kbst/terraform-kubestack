@@ -26,7 +26,7 @@ variable "configuration" {
       value  = string
       effect = string
     })))
-    
+
     labels = optional(map(string))
 
     extra_oauth_scopes = optional(list(string))
@@ -38,7 +38,18 @@ variable "configuration" {
     ephemeral_storage_local_ssd_config = optional(object({
       local_ssd_count = number
     }))
+
+    guest_accelerator = optional(object({
+      type               = string
+      count              = number
+      gpu_partition_size = optional(string)
+      gpu_sharing_config = optional(object({
+        gpu_sharing_strategy       = optional(string)
+        max_shared_clients_per_gpu = optional(number)
+      }))
+    }))
   }))
+
   description = "Map with per workspace cluster configuration."
 }
 

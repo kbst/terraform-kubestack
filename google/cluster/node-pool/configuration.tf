@@ -37,4 +37,8 @@ locals {
   node_workload_metadata_config = local.cfg["node_workload_metadata_config"] != null ? local.cfg["node_workload_metadata_config"] : "GKE_METADATA"
 
   service_account_email = local.cfg["service_account_email"]
+
+  network_config = local.cfg["network_config"]
+
+  instance_tags = local.cfg["instance_tags"]
 }

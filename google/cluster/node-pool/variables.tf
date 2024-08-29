@@ -32,6 +32,14 @@ variable "configuration" {
     node_workload_metadata_config = optional(string)
 
     service_account_email = optional(string)
+
+    network_config = optional(object({
+      enable_private_nodes = bool
+      create_pod_range     = bool
+      pod_ipv4_cidr_block  = string
+    }))
+
+    instance_tags = optional(list(string))
   }))
   description = "Map with per workspace cluster configuration."
 }

@@ -119,6 +119,12 @@ variable "taints" {
   default     = null
 }
 
+variable "instance_tags" {
+  type = list(string)
+  description = "List of instance tags to apply to nodes."
+  default = []
+}
+
 variable "node_locations" {
   type        = list(string)
   description = "List of zones in the cluster's region to start worker nodes in. Defaults to cluster's node locations."
@@ -136,5 +142,15 @@ variable "guest_accelerator" {
     }))
   })
   description = "`guest_accelerator` block supports during node_group creation, useful to provision GPU-capable nodes. Default to `null` or `{}` which will disable GPUs."
+  default     = null
+}
+
+variable "network_config" {
+  type = object({
+    enable_private_nodes = bool
+    create_pod_range     = bool
+    pod_ipv4_cidr_block  = string
+  })
+  description = "Additional network configuration for the node pool."
   default     = null
 }

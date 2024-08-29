@@ -14,6 +14,16 @@ resource "google_container_node_pool" "current" {
 
   node_locations = var.node_locations
 
+  dynamic "network_config" {
+    for_each = var.network_config == null ? [] : [1]
+
+    content {
+        enable_private_nodes = var.network_config["enable_private_nodes"]
+        create_pod_range     = var.network_config["create_pod_range"]
+        pod_ipv4_cidr_block  = var.network_config["pod_ipv4_cidr_block"]
+    }
+  }
+
   #
   #
   # Node config
@@ -31,7 +41,7 @@ resource "google_container_node_pool" "current" {
 
     labels = var.metadata_labels
 
-    tags = var.metadata_tags
+    tags = concat(var.metadata_tags, var.instance_tags)
 
     workload_metadata_config {
       mode = var.node_workload_metadata_config

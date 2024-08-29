@@ -30,7 +30,8 @@ module "node_pool" {
 
   node_workload_metadata_config = local.node_workload_metadata_config
 
-  taints = local.taints
+  taints        = local.taints
+  instance_tags = local.instance_tags
 
   labels = local.labels
 
@@ -40,4 +41,6 @@ module "node_pool" {
   ephemeral_storage_local_ssd_config = local.ephemeral_storage_local_ssd_config
 
   guest_accelerator = local.guest_accelerator
+
+  network_config = local.network_config
 }

@@ -48,6 +48,14 @@ variable "configuration" {
         max_shared_clients_per_gpu = optional(number)
       }))
     }))
+
+    network_config = optional(object({
+      enable_private_nodes = bool
+      create_pod_range     = bool
+      pod_ipv4_cidr_block  = string
+    }))
+
+    instance_tags = optional(list(string))
   }))
 
   description = "Map with per workspace cluster configuration."

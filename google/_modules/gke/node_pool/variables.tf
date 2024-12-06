@@ -131,10 +131,24 @@ variable "guest_accelerator" {
     count              = number
     gpu_partition_size = optional(string)
     gpu_sharing_config = optional(object({
-      gpu_sharing_strategy       = string
-      max_shared_clients_per_gpu = number
+      gpu_sharing_strategy       = optional(string)
+      max_shared_clients_per_gpu = optional(number)
     }))
   })
   description = "`guest_accelerator` block supports during node_group creation, useful to provision GPU-capable nodes. Default to `null` or `{}` which will disable GPUs."
   default     = null
+}
+
+variable "ephemeral_storage_local_ssd_config" {
+  type = object({
+    local_ssd_count = number
+  })
+  description = "`ephemeral_storage_local_ssd_config` block, useful for node groups with local SSD. Defaults to `null`"
+  default     = null
+}
+
+variable "labels" {
+  type        = map(string)
+  description = "Kubernetes labels to set on the nodes created by the node pool. Merged with Kubestack default labels."
+  default     = {}
 }

@@ -29,7 +29,7 @@ resource "google_container_node_pool" "current" {
     machine_type = var.machine_type
     preemptible  = var.preemptible
 
-    labels = var.metadata_labels
+    labels = merge(var.labels, var.metadata_labels)
 
     tags = var.metadata_tags
 
@@ -42,10 +42,17 @@ resource "google_container_node_pool" "current" {
       for_each = var.guest_accelerator == null ? [] : [1]
 
       content {
-        type               = guest_accelerator.value.type
-        count              = guest_accelerator.value.count
-        gpu_partition_size = guest_accelerator.value.gpu_partition_size
-        gpu_sharing_config = guest_accelerator.value.gpu_sharing_config
+        type  = var.guest_accelerator.type
+        count = var.guest_accelerator.count
+
+        dynamic "gpu_sharing_config" {
+          for_each = var.guest_accelerator.gpu_sharing_config == null ? [] : [1]
+
+          content {
+            gpu_sharing_strategy       = var.guest_accelerator.gpu_sharing_config.gpu_sharing_strategy
+            max_shared_clients_per_gpu = var.guest_accelerator.gpu_sharing_config.max_shared_clients_per_gpu
+          }
+        }
       }
     }
 
@@ -56,6 +63,14 @@ resource "google_container_node_pool" "current" {
         key    = taint.value["key"]
         value  = taint.value["value"]
         effect = taint.value["effect"]
+      }
+    }
+
+    dynamic "ephemeral_storage_local_ssd_config" {
+      for_each = var.ephemeral_storage_local_ssd_config == null ? [] : [1]
+
+      content {
+        local_ssd_count = var.ephemeral_storage_local_ssd_config.local_ssd_count
       }
     }
   }

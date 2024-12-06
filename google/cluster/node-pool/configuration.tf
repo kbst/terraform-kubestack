@@ -32,9 +32,15 @@ locals {
 
   taints = local.cfg["taints"]
 
+  labels = local.cfg["labels"]
+
   extra_oauth_scopes = local.cfg["extra_oauth_scopes"] != null ? local.cfg["extra_oauth_scopes"] : []
 
   node_workload_metadata_config = local.cfg["node_workload_metadata_config"] != null ? local.cfg["node_workload_metadata_config"] : "GKE_METADATA"
 
   service_account_email = local.cfg["service_account_email"]
+
+  ephemeral_storage_local_ssd_config = local.cfg["ephemeral_storage_local_ssd_config"]
+
+  guest_accelerator = local.cfg["guest_accelerator"]
 }

@@ -33,4 +33,6 @@ module "node_pool" {
   auto_upgrade = var.auto_upgrade
 
   node_workload_metadata_config = var.node_workload_metadata_config
+
+  guest_accelerator = var.guest_accelerator
 }

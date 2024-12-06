@@ -27,7 +27,11 @@ module "cluster" {
   release_channel    = local.cluster_release_channel
 
   daily_maintenance_window_start_time = local.cluster_daily_maintenance_window_start_time
-  maintenance_exclusions              = local.cluster_maintenance_exclusions
+
+  maintenance_exclusion_start_time = local.cluster_maintenance_exclusion_start_time
+  maintenance_exclusion_end_time = local.cluster_maintenance_exclusion_end_time
+  maintenance_exclusion_name = local.cluster_maintenance_exclusion_name
+  maintenance_exclusion_scope = local.cluster_maintenance_exclusion_scope
 
   remove_default_node_pool = local.remove_default_node_pool
 

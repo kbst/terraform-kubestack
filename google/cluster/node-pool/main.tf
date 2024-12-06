@@ -30,12 +30,19 @@ module "node_pool" {
 
   node_workload_metadata_config = local.node_workload_metadata_config
 
-  taints = local.taints
+  taints        = local.taints
+  instance_tags = local.instance_tags
 
   labels = local.labels
 
   service_account_email                 = local.service_account_email
   disable_per_node_pool_service_account = local.service_account_email == null ? false : true
+
+  ephemeral_storage_local_ssd_config = local.ephemeral_storage_local_ssd_config
+
+  guest_accelerator = local.guest_accelerator
+
+  network_config = local.network_config
 
   ephemeral_storage_local_ssd_config = local.ephemeral_storage_local_ssd_config
 

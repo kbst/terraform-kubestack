@@ -74,15 +74,15 @@ resource "google_container_cluster" "current" {
     }
 
     dynamic "maintenance_exclusion" {
-      for_each = var.maintenance_exclusions
+      for_each = var.maintenance_exclusion_start_time != null ? [1] : []
 
       content {
-        start_time     = maintenance_exclusion.value.start_time
-        end_time       = maintenance_exclusion.value.end_time
-        exclusion_name = maintenance_exclusion.value.exclusion_name
+        start_time     = var.maintenance_exclusion_start_time
+        end_time       = var.maintenance_exclusion_end_time
+        exclusion_name = var.maintenance_exclusion_name
 
         exclusion_options {
-          scope = maintenance_exclusion.value.scope
+          scope = var.maintenance_exclusion_scope
         }
       }
     }

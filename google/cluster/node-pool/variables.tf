@@ -29,11 +29,35 @@ variable "configuration" {
 
     labels = optional(map(string))
 
+    labels = optional(map(string))
+
     extra_oauth_scopes = optional(list(string))
 
     node_workload_metadata_config = optional(string)
 
     service_account_email = optional(string)
+
+    ephemeral_storage_local_ssd_config = optional(object({
+      local_ssd_count = number
+    }))
+
+    guest_accelerator = optional(object({
+      type               = string
+      count              = number
+      gpu_partition_size = optional(string)
+      gpu_sharing_config = optional(object({
+        gpu_sharing_strategy       = optional(string)
+        max_shared_clients_per_gpu = optional(number)
+      }))
+    }))
+
+    network_config = optional(object({
+      enable_private_nodes = bool
+      create_pod_range     = bool
+      pod_ipv4_cidr_block  = string
+    }))
+
+    instance_tags = optional(list(string))
 
     ephemeral_storage_local_ssd_config = optional(object({
       local_ssd_count = number

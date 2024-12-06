@@ -10,7 +10,7 @@ locals {
 resource "azurerm_kubernetes_cluster_node_pool" "current" {
   name                  = var.node_pool_name
   kubernetes_cluster_id = data.azurerm_kubernetes_cluster.current.id
-  enable_auto_scaling   = var.enable_auto_scaling
+  auto_scaling_enabled  = var.enable_auto_scaling
   max_count             = var.max_count
   min_count             = var.min_count
   node_count            = var.node_count

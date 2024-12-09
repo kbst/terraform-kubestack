@@ -8,9 +8,9 @@ DOCKER_TARGET ?= multi-cloud
 
 ifeq ("${DOCKER_PUSH}", "true")
 BUILD_PLATFORM := --platform linux/arm64,linux/amd64
-BUILD_CACHE_DIST := --cache-to type=registry,mode=max,ref=kubestack/framework-dev:buildcache-dist-helper,push=${DOCKER_PUSH}
+BUILD_CACHE_DIST := --cache-to type=registry,mode=max,ref=ghcr.io/kbst/terraform-kubestack/dev:buildcache-dist-helper,push=${DOCKER_PUSH}
 BUILD_OUTPUT := --output type=registry,push=${DOCKER_PUSH}
-BUILD_CACHE := --cache-to type=registry,mode=max,ref=kubestack/framework-dev:buildcache-${DOCKER_TARGET},push=${DOCKER_PUSH}
+BUILD_CACHE := --cache-to type=registry,mode=max,ref=ghcr.io/kbst/terraform-kubestack/dev:buildcache-${DOCKER_TARGET},push=${DOCKER_PUSH}
 else
 BUILD_PLATFORM := 
 BUILD_OUTPUT := --output type=docker
@@ -24,7 +24,7 @@ dist:
 		--build-arg GIT_SHA=${GIT_SHA} \
 		--file oci/Dockerfile \
 		--output type=docker \
-		--cache-from type=registry,ref=kubestack/framework-dev:buildcache-dist-helper \
+		--cache-from type=registry,ref=ghcr.io/kbst/terraform-kubestack/dev:buildcache-dist-helper \
 		${BUILD_CACHE_DIST} \
 		--progress plain \
 		-t dist-helper:latest \
@@ -47,11 +47,11 @@ build:
 		--build-arg GIT_SHA=${GIT_SHA} \
 		--file oci/Dockerfile \
 		${BUILD_OUTPUT} \
-		--cache-from type=registry,ref=kubestack/framework-dev:buildcache-${DOCKER_TARGET} \
+		--cache-from type=registry,ref=ghcr.io/kbst/terraform-kubestack/dev:buildcache-${DOCKER_TARGET} \
 		${BUILD_CACHE} \
 		--progress plain \
 		--target ${DOCKER_TARGET} \
-		-t kubestack/framework-dev:test-$(GIT_SHA)-${DOCKER_TARGET} \
+		-t ghcr.io/kbst/terraform-kubestack/dev:test-$(GIT_SHA)-${DOCKER_TARGET} \
 		.
 
 validate: .init
@@ -97,7 +97,7 @@ shell: .check-container
 		-e KBST_AUTH_GCLOUD \
 		-e HOME=/infra/tests/.user \
 		--workdir /infra/tests \
-		kubestack/framework-dev:test-$(GIT_SHA)-${DOCKER_TARGET} \
+		ghcr.io/kbst/terraform-kubestack/dev:test-$(GIT_SHA)-${DOCKER_TARGET} \
 		sleep infinity
 
 .stop-container:

@@ -165,19 +165,6 @@ variable "network_config" {
     create_pod_range     = bool
     pod_ipv4_cidr_block  = string
   })
-  description = "Additional network configuration for the node pool."
-}
-
-variable "ephemeral_storage_local_ssd_config" {
-  type = object({
-    local_ssd_count = number
-  })
-  description = "`ephemeral_storage_local_ssd_config` block, useful for node groups with local SSD. Defaults to `null`"
+  description = "Configure additional pod IP address range for the node pool. Defaults to `null`"
   default     = null
-}
-
-variable "labels" {
-  type        = map(string)
-  description = "Kubernetes labels to set on the nodes created by the node pool. Merged with Kubestack default labels."
-  default     = {}
 }

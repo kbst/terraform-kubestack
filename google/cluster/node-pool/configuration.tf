@@ -45,5 +45,5 @@ locals {
   guest_accelerator = local.cfg["guest_accelerator"]
   network_config    = local.cfg["network_config"]
 
-  instance_tags = local.cfg["instance_tags"]
+  instance_tags = local.cfg["instance_tags"] != null ? local.cfg["instance_tags"] : []
 }

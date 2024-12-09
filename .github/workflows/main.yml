@@ -12,29 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 'Checkout'
-      uses: actions/checkout@v3
+    - name: "Checkout"
+      uses: actions/checkout@v4
 
-    - name: 'Setup buildx'
-      uses: docker/setup-buildx-action@v2
+    - name: "Setup buildx"
+      uses: docker/setup-buildx-action@v3
       with:
         install: true
 
-    - name: 'Docker login'
-      uses: docker/login-action@v2
+    - name: "Docker login"
+      uses: docker/login-action@v3
       with:
         username: kbstci
         password: ${{ secrets.DOCKER_AUTH }}
 
-    - name: 'Build artifacts'
+    - name: "Build artifacts"
       env:
         DOCKER_PUSH: true
         GIT_SHA: ${{ github.sha }}
         GIT_REF: ${{ github.ref }}
       run: make dist
 
-    - name: 'Upload artifacts'
-      uses: actions/upload-artifact@v3
+    - name: "Upload artifacts"
+      uses: actions/upload-artifact@v4
       with:
         name: test-artifacts
         path: ./quickstart/_dist
@@ -44,13 +44,13 @@ jobs:
     needs: [build-test-artifacts]
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
 
     permissions:
       id-token: write # needed for keyless signing
 
     steps:
-    - name: 'Free disk space'
+    - name: "Free disk space"
       # https://github.com/actions/runner-images/issues/2840#issuecomment-790492173
       run: |
         sudo rm -rf /usr/share/dotnet
@@ -58,25 +58,25 @@ jobs:
         sudo rm -rf /usr/local/share/boost
         sudo rm -rf $AGENT_TOOLSDIRECTORY
 
-    - name: 'Checkout'
-      uses: actions/checkout@v3
+    - name: "Checkout"
+      uses: actions/checkout@v4
 
-    - name: 'Download test-artifacts'
-      uses: actions/download-artifact@v3
+    - name: "Download test-artifacts"
+      uses: actions/download-artifact@v4
       with:
         name: test-artifacts
         path: ./quickstart/_dist
 
     - name: Install Cosign
-      uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 #v3.3.0
+      uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 #v3.7.0
 
-    - name: 'Setup buildx'
-      uses: docker/setup-buildx-action@v2
+    - name: "Setup buildx"
+      uses: docker/setup-buildx-action@v3
       with:
         install: true
 
-    - name: 'Docker login'
-      uses: docker/login-action@v2
+    - name: "Docker login"
+      uses: docker/login-action@v3
       with:
         username: kbstci
         password: ${{ secrets.DOCKER_AUTH }}
@@ -87,7 +87,7 @@ jobs:
         DOCKER_TARGET: ${{ matrix.starter }}
       run: make build
 
-    - name: 'Sign Images'
+    - name: "Sign Images"
       env:
         COSIGN_EXPERIMENTAL: true
       run: |
@@ -99,26 +99,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
 
     steps:
-    - name: 'Download test-artifacts'
-      uses: actions/download-artifact@v3
+    - name: "Download test-artifacts"
+      uses: actions/download-artifact@v4
       with:
         name: test-artifacts
         path: ./quickstart/_dist
 
-    - name: 'Unzip ${{ matrix.starter }} quickstart'
+    - name: "Unzip ${{ matrix.starter }} quickstart"
       run: |
         unzip quickstart/_dist/kubestack-starter-${{ matrix.starter }}-*.zip
 
-    - name: 'Docker login'
-      uses: docker/login-action@v2
+    - name: "Docker login"
+      uses: docker/login-action@v3
       with:
         username: kbstci
         password: ${{ secrets.DOCKER_AUTH }}
 
-    - name: 'Docker build'
+    - name: "Docker build"
       env:
         DOCKER_BUILDKIT: 1
       working-directory: ./kubestack-starter-${{ matrix.starter }}
@@ -132,7 +132,7 @@ jobs:
         docker tag $SOURCE_IMAGE $TARGET_IMAGE
         docker build -t test-image:${{ github.sha }} .
 
-    - name: 'Configure Kubestack for ${{ matrix.starter }}'
+    - name: "Configure Kubestack for ${{ matrix.starter }}"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         # ALL: set name_prefix
@@ -159,7 +159,7 @@ jobs:
         # GKE: set cluster_node_locations
         sed -i 's/cluster_node_locations = ""/cluster_node_locations = "europe-west1-b,europe-west1-c,europe-west1-d"/g' gke_zero_cluster.tf || true
 
-    - name: 'Terraform init'
+    - name: "Terraform init"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
@@ -167,7 +167,7 @@ jobs:
           test-image:${{ github.sha }} \
           terraform init
 
-    - name: 'Terraform workspace new ops'
+    - name: "Terraform workspace new ops"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
@@ -175,7 +175,7 @@ jobs:
           test-image:${{ github.sha }} \
           terraform workspace new ops
 
-    - name: 'Terraform validate'
+    - name: "Terraform validate"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
@@ -183,7 +183,7 @@ jobs:
           test-image:${{ github.sha }} \
           terraform validate
 
-    - name: 'Terraform plan'
+    - name: "Terraform plan"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       env:
         KBST_AUTH_AWS: ${{ secrets.KBST_AUTH_AWS }}
@@ -203,28 +203,27 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
 
-
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
 
     steps:
-    - name: 'Download test-artifacts'
-      uses: actions/download-artifact@v3
+    - name: "Download test-artifacts"
+      uses: actions/download-artifact@v4
       with:
         name: test-artifacts
         path: ./quickstart/_dist
 
     - name: Install Cosign
-      uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 #v3.3.0
+      uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 #v3.7.0
 
-    - name: 'Docker login'
-      uses: docker/login-action@v2
+    - name: "Docker login"
+      uses: docker/login-action@v3
       with:
         username: kbstci
         password: ${{ secrets.DOCKER_AUTH }}
 
-    - name: 'Docker push'
+    - name: "Docker push"
       # cosign copy copies the images and the signature from one place to another
       # then we dont need to sign again the same image
       env:
@@ -246,27 +245,27 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke" ,"kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
 
     steps:
-    - name: 'Download test-artifacts'
-      uses: actions/download-artifact@v3
+    - name: "Download test-artifacts"
+      uses: actions/download-artifact@v4
       with:
         name: test-artifacts
         path: ./quickstart/_dist
 
     - name: Install Cosign
-      uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 #v3.3.0
+      uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 #v3.7.0
 
-    - id: 'auth'
-      uses: 'google-github-actions/auth@v1'
+    - id: "auth"
+      uses: google-github-actions/auth@v2
       with:
         credentials_json: ${{ secrets.GCLOUD_AUTH }}
 
-    - name: 'Setup gcloud'
-      uses: google-github-actions/setup-gcloud@v1
+    - name: "Setup gcloud"
+      uses: google-github-actions/setup-gcloud@v2
 
-    - name: 'Publish ${{ matrix.starter }} starter'
+    - name: "Publish ${{ matrix.starter }} starter"
       env:
         COSIGN_EXPERIMENTAL: true
       run: |

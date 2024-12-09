@@ -11,6 +11,9 @@ jobs:
   build-test-artifacts:
     runs-on: ubuntu-latest
 
+    permissions:
+      packages: write # required for docker push
+
     steps:
     - name: "Checkout"
       uses: actions/checkout@v4
@@ -54,7 +57,8 @@ jobs:
         starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
 
     permissions:
-      id-token: write # needed for keyless signing
+      id-token: write # required for keyless signing
+      packages: write # required for docker push
 
     steps:
     - name: "Free disk space"
@@ -269,7 +273,7 @@ jobs:
     needs: [test, publish-image]
 
     permissions:
-      id-token: write # needed for keyless signing
+      id-token: write # required for keyless signing
 
     strategy:
       matrix:

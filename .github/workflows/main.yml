@@ -20,11 +20,18 @@ jobs:
       with:
         install: true
 
-    - name: "Docker login"
+    - name: "Docker login docker.io"
       uses: docker/login-action@v3
       with:
         username: kbstci
         password: ${{ secrets.DOCKER_AUTH }}
+
+    - name: "Docker login ghcr.io"
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: "Build artifacts"
       env:
@@ -75,11 +82,18 @@ jobs:
       with:
         install: true
 
-    - name: "Docker login"
+    - name: "Docker login docker.io"
       uses: docker/login-action@v3
       with:
         username: kbstci
         password: ${{ secrets.DOCKER_AUTH }}
+
+    - name: "Docker login ghcr.io"
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build ${{ matrix.starter }} image
       env:
@@ -91,7 +105,7 @@ jobs:
       env:
         COSIGN_EXPERIMENTAL: true
       run: |
-        cosign sign --yes -a GIT_HASH=${{ github.sha }} -a GIT_REF=${{ github.ref }} kubestack/framework-dev:test-${{ github.sha }}-${{ matrix.starter }}
+        cosign sign --yes -a GIT_HASH=${{ github.sha }} -a GIT_REF=${{ github.ref }} ghcr.io/kbst/terraform-kubestack/dev:test-${{ github.sha }}-${{ matrix.starter }}
 
   test:
     runs-on: ubuntu-latest
@@ -112,11 +126,18 @@ jobs:
       run: |
         unzip quickstart/_dist/kubestack-starter-${{ matrix.starter }}-*.zip
 
-    - name: "Docker login"
+    - name: "Docker login docker.io"
       uses: docker/login-action@v3
       with:
         username: kbstci
         password: ${{ secrets.DOCKER_AUTH }}
+
+    - name: "Docker login ghcr.io"
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: "Docker build"
       env:
@@ -126,7 +147,7 @@ jobs:
       # to kubestack/framework after they have been tested
       # but the Dockerfiles in the artifact have the target image name
       run: |
-        SOURCE_IMAGE=kubestack/framework-dev:test-${{ github.sha }}-${{ matrix.starter }}
+        SOURCE_IMAGE=ghcr.io/kbst/terraform-kubestack/dev:test-${{ github.sha }}-${{ matrix.starter }}
         docker pull $SOURCE_IMAGE
         TARGET_IMAGE=$(cat Dockerfile | sed 's/FROM //')
         docker tag $SOURCE_IMAGE $TARGET_IMAGE
@@ -217,11 +238,18 @@ jobs:
     - name: Install Cosign
       uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 #v3.7.0
 
-    - name: "Docker login"
+    - name: "Docker login docker.io"
       uses: docker/login-action@v3
       with:
         username: kbstci
         password: ${{ secrets.DOCKER_AUTH }}
+
+    - name: "Docker login ghcr.io"
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: "Docker push"
       # cosign copy copies the images and the signature from one place to another
@@ -229,7 +257,7 @@ jobs:
       env:
         COSIGN_EXPERIMENTAL: true
       run: |
-        SOURCE_IMAGE=kubestack/framework-dev:test-${{ github.sha }}-${{ matrix.starter }}
+        SOURCE_IMAGE=ghcr.io/kbst/terraform-kubestack/dev:test-${{ github.sha }}-${{ matrix.starter }}
         TARGET_IMAGE=$(cat quickstart/_dist/kubestack-starter-${{ matrix.starter }}/Dockerfile | sed 's/FROM //')
         echo "Source image $SOURCE_IMAGE will be pushed to $TARGET_IMAGE"
         cosign copy $SOURCE_IMAGE $TARGET_IMAGE

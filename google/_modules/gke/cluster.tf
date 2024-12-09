@@ -74,7 +74,7 @@ resource "google_container_cluster" "current" {
     }
 
     dynamic "maintenance_exclusion" {
-      for_each = var.maintenance_exclusion_start_time != null ? [1] : []
+      for_each = var.maintenance_exclusion_start_time != "" ? [1] : []
 
       content {
         start_time     = var.maintenance_exclusion_start_time

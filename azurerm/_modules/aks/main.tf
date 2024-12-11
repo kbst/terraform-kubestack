@@ -35,6 +35,12 @@ resource "azurerm_kubernetes_cluster" "current" {
     only_critical_addons_enabled = var.default_node_pool_only_critical_addons
 
     zones = var.availability_zones
+
+    upgrade_settings {
+      max_surge                     = var.upgade_settings_max_surge
+      drain_timeout_in_minutes      = var.upgade_settings_drain_timeout_in_minutes
+      node_soak_duration_in_minutes = var.upgade_settings_node_soak_duration_in_minutes
+    }
   }
 
   network_profile {
@@ -75,9 +81,13 @@ resource "azurerm_kubernetes_cluster" "current" {
     }
   }
 
-  workload_autoscaler_profile {
-    keda_enabled                    = var.keda_enabled
-    vertical_pod_autoscaler_enabled = var.vertical_pod_autoscaler_enabled
+  dynamic "workload_autoscaler_profile" {
+    for_each = var.keda_enabled || var.vertical_pod_autoscaler_enabled ? toset([1]) : toset([])
+
+    content {
+      keda_enabled                    = var.keda_enabled
+      vertical_pod_autoscaler_enabled = var.vertical_pod_autoscaler_enabled
+    }
   }
 
   tags = var.metadata_labels

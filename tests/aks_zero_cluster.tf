@@ -13,6 +13,8 @@ module "aks_zero" {
       default_node_pool_max_count = 1
 
       network_plugin = "azure"
+
+      sku_tier = "Standard"
     }
 
     # Settings for Ops-cluster

@@ -67,6 +67,10 @@ module "cluster" {
 
   availability_zones = local.availability_zones
 
-  keda_enabled = local.keda_enabled
+  keda_enabled                    = local.keda_enabled
   vertical_pod_autoscaler_enabled = local.vertical_pod_autoscaler_enabled
+
+  upgade_settings_max_surge                     = local.upgade_settings_max_surge
+  upgade_settings_drain_timeout_in_minutes      = local.upgade_settings_drain_timeout_in_minutes
+  upgade_settings_node_soak_duration_in_minutes = local.upgade_settings_node_soak_duration_in_minutes
 }

@@ -67,6 +67,10 @@ locals {
   additional_metadata_labels_tuples = [for t in split(",", local.additional_metadata_labels_lookup) : split("=", t)]
   additional_metadata_labels        = { for t in local.additional_metadata_labels_tuples : t[0] => t[1] if length(t) == 2 }
 
-  keda_enabled = lookup(local.cfg, "keda_enabled", false)
+  keda_enabled                    = lookup(local.cfg, "keda_enabled", false)
   vertical_pod_autoscaler_enabled = lookup(local.cfg, "vertical_pod_autoscaler_enabled", false)
+
+  upgade_settings_max_surge                     = lookup(local.cfg, "upgade_settings_max_surge", "10%")
+  upgade_settings_drain_timeout_in_minutes      = lookup(local.cfg, "upgade_settings_drain_timeout_in_minutes", 0)
+  upgade_settings_node_soak_duration_in_minutes = lookup(local.cfg, "upgade_settings_node_soak_duration_in_minutes", 0)
 }

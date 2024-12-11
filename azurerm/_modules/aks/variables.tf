@@ -194,11 +194,24 @@ variable "availability_zones" {
 variable "keda_enabled" {
   type        = bool
   description = "Whether KEDA Autoscaler should be enabled for the cluster."
-  default     = false
 }
 
 variable "vertical_pod_autoscaler_enabled" {
   type        = bool
   description = "Whether Vertical Pod Autoscaler should be enabled for the cluster."
-  default     = false
+}
+
+variable "upgade_settings_drain_timeout_in_minutes" {
+  type        = number
+  description = "The amount of time in minutes to wait on eviction of pods and graceful termination per node."
+}
+
+variable "upgade_settings_max_surge" {
+  type        = string
+  description = "The maximum number or percentage of nodes which will be added to the Node Pool size during an upgrade."
+}
+
+variable "upgade_settings_node_soak_duration_in_minutes" {
+  type        = number
+  description = "The amount of time in minutes to wait after draining a node and before reimaging and moving on to next node."
 }

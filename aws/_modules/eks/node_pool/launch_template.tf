@@ -5,9 +5,9 @@ locals {
   launch_template_name_hash  = sha256(local.launch_template_name_parts)
   launch_template_name       = "${substr(local.launch_template_name_parts, 0, 120)}-${substr(local.launch_template_name_hash, 0, 7)}"
 
-  cpu_ami_name       = data.aws_ec2_instance_type.current.supported_architectures[0] == "arm64" ? "amazon-linux-2-arm64" : "amazon-linux-2"
+  cpu_ami_name       = data.aws_ec2_instance_type.current.supported_architectures[0] == "arm64" ? "amazon-linux-2023/arm64/standard" : "amazon-linux-2023/x86_64/standard"
   is_gpu             = length(data.aws_ec2_instance_type.current.gpus) > 0
-  ami_name           = local.is_gpu ? "amazon-linux-2-gpu" : local.cpu_ami_name
+  ami_name           = local.is_gpu ? "amazon-linux-2023/x86_64/nvidia" : local.cpu_ami_name
   ami_release_prefix = local.is_gpu ? "amazon-eks-gpu-node" : "amazon-eks-node"
   ami_release_date   = var.ami_release_version == null ? "" : split("-", var.ami_release_version)[1]
   ami_release_name   = var.ami_release_version == null ? "recommended" : "${local.ami_release_prefix}-${var.kubernetes_version}-v${local.ami_release_date}"

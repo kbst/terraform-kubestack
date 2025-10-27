@@ -172,6 +172,12 @@ variable "cluster_encryption_key_arn" {
   description = "Arn of an AWS KMS symmetric key to be used for encryption of kubernetes resources."
 }
 
+variable "worker_ami_type" {
+  type        = string
+  default     = null
+  description = "AMI type to use for nodes. Defaults to automatically determined based on instance type (AL2023_x86_64_STANDARD, AL2023_ARM_64_STANDARD, AL2023_x86_64_NVIDIA or AL2023_ARM_64_NVIDIA)."
+}
+
 variable "worker_ami_release_version" {
   type        = string
   default     = null

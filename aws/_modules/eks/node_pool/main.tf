@@ -4,8 +4,8 @@ data "aws_ec2_instance_type" "current" {
 }
 
 locals {
-  cpu_ami_type = data.aws_ec2_instance_type.current.supported_architectures[0] == "arm64" ? "AL2_ARM_64" : "AL2_x86_64"
-  ami_type     = length(data.aws_ec2_instance_type.current.gpus) > 0 ? "AL2_x86_64_GPU" : local.cpu_ami_type
+  cpu_ami_type = data.aws_ec2_instance_type.current.supported_architectures[0] == "arm64" ? "AL2023_ARM_64_STANDARD" : "AL2023_x86_64_STANDARD"
+  ami_type     = length(data.aws_ec2_instance_type.current.gpus) > 0 ? "AL2023_x86_64_NVIDIA" : local.cpu_ami_type
 }
 
 resource "aws_eks_node_group" "nodes" {

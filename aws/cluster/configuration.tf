@@ -67,6 +67,7 @@ locals {
   worker_root_device_volume_size = lookup(local.cfg, "worker_root_device_volume_size", null)
   worker_root_device_encrypted   = lookup(local.cfg, "worker_root_device_encrypted", null)
 
+  worker_ami_type            = lookup(local.cfg, "worker_ami_type", null)
   worker_ami_release_version = lookup(local.cfg, "worker_ami_release_version", null)
 
   cluster_aws_auth_map_roles    = lookup(local.cfg, "cluster_aws_auth_map_roles", "")

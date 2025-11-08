@@ -55,7 +55,7 @@ module "eks_zero_node_pool_existing_subnets_one_az_only" {
       min_size         = 1
       max_size         = 3
 
-      ami_type = "AL2_x86_64_GPU"
+      ami_type = "AL2023_x86_64_NVIDIA"
     }
 
     # Settings for Ops-cluster

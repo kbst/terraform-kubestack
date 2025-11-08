@@ -59,6 +59,7 @@ module "cluster" {
 
   cluster_encryption_key_arn = local.cluster_encryption_key_arn
 
+  worker_ami_type            = local.worker_ami_type
   worker_ami_release_version = local.worker_ami_release_version
 
   # cluster module configuration is still map(string)

@@ -4,7 +4,7 @@ module "node_pool" {
   cluster_metadata = module.cluster_metadata
 
   configuration = {
-    (terraform.workspace) = {
+    (var.configuration_base_key) = {
       project_id = local.project_id
 
       name = "default"
@@ -34,5 +34,6 @@ module "node_pool" {
 
       labels = {}
     }
+    (terraform.workspace) = {}
   }
 }

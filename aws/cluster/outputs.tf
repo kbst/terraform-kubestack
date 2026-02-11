@@ -7,5 +7,5 @@ output "current_metadata" {
 }
 
 output "kubeconfig" {
-  value = module.cluster.kubeconfig
+  value = local.kubeconfig
 }

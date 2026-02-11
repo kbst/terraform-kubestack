@@ -8,84 +8,134 @@ module "cluster_metadata" {
   provider_region = local.region
 }
 
-module "cluster" {
-  source = "../_modules/gke"
-
+resource "google_container_cluster" "current" {
   project = local.project_id
+  name    = module.cluster_metadata.name
 
   deletion_protection = local.deletion_protection
-
-  metadata_name   = module.cluster_metadata.name
-  metadata_fqdn   = module.cluster_metadata.fqdn
-  metadata_tags   = module.cluster_metadata.tags
-  metadata_labels = module.cluster_metadata.labels
 
   location       = local.region
   node_locations = local.cluster_node_locations
 
   min_master_version = local.cluster_min_master_version
-  release_channel    = local.cluster_release_channel
 
-  daily_maintenance_window_start_time = local.cluster_daily_maintenance_window_start_time
-
-  maintenance_exclusion_start_time = local.cluster_maintenance_exclusion_start_time
-  maintenance_exclusion_end_time = local.cluster_maintenance_exclusion_end_time
-  maintenance_exclusion_name = local.cluster_maintenance_exclusion_name
-  maintenance_exclusion_scope = local.cluster_maintenance_exclusion_scope
+  release_channel {
+    channel = local.cluster_release_channel
+  }
 
   remove_default_node_pool = local.remove_default_node_pool
+  initial_node_count       = local.cluster_initial_node_count
 
-  initial_node_count = local.cluster_initial_node_count
-  min_node_count     = local.cluster_min_node_count
-  max_node_count     = local.cluster_max_node_count
-  location_policy    = local.cluster_node_location_policy
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = false
+    }
+  }
 
-  extra_oauth_scopes = local.cluster_extra_oauth_scopes
+  network = google_compute_network.current.self_link
 
-  disk_size_gb = local.cluster_disk_size_gb
-  disk_type    = local.cluster_disk_type
-  image_type   = local.cluster_image_type
-  machine_type = local.cluster_machine_type
+  dynamic "workload_identity_config" {
+    for_each = local.disable_workload_identity == false ? toset([1]) : toset([])
+    content {
+      workload_pool = "${local.project_id}.svc.id.goog"
+    }
+  }
 
-  preemptible = local.cluster_preemptible
+  dynamic "database_encryption" {
+    for_each = local.cluster_database_encryption_key_name != null ? toset([1]) : toset([])
+    content {
+      state    = "ENCRYPTED"
+      key_name = local.cluster_database_encryption_key_name
+    }
+  }
 
-  auto_repair = local.cluster_auto_repair
+  #
+  #
+  # Addon config
+  addons_config {
+    http_load_balancing {
+      disabled = true
+    }
 
-  auto_upgrade = local.cluster_auto_upgrade
+    horizontal_pod_autoscaling {
+      disabled = false
+    }
 
-  disable_default_ingress = local.disable_default_ingress
+    network_policy_config {
+      disabled = false
+    }
 
-  enable_private_nodes = local.enable_private_nodes
-  master_cidr_block    = local.master_cidr_block
+    dynamic "gcs_fuse_csi_driver_config" {
+      for_each = local.enable_gcs_fuse_csi_driver != null ? [1] : []
 
-  cluster_ipv4_cidr_block  = local.cluster_ipv4_cidr_block
-  services_ipv4_cidr_block = local.services_ipv4_cidr_block
+      content {
+        enabled = local.enable_gcs_fuse_csi_driver
+      }
+    }
+  }
 
-  enable_cloud_nat                       = local.enable_cloud_nat
-  cloud_nat_endpoint_independent_mapping = local.cloud_nat_endpoint_independent_mapping
-  cloud_nat_ip_count                     = local.cloud_nat_ip_count
+  network_policy {
+    enabled = true
+  }
 
-  master_authorized_networks_config_cidr_blocks = local.master_authorized_networks_config_cidr_blocks
+  maintenance_policy {
+    daily_maintenance_window {
+      start_time = local.cluster_daily_maintenance_window_start_time
+    }
 
-  cloud_nat_min_ports_per_vm = local.cloud_nat_min_ports_per_vm
+    dynamic "maintenance_exclusion" {
+      for_each = local.cluster_maintenance_exclusion_start_time != "" ? [1] : []
 
-  disable_workload_identity     = local.disable_workload_identity
-  node_workload_metadata_config = local.node_workload_metadata_config
+      content {
+        start_time     = local.cluster_maintenance_exclusion_start_time
+        end_time       = local.cluster_maintenance_exclusion_end_time
+        exclusion_name = local.cluster_maintenance_exclusion_name
 
-  cluster_database_encryption_key_name = local.cluster_database_encryption_key_name
+        exclusion_options {
+          scope = local.cluster_maintenance_exclusion_scope
+        }
+      }
+    }
+  }
+
+  dynamic "master_authorized_networks_config" {
+    for_each = local.master_authorized_networks_config_cidr_blocks == null ? toset([]) : toset([1])
+
+    content {
+      dynamic "cidr_blocks" {
+        for_each = local.master_authorized_networks_config_cidr_blocks
+
+        content {
+          cidr_block   = cidr_blocks.value
+          display_name = "terraform-kubestack_${cidr_blocks.value}"
+        }
+      }
+    }
+  }
+
+  logging_config {
+    enable_components = local.logging_config_enable_components
+  }
+
+  monitoring_config {
+    enable_components = local.monitoring_config_enable_components
+  }
+
+  private_cluster_config {
+    enable_private_nodes    = local.enable_private_nodes
+    enable_private_endpoint = false
+    master_ipv4_cidr_block  = local.master_cidr_block
+  }
+
+  dynamic "ip_allocation_policy" {
+    for_each = local.enable_private_nodes ? toset([1]) : []
+
+    content {
+      cluster_ipv4_cidr_block  = local.cluster_ipv4_cidr_block
+      services_ipv4_cidr_block = local.services_ipv4_cidr_block
+    }
+  }
 
   enable_intranode_visibility = local.enable_intranode_visibility
   enable_tpu                  = local.enable_tpu
-
-  router_advertise_config = {
-    groups    = local.router_advertise_config_groups
-    ip_ranges = { for ip in local.router_advertise_config_ip_ranges : ip => null }
-    mode      = local.router_advertise_config_mode
-  }
-  router_asn = local.router_asn
-
-  logging_config_enable_components    = local.logging_config_enable_components
-  monitoring_config_enable_components = local.monitoring_config_enable_components
-
-  enable_gcs_fuse_csi_driver = local.enable_gcs_fuse_csi_driver
 }

@@ -11,59 +11,42 @@ module "cluster_metadata" {
   provider_region = data.aws_region.current.name
 }
 
-module "cluster" {
-  source = "../_modules/eks"
+resource "aws_eks_cluster" "current" {
+  name     = module.cluster_metadata.name
+  role_arn = aws_iam_role.master.arn
 
-  metadata_name   = module.cluster_metadata.name
-  metadata_fqdn   = module.cluster_metadata.fqdn
-  metadata_labels = module.cluster_metadata.labels
+  vpc_config {
+    security_group_ids      = [aws_security_group.masters.id]
+    subnet_ids              = aws_subnet.current.*.id
+    endpoint_private_access = local.cluster_endpoint_private_access
+    endpoint_public_access  = local.cluster_endpoint_public_access
+    public_access_cidrs     = local.cluster_public_access_cidrs
+  }
 
-  availability_zones = local.cluster_availability_zones
+  dynamic "kubernetes_network_config" {
+    for_each = local.cluster_service_cidr != null ? toset([1]) : toset([])
+    content {
+      service_ipv4_cidr = local.cluster_service_cidr
+    }
+  }
 
-  vpc_cidr                      = local.cluster_vpc_cidr
-  vpc_control_subnet_newbits    = local.cluster_vpc_control_subnet_newbits
-  vpc_dns_hostnames             = local.cluster_vpc_dns_hostnames
-  vpc_dns_support               = local.cluster_vpc_dns_support
-  vpc_node_subnet_newbits       = local.cluster_vpc_node_subnet_newbits
-  vpc_node_subnet_number_offset = local.cluster_vpc_node_subnet_number_offset
-  vpc_legacy_node_subnets       = local.cluster_vpc_legacy_node_subnets
-  vpc_subnet_map_public_ip      = local.cluster_vpc_subnet_map_public_ip
+  dynamic "encryption_config" {
+    for_each = local.cluster_encryption_key_arn != null ? toset([1]) : toset([])
+    content {
+      resources = ["secrets"]
 
-  instance_types   = local.cluster_instance_types
-  desired_capacity = local.cluster_desired_capacity
-  max_size         = local.cluster_max_size
-  min_size         = local.cluster_min_size
-  cluster_version  = local.cluster_version
+      provider {
+        key_arn = local.cluster_encryption_key_arn
+      }
+    }
+  }
 
-  metadata_options = local.metadata_options
+  depends_on = [
+    aws_iam_role_policy_attachment.master_cluster_policy,
+    aws_iam_role_policy_attachment.master_service_policy,
+  ]
 
-  root_device_encrypted   = local.worker_root_device_encrypted
-  root_device_volume_size = local.worker_root_device_volume_size
-
-  additional_node_tags = local.cluster_additional_node_tags
-
-  aws_auth_map_roles    = local.cluster_aws_auth_map_roles
-  aws_auth_map_users    = local.cluster_aws_auth_map_users
-  aws_auth_map_accounts = local.cluster_aws_auth_map_accounts
-
-  disable_default_ingress = local.disable_default_ingress
+  version = local.cluster_version
 
   enabled_cluster_log_types = local.enabled_cluster_log_types
-
-  disable_openid_connect_provider = local.disable_openid_connect_provider
-
-  cluster_endpoint_private_access = local.cluster_endpoint_private_access
-  cluster_endpoint_public_access  = local.cluster_endpoint_public_access
-  cluster_public_access_cidrs     = local.cluster_public_access_cidrs
-  cluster_service_cidr            = local.cluster_service_cidr
-
-  cluster_encryption_key_arn = local.cluster_encryption_key_arn
-
-  worker_ami_type            = local.worker_ami_type
-  worker_ami_release_version = local.worker_ami_release_version
-
-  # cluster module configuration is still map(string)
-  # once module_variable_optional_attrs isn't experimental anymore
-  # we can migrate cluster module configuration to map(object(...))
-  taints = toset([])
 }

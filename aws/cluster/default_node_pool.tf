@@ -28,4 +28,10 @@ module "node_pool" {
     }
     (terraform.workspace) = {}
   }
+
+  # force node_pool to depend on aws-auth configmap
+  depends_on_aws_auth = {
+    name      = kubernetes_config_map.current.metadata[0].name
+    namespace = kubernetes_config_map.current.metadata[0].namespace
+  }
 }

@@ -53,8 +53,14 @@ variable "cluster_name" {
   type        = string
   description = "Name of the cluster to attach the node pool to."
 }
+
 variable "cluster_default_node_pool_name" {
   type        = string
   description = "Name of the cluster's default node pool to inherit IAM role and subnets from."
   default     = "default"
+}
+
+variable "depends_on_aws_auth" {
+  type        = map(string)
+  description = "Used as a depends_on shim to first create the aws-auth configmap before creating the node_pool."
 }

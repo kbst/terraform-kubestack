@@ -4,7 +4,7 @@ module "node_pool" {
   cluster_name = aws_eks_cluster.current.name
 
   configuration = {
-    (terraform.wokspace) = {
+    (terraform.workspace) = {
       name = "default"
 
       instance_types   = join(",", local.cluster_instance_types)

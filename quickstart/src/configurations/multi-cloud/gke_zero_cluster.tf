@@ -47,7 +47,5 @@ module "gke_zero" {
       # e.g. cluster_node_locations = "europe-west3-a"
       cluster_node_locations = ""
     }
-
-    loc = {}
   }
 }

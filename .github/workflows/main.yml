@@ -54,7 +54,7 @@ jobs:
     needs: [build-test-artifacts]
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     permissions:
       id-token: write # required for keyless signing
@@ -117,7 +117,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
     - name: "Download test-artifacts"
@@ -230,7 +230,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
     - name: "Download test-artifacts"
@@ -277,7 +277,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
     - name: "Download test-artifacts"

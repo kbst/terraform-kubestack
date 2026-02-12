@@ -121,27 +121,6 @@ RUN echo "AZURE_CLI_VERSION: ${AZURE_CLI_VERSION}" \
 
 #
 #
-# KinD builder
-FROM builder AS kind-builder
-
-ARG TARGETARCH
-
-# https://docs.docker.com/engine/release-notes/
-ARG DOCKER_CLI_VERSION=27.3.1
-
-RUN mkdir -p /opt/bin
-
-# kind requires docker client
-RUN echo "DOCKER_CLI_VERSION: ${DOCKER_CLI_VERSION}" \
-    && arch=`echo ${TARGETARCH} | sed -e 's/amd64/x86_64/' -e 's/arm64/aarch64/'` \
-    && curl -O https://download.docker.com/linux/static/stable/${arch}/docker-${DOCKER_CLI_VERSION}.tgz \
-    && tar zxvf docker-${DOCKER_CLI_VERSION}.tgz -C . docker/docker \
-    && mv docker/docker /opt/bin/docker \
-    && /opt/bin/docker --help
-
-
-#
-#
 # Final base
 FROM ${BASE_IMAGE} AS final-base
 
@@ -251,15 +230,6 @@ FROM final-base AS aks
 # Azure
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
-
-
-#
-#
-# KinD variant
-FROM final-base AS kind
-
-# KinD provider
-COPY --from=kind-builder /opt/bin /opt/bin
 
 
 #

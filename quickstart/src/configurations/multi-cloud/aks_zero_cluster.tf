@@ -22,7 +22,5 @@ module "aks_zero" {
 
     # Settings for Ops-cluster
     ops = {}
-
-    loc = {}
   }
 }

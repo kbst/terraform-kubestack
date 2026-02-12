@@ -42,7 +42,5 @@ module "eks_zero" {
       # e.g. cluster_availability_zones = "eu-west-1a,eu-west-1b"
       cluster_availability_zones = ""
     }
-
-    loc = {}
   }
 }

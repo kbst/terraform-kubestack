@@ -41,8 +41,5 @@ module "gke_zero" {
 
     # ops environment, inherits from apps
     ops = {}
-
-    # loc environment, inherits from apps
-    loc = {}
   }
 }

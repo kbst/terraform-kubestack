@@ -21,9 +21,9 @@ module "aks_zero" {
 
       # CNI/Advanced networking configuration parameters.
       # Leave commented for default 'kubenet' networking
-      # vnet_address_space       = "10.16.0.0/12"  # accepts multiple comma-separated values
-      # subnet_address_prefixes  = "10.18.0.0/16"  # accepts multiple comma-separated values
-      # subnet_service_endpoints = null            # accepts multiple comma-separated values
+      # vnet_address_space       = ["10.16.0.0/12"]
+      # subnet_address_prefixes  = ["10.18.0.0/16"]
+      # subnet_service_endpoints = ["Microsoft.Storage", "Microsoft.Sql"]
 
       # network_plugin           = "azure"
       # network_policy           = "azure"
@@ -34,8 +34,5 @@ module "aks_zero" {
 
     # ops environment, inherits from apps
     ops = {}
-
-    # loc environment, inherits from apps
-    loc = {}
   }
 }

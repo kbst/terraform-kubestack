@@ -54,7 +54,7 @@ jobs:
     needs: [build-test-artifacts]
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     permissions:
       id-token: write # required for keyless signing
@@ -117,7 +117,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
     - name: "Download test-artifacts"
@@ -173,7 +173,7 @@ jobs:
         sed -i 's/region = ""/region = "eu-west-1"/g' eks_zero_providers.tf || true
 
         # EKS: set cluster_availability_zones
-        sed -i 's/cluster_availability_zones = ""/cluster_availability_zones = "eu-west-1a,eu-west-1b"/g' eks_zero_cluster.tf || true
+        sed -i 's/cluster_availability_zones = \[\]/cluster_availability_zones = ["eu-west-1a", "eu-west-1b"]/g' eks_zero_cluster.tf || true
 
         # GKE: set project_id
         sed -i 's/project_id = ""/project_id = "terraform-kubestack-testing"/g' gke_zero_cluster.tf || true
@@ -182,7 +182,7 @@ jobs:
         sed -i 's/region = ""/region = "europe-west1"/g' gke_zero_cluster.tf || true
 
         # GKE: set cluster_node_locations
-        sed -i 's/cluster_node_locations = ""/cluster_node_locations = "europe-west1-b,europe-west1-c,europe-west1-d"/g' gke_zero_cluster.tf || true
+        sed -i 's/cluster_node_locations = \[\]/cluster_node_locations = ["europe-west1-b", "europe-west1-c", "europe-west1-d"]/g' gke_zero_cluster.tf || true
 
     - name: "Terraform init"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
@@ -230,7 +230,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
     - name: "Download test-artifacts"
@@ -277,7 +277,7 @@ jobs:
 
     strategy:
       matrix:
-        starter: ["multi-cloud", "aks", "eks", "gke", "kind"]
+        starter: ["multi-cloud", "aks", "eks", "gke"]
 
     steps:
     - name: "Download test-artifacts"

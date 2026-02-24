@@ -13,6 +13,9 @@ variable "test_configuration" {
     test_object = optional(object({
       key = string
     }))
+    test_map_object = optional(map(object({
+      key = string
+    })))
   }))
   description = "Map with per workspace module configuration."
   default = {
@@ -34,6 +37,10 @@ variable "test_configuration" {
       test_object = {
         key = "from_apps"
       }
+
+      test_map_object = {
+        env = { key = "from_apps" }
+      }
     }
 
     ops = {
@@ -53,6 +60,10 @@ variable "test_configuration" {
 
       test_object = {
         key = "from_ops"
+      }
+
+      test_map_object = {
+        env = { key = "from_ops" }
       }
     }
 

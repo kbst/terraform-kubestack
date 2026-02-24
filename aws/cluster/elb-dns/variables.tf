@@ -8,9 +8,16 @@ variable "ingress_service_namespace" {
   description = "Metadata namespace of the ingress service."
 }
 
-variable "metadata_fqdn" {
-  type        = string
-  description = "Cluster module FQDN."
+variable "metadata" {
+  type = object({
+    name            = string
+    domain          = string
+    fqdn            = string
+    labels          = map(string)
+    label_namespace = string
+    tags            = list(string)
+  })
+  description = "Cluster metadata from the common/metadata module."
 }
 
 variable "using_nlb" {

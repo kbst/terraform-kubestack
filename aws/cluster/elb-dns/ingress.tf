@@ -6,14 +6,14 @@ data "kubernetes_service" "current" {
 }
 
 data "aws_route53_zone" "current" {
-  name = "${var.metadata_fqdn}."
+  name = "${var.metadata.fqdn}."
 }
 
 data "aws_elb_hosted_zone_id" "current" {
   count = var.using_nlb ? 0 : 1
 }
 
-# this is a workaround as aws_elb_hosted_zone_id doesn't support NLBs 
+# this is a workaround as aws_elb_hosted_zone_id doesn't support NLBs
 # ref: https://github.com/hashicorp/terraform-provider-aws/issues/7988
 data "aws_lb" "current" {
   count = var.using_nlb ? 1 : 0
@@ -23,7 +23,7 @@ data "aws_lb" "current" {
 
 resource "aws_route53_record" "host" {
   zone_id = data.aws_route53_zone.current.zone_id
-  name    = var.metadata_fqdn
+  name    = var.metadata.fqdn
   type    = "A"
 
   alias {
@@ -35,7 +35,7 @@ resource "aws_route53_record" "host" {
 
 resource "aws_route53_record" "wildcard" {
   zone_id = data.aws_route53_zone.current.zone_id
-  name    = "*.${var.metadata_fqdn}"
+  name    = "*.${var.metadata.fqdn}"
   type    = "A"
 
   alias {

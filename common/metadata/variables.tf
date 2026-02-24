@@ -35,4 +35,3 @@ variable "label_namespace" {
   description = "Prefix labels are namespaced with."
   default     = "kubestack.com/"
 }
-

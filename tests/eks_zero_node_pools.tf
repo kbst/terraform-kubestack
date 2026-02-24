@@ -5,14 +5,17 @@ module "eks_zero_node_pool_existing_subnets" {
 
   source = "../aws/cluster/node-pool"
 
-  cluster_name = module.eks_zero.current_metadata["name"]
+  cluster          = module.eks_zero.cluster
+  cluster_metadata = module.eks_zero.current_metadata
 
   configuration = {
     # Settings for Apps-cluster
     apps = {
       name = "existing-subnets"
 
-      instance_types   = "t3a.medium"
+      availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+
+      instance_types   = ["t3a.medium"]
       desired_capacity = 1
       min_size         = 1
       max_size         = 3
@@ -29,7 +32,7 @@ module "eks_zero_node_pool_existing_subnets" {
 
     # Settings for Ops-cluster
     ops = {
-      max_size = "1"
+      max_size = 1
     }
   }
 }
@@ -41,16 +44,17 @@ module "eks_zero_node_pool_existing_subnets_one_az_only" {
 
   source = "../aws/cluster/node-pool"
 
-  cluster_name = module.eks_zero.current_metadata["name"]
+  cluster          = module.eks_zero.cluster
+  cluster_metadata = module.eks_zero.current_metadata
 
   configuration = {
     # Settings for Apps-cluster
     apps = {
       name = "existing-subnets-one-az-only"
 
-      availability_zones = "eu-west-1b"
+      availability_zones = ["eu-west-1b"]
 
-      instance_types   = "t3a.medium"
+      instance_types   = ["t3a.medium"]
       desired_capacity = 1
       min_size         = 1
       max_size         = 3
@@ -60,7 +64,7 @@ module "eks_zero_node_pool_existing_subnets_one_az_only" {
 
     # Settings for Ops-cluster
     ops = {
-      max_size = "1"
+      max_size = 1
     }
   }
 }
@@ -72,19 +76,20 @@ module "eks_zero_node_pool_new_subnets" {
 
   source = "../aws/cluster/node-pool"
 
-  cluster_name = module.eks_zero.current_metadata["name"]
+  cluster          = module.eks_zero.cluster
+  cluster_metadata = module.eks_zero.current_metadata
 
   configuration = {
     # Settings for Apps-cluster
     apps = {
       name = "new-subnets"
 
-      instance_types   = "t3a.medium,t3a.small"
+      instance_types   = ["t3a.medium", "t3a.small"]
       desired_capacity = 1
       min_size         = 1
       max_size         = 3
 
-      availability_zones = "eu-west-1a,eu-west-1b,eu-west-1c"
+      availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
 
       # use the last three /18 subnets in the CIDR
       # https://www.davidc.net/sites/default/subnets/subnets.html?network=10.0.0.0&mask=16&division=23.ff4011
@@ -106,8 +111,8 @@ module "eks_zero_node_pool_new_subnets" {
 
     # Settings for Ops-cluster
     ops = {
-      max_size           = "1"
-      availability_zones = "eu-west-1a,eu-west-1b"
+      max_size           = 1
+      availability_zones = ["eu-west-1a", "eu-west-1b"]
     }
   }
 }
@@ -119,19 +124,20 @@ module "eks_zero_node_pool_new_subnets_secondary_cidr" {
 
   source = "../aws/cluster/node-pool"
 
-  cluster_name = module.eks_zero.current_metadata["name"]
+  cluster          = module.eks_zero.cluster
+  cluster_metadata = module.eks_zero.current_metadata
 
   configuration = {
     # Settings for Apps-cluster
     apps = {
       name = "new-subnets-secondary-cidr"
 
-      instance_types   = "t3a.medium,t3a.small"
+      instance_types   = ["t3a.medium", "t3a.small"]
       desired_capacity = 1
       min_size         = 1
       max_size         = 3
 
-      availability_zones = "eu-west-1a,eu-west-1b,eu-west-1c"
+      availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
 
       # add a secondary CIDR to the VPC and create subnets for it
       # https://www.davidc.net/sites/default/subnets/subnets.html?network=10.1.0.0&mask=16&division=23.ff4011
@@ -152,8 +158,8 @@ module "eks_zero_node_pool_new_subnets_secondary_cidr" {
 
     # Settings for Ops-cluster
     ops = {
-      max_size           = "1"
-      availability_zones = "eu-west-1a,eu-west-1b"
+      max_size           = 1
+      availability_zones = ["eu-west-1a", "eu-west-1b"]
 
       # only two zones, use the two /17 subnets
       vpc_subnet_newbits = 1

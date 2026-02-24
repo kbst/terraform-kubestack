@@ -27,22 +27,20 @@ module "gke_zero" {
       cluster_min_master_version = "1.22"
 
       # Initial number of desired nodes per zone
-      cluster_initial_node_count = 1
+      default_node_pool = {
+        initial_node_count = 1
+      }
 
       # The Google cloud region to deploy the clusters in
       region = ""
 
       # Comma-separated list of zone names to deploy worker nodes in.
       # Must match region above.
-      # e.g. cluster_node_locations = "europe-west3-a,europe-west3-b,europe-west3-c"
-      # FIXME: Use actual list when TF 0.12 finally supports heterogeneous maps
-      cluster_node_locations = ""
+      # e.g. cluster_node_locations = ["europe-west3-a", "europe-west3-b", "europe-west3-c"]
+      cluster_node_locations = []
     }
 
     # ops environment, inherits from apps
     ops = {}
-
-    # loc environment, inherits from apps
-    loc = {}
   }
 }

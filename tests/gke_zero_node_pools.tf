@@ -1,6 +1,7 @@
 module "gke_zero_node_pool" {
   source = "../google/cluster/node-pool"
 
+  cluster          = module.gke_zero.cluster
   cluster_metadata = module.gke_zero.current_metadata
 
   configuration = {

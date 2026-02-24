@@ -9,13 +9,15 @@ module "eks_zero" {
   configuration = {
     # Settings for Apps-cluster
     apps = {
-      name_prefix                = "kbstacctest"
-      base_domain                = "infra.serverwolken.de"
-      cluster_instance_type      = "t3a.medium"
-      cluster_desired_capacity   = "1"
-      cluster_min_size           = "1"
-      cluster_max_size           = "1"
-      cluster_availability_zones = "eu-west-1a,eu-west-1b,eu-west-1c"
+      name_prefix = "kbstacctest"
+      base_domain = "infra.serverwolken.de"
+      default_node_pool = {
+        instance_types   = ["t3a.medium"]
+        desired_capacity = 1
+        min_size         = 1
+        max_size         = 3
+      }
+      cluster_availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
 
       cluster_aws_auth_map_users = <<MAPUSERS
       - userarn: arn:aws:iam::694714331404:user/pst
@@ -27,8 +29,10 @@ module "eks_zero" {
 
     # Settings for Ops-cluster
     ops = {
-      cluster_max_size           = "1"
-      cluster_availability_zones = "eu-west-1a,eu-west-1b"
+      default_node_pool = {
+        max_size = 1
+      }
+      cluster_availability_zones = ["eu-west-1a", "eu-west-1b"]
     }
   }
 }

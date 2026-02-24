@@ -1,46 +1,104 @@
-module "node_pool" {
-  source = "../../_modules/gke/node_pool"
+module "configuration" {
+  source        = "../../../common/configuration"
+  configuration = var.configuration
+  base_key      = var.configuration_base_key
+}
 
-  project = local.project_id
+locals {
+  cfg = module.configuration.merged[terraform.workspace]
 
-  location       = local.location
-  node_locations = local.node_locations
+  disable_per_node_pool_service_account = local.cfg.service_account_email == null ? false : true
+}
 
-  cluster_name = var.cluster_metadata["name"]
-  pool_name    = local.name
+resource "google_container_node_pool" "current" {
+  name     = local.cfg.name
+  project  = local.cfg.project_id
+  cluster  = var.cluster.name
+  location = local.cfg.location
 
-  metadata_tags   = var.cluster_metadata["tags"]
-  metadata_labels = var.cluster_metadata["labels"]
+  initial_node_count = local.cfg.initial_node_count
 
-  initial_node_count = local.initial_node_count
-  min_node_count     = local.min_node_count
-  max_node_count     = local.max_node_count
-  location_policy    = local.location_policy
+  autoscaling {
+    min_node_count  = try(coalesce(local.cfg.min_node_count, null), 1)
+    max_node_count  = try(coalesce(local.cfg.max_node_count, null), 1)
+    location_policy = try(coalesce(local.cfg.location_policy, null), "BALANCED")
+  }
 
-  extra_oauth_scopes = local.extra_oauth_scopes
+  node_locations = try(coalesce(local.cfg.node_locations, null), [])
 
-  disk_size_gb = local.disk_size_gb
-  disk_type    = local.disk_type
-  image_type   = local.image_type
-  machine_type = local.machine_type
+  dynamic "network_config" {
+    for_each = local.cfg.network_config == null ? [] : [1]
 
-  preemptible  = local.preemptible
-  auto_repair  = local.auto_repair
-  auto_upgrade = local.auto_upgrade
+    content {
+      enable_private_nodes = local.cfg.network_config.enable_private_nodes
+      create_pod_range     = local.cfg.network_config.create_pod_range
+      pod_ipv4_cidr_block  = local.cfg.network_config.pod_ipv4_cidr_block
+    }
+  }
 
-  node_workload_metadata_config = local.node_workload_metadata_config
+  #
+  #
+  # Node config
+  node_config {
+    service_account = local.disable_per_node_pool_service_account ? local.cfg.service_account_email : google_service_account.current[0].email
 
-  taints        = local.taints
-  instance_tags = local.instance_tags
+    oauth_scopes = local.oauth_scopes
 
-  labels = local.labels
+    disk_size_gb = try(coalesce(local.cfg.disk_size_gb, null), 100)
+    disk_type    = try(coalesce(local.cfg.disk_type, null), "pd-balanced")
 
-  service_account_email                 = local.service_account_email
-  disable_per_node_pool_service_account = local.service_account_email == null ? false : true
+    image_type   = try(coalesce(local.cfg.image_type, null), "COS_CONTAINERD")
+    machine_type = try(coalesce(local.cfg.machine_type, null), "")
+    preemptible  = try(coalesce(local.cfg.preemptible, null), false)
 
-  ephemeral_storage_local_ssd_config = local.ephemeral_storage_local_ssd_config
+    labels = merge(try(coalesce(local.cfg.labels, null), {}), var.cluster_metadata.labels)
 
-  guest_accelerator = local.guest_accelerator
+    tags = concat(var.cluster_metadata.tags, try(coalesce(local.cfg.instance_tags, null), []))
 
-  network_config = local.network_config
+    workload_metadata_config {
+      mode = try(coalesce(local.cfg.node_workload_metadata_config, null), "GKE_METADATA")
+    }
+
+    dynamic "guest_accelerator" {
+      # Make sure to generate this only once
+      for_each = local.cfg.guest_accelerator == null ? [] : [1]
+
+      content {
+        type  = local.cfg.guest_accelerator.type
+        count = local.cfg.guest_accelerator.count
+
+        dynamic "gpu_sharing_config" {
+          for_each = local.cfg.guest_accelerator.gpu_sharing_config == null ? [] : [1]
+
+          content {
+            gpu_sharing_strategy       = local.cfg.guest_accelerator.gpu_sharing_config.gpu_sharing_strategy
+            max_shared_clients_per_gpu = local.cfg.guest_accelerator.gpu_sharing_config.max_shared_clients_per_gpu
+          }
+        }
+      }
+    }
+
+    dynamic "taint" {
+      for_each = try(coalesce(local.cfg.taints, null), toset([])) == null ? [] : try(coalesce(local.cfg.taints, null), toset([]))
+
+      content {
+        key    = taint.value.key
+        value  = taint.value.value
+        effect = taint.value.effect
+      }
+    }
+
+    dynamic "ephemeral_storage_local_ssd_config" {
+      for_each = local.cfg.ephemeral_storage_local_ssd_config == null ? [] : [1]
+
+      content {
+        local_ssd_count = local.cfg.ephemeral_storage_local_ssd_config.local_ssd_count
+      }
+    }
+  }
+
+  management {
+    auto_repair  = try(coalesce(local.cfg.auto_repair, null), true)
+    auto_upgrade = try(coalesce(local.cfg.auto_upgrade, null), true)
+  }
 }

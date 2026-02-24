@@ -8,9 +8,11 @@ module "aks_zero" {
       name_prefix    = "kbstacctest"
       base_domain    = "infra.serverwolken.de"
 
-      default_node_pool_vm_size   = "Standard_B2s"
-      default_node_pool_min_count = 1
-      default_node_pool_max_count = 1
+      default_node_pool = {
+        vm_size   = "Standard_B2s"
+        min_count = 1
+        max_count = 1
+      }
 
       network_plugin = "azure"
 

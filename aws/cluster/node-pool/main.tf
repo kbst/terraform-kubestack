@@ -1,44 +1,72 @@
-locals {
-  // if provider level tags are set, the node_group data source tags attr
-  // includes the resource level and provider level tags
-  // we have to exclude the provider level tags when setting them for node pools below
-  node_group_tag_keys        = toset(keys(data.aws_eks_node_group.default.tags))
-  provider_level_tag_keys    = toset(keys(data.aws_default_tags.current.tags))
-  tags_without_all_tags_keys = setsubtract(local.node_group_tag_keys, local.provider_level_tag_keys)
-  tags_without_all_tags      = { for k in local.tags_without_all_tags_keys : k => data.aws_eks_node_group.default.tags[k] }
+module "configuration" {
+  source        = "../../../common/configuration"
+  configuration = var.configuration
+  base_key      = var.configuration_base_key
 }
 
-module "node_pool" {
-  source = "../../_modules/eks/node_pool"
+locals {
+  cfg = module.configuration.merged[terraform.workspace]
 
-  cluster_name      = data.aws_eks_cluster.current.name
-  metadata_labels   = data.aws_eks_node_group.default.labels
-  eks_metadata_tags = local.tags_without_all_tags
-  role_arn          = data.aws_eks_node_group.default.node_role_arn
+  cpu_ami_type      = data.aws_ec2_instance_type.current.supported_architectures[0] == "arm64" ? "AL2023_ARM_64_STANDARD" : "AL2023_x86_64_STANDARD"
+  computed_ami_type = length(data.aws_ec2_instance_type.current.gpus) > 0 ? "AL2023_x86_64_NVIDIA" : local.cpu_ami_type
+}
 
-  node_group_name = local.name
+resource "aws_eks_node_group" "nodes" {
+  cluster_name    = var.cluster.name
+  node_group_name = local.cfg.name
+  node_role_arn   = data.aws_iam_role.node.arn
+  subnet_ids = coalesce(
+    # first prio, user specified subnet ids
+    try(coalesce(var.cluster_default_node_pool_subnet_ids, local.cfg.vpc_subnet_ids), null),
+    # second prio, created subnet ids
+    length(aws_subnet.current.*.id) > 0 ? aws_subnet.current.*.id : null,
+    # fall back, existing subnet ids
+    length(data.aws_subnets.current) == 1 ? data.aws_subnets.current[0].ids : null,
+  )
 
-  subnet_ids = local.vpc_subnet_newbits == null ? local.vpc_subnet_ids : aws_subnet.current.*.id
+  scaling_config {
+    desired_size = local.cfg.desired_capacity
+    max_size     = local.cfg.max_size
+    min_size     = local.cfg.min_size
+  }
 
-  instance_types      = local.instance_types
-  ami_release_version = local.ami_release_version
-  desired_size        = local.desired_capacity
-  max_size            = local.max_size
-  min_size            = local.min_size
+  version         = var.cluster.version
+  ami_type        = local.cfg.ami_type == null ? local.computed_ami_type : local.cfg.ami_type
+  release_version = local.cfg.ami_release_version
+  instance_types  = try(toset(local.cfg.instance_types), toset([]))
 
-  ami_type = local.ami_type
+  disk_size = local.create_launch_template ? null : try(coalesce(local.cfg.disk_size, null), 20)
 
-  kubernetes_version = data.aws_eks_cluster.current.version
+  dynamic "launch_template" {
+    for_each = local.create_launch_template ? toset([1]) : toset([])
 
-  disk_size = local.disk_size
+    content {
+      id      = aws_launch_template.current[0].id
+      version = aws_launch_template.current[0].latest_version
+    }
+  }
 
-  metadata_options = local.metadata_options
+  tags = merge(
+    { "kubernetes.io/cluster/${var.cluster.name}" = "shared" },
+    var.cluster_metadata.labels,
+    coalesce(local.cfg.tags, {})
+  )
+  labels = merge(var.cluster_metadata.labels, coalesce(local.cfg.labels, {}))
 
-  taints = local.taints
+  dynamic "taint" {
+    for_each = coalesce(local.cfg.taints, [])
 
-  tags = local.tags
+    content {
+      key    = taint.value.key
+      value  = taint.value.value
+      effect = taint.value.effect
+    }
+  }
 
-  labels = local.labels
-
-  depends-on-aws-auth = null
+  # when autoscaler is enabled, desired_size needs to be ignored
+  # better would be to handle this in the resource and not require
+  # desired_size, min_size and max_size in scaling_config
+  lifecycle {
+    ignore_changes = [scaling_config[0].desired_size]
+  }
 }

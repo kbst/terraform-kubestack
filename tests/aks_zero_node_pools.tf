@@ -1,8 +1,7 @@
 module "aks_zero_node_pool" {
   source = "../azurerm/cluster/node-pool"
 
-  cluster_name   = module.aks_zero.current_metadata["name"]
-  resource_group = module.aks_zero.current_config["resource_group"]
+  cluster = module.aks_zero.cluster
 
   configuration = {
     # Settings for Apps-cluster

@@ -1,5 +1,9 @@
+output "cluster" {
+  value = aws_eks_cluster.current
+}
+
 output "current_config" {
-  value = module.configuration.merged[terraform.workspace]
+  value = local.cfg
 }
 
 output "current_metadata" {
@@ -7,5 +11,5 @@ output "current_metadata" {
 }
 
 output "kubeconfig" {
-  value = module.cluster.kubeconfig
+  value = local.kubeconfig
 }

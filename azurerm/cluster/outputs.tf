@@ -1,9 +1,13 @@
+output "cluster" {
+  value = azurerm_kubernetes_cluster.current
+}
+
 output "aks_vnet" {
-  value = module.cluster.aks_vnet
+  value = length(azurerm_virtual_network.current) > 0 ? azurerm_virtual_network.current[0] : null
 }
 
 output "current_config" {
-  value = module.configuration.merged[terraform.workspace]
+  value = local.cfg
 }
 
 output "current_metadata" {
@@ -12,9 +16,9 @@ output "current_metadata" {
 
 output "kubeconfig" {
   sensitive = true
-  value     = module.cluster.kubeconfig
+  value     = local.kubeconfig
 }
 
 output "default_ingress_ip" {
-  value = module.cluster.default_ingress_ip
+  value = length(azurerm_public_ip.current) > 0 ? azurerm_public_ip.current[0].ip_address : null
 }

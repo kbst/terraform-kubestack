@@ -1,14 +1,32 @@
 locals {
-  base_config = var.configuration[var.base_key]
+  base_cfg = var.configuration[var.base_key]
 
   merged = {
-    for env_key, env in var.configuration :
+    # loop through all environments
+    for env_key, env_cfg in var.configuration :
     env_key => {
-      # loop through all config keys in base_key environment and current env
-      # if current env has that key, use the value from current env
-      # if not, use the value from the base_key environment
-      for key in setunion(keys(env), keys(local.base_config)) :
-      key => lookup(env, key, null) != null ? env[key] : local.base_config[key]
+      # loop through all keys in current and base_key environment config
+      for cfg_key in setunion(keys(env_cfg), keys(local.base_cfg)) :
+      cfg_key => try(
+        # try one level of nesting
+        {
+          for nested_key in setunion(keys(env_cfg[cfg_key]), keys(local.base_cfg[cfg_key])) :
+          nested_key => try(
+            # use current environment's nested value or base env's value
+            coalesce(
+              lookup(env_cfg[cfg_key], nested_key, null),
+              lookup(local.base_cfg[cfg_key], nested_key, null),
+            ),
+            local.base_cfg[cfg_key][nested_key]
+          )
+        },
+        # fall back to use current environment's value or base env's value
+        coalesce(
+          lookup(env_cfg, cfg_key, null),
+          lookup(local.base_cfg, cfg_key, null),
+        ),
+        local.base_cfg[cfg_key]
+      )
     }
   }
 }

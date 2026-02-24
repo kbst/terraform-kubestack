@@ -8,11 +8,11 @@ variable "configuration" {
     node_locations  = optional(list(string))
     location_policy = optional(string)
 
-    initial_node_count = optional(string)
-    min_node_count     = optional(string)
-    max_node_count     = optional(string)
+    initial_node_count = optional(number)
+    min_node_count     = optional(number)
+    max_node_count     = optional(number)
 
-    disk_size_gb = optional(string)
+    disk_size_gb = optional(number)
     disk_type    = optional(string)
     image_type   = optional(string)
     machine_type = optional(string)
@@ -59,15 +59,24 @@ variable "configuration" {
   }))
 
   description = "Map with per workspace cluster configuration."
+  nullable    = false
 }
 
 variable "configuration_base_key" {
   type        = string
   description = "The key in the configuration map all other keys inherit from."
   default     = "apps"
+  nullable    = false
+}
+
+variable "cluster" {
+  type        = any
+  description = "The cluster output from the cluster module."
+  nullable    = false
 }
 
 variable "cluster_metadata" {
   type        = any
   description = "Metadata of the cluster to attach the node pool to."
+  nullable    = false
 }

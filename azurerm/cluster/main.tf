@@ -1,76 +1,117 @@
-data "azurerm_resource_group" "current" {
-  name = local.resource_group
+module "configuration" {
+  source        = "../../common/configuration"
+  configuration = var.configuration
+  base_key      = var.configuration_base_key
+}
+
+locals {
+  cfg = module.configuration.merged[terraform.workspace]
 }
 
 module "cluster_metadata" {
   source = "../../common/metadata"
 
-  name_prefix = local.name_prefix
-  base_domain = local.base_domain
+  name_prefix = local.cfg.name_prefix
+  base_domain = local.cfg.base_domain
 
   provider_name   = "azure"
-  provider_region = data.azurerm_resource_group.current.location
+  provider_region = data.azurerm_resource_group.current.location # references cluster.tf data source
 
   # Azure does not allow / character in labels
   label_namespace = "kubestack.com-"
 }
 
-module "cluster" {
-  source = "../_modules/aks"
+data "azurerm_resource_group" "current" {
+  name = local.cfg.resource_group
+}
 
-  resource_group = local.resource_group
+resource "azurerm_kubernetes_cluster" "current" {
+  name                      = module.cluster_metadata.name
+  location                  = data.azurerm_resource_group.current.location
+  resource_group_name       = data.azurerm_resource_group.current.name
+  dns_prefix                = try(coalesce(local.cfg.dns_prefix, null), "api")
+  sku_tier                  = try(coalesce(local.cfg.sku_tier, null), "Free")
+  kubernetes_version        = local.cfg.kubernetes_version
+  automatic_upgrade_channel = local.cfg.automatic_channel_upgrade
 
-  metadata_name            = module.cluster_metadata.name
-  metadata_fqdn            = module.cluster_metadata.fqdn
-  metadata_labels          = merge(module.cluster_metadata.labels, local.additional_metadata_labels)
-  metadata_label_namespace = module.cluster_metadata.label_namespace
+  role_based_access_control_enabled = true
 
-  dns_prefix = local.dns_prefix
+  default_node_pool {
+    name = try(coalesce(local.cfg.default_node_pool.name, null), "default")
+    type = try(coalesce(local.cfg.default_node_pool.type, null), "VirtualMachineScaleSets")
 
-  sku_tier = local.sku_tier
+    auto_scaling_enabled = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true)
 
-  legacy_vnet_name         = local.legacy_vnet_name
-  vnet_address_space       = local.vnet_address_space
-  subnet_address_prefixes  = local.subnet_address_prefixes
-  subnet_service_endpoints = local.subnet_service_endpoints
+    # set min and max count only if autoscaling is _enabled_
+    min_count = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) ? try(coalesce(local.cfg.default_node_pool.min_count, null), 1) : null
+    max_count = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) ? try(coalesce(local.cfg.default_node_pool.max_count, null), 1) : null
 
-  network_plugin = local.network_plugin
-  network_policy = local.network_policy
-  service_cidr   = local.service_cidr
-  dns_service_ip = local.dns_service_ip
-  pod_cidr       = local.pod_cidr
-  max_pods       = local.max_pods
+    # set node count only if auto scaling is _disabled_
+    node_count = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) ? null : try(coalesce(local.cfg.default_node_pool.node_count, null), 1)
 
-  default_node_pool_name = local.default_node_pool_name
-  default_node_pool_type = local.default_node_pool_type
+    vm_size         = try(coalesce(local.cfg.default_node_pool.vm_size, null), "Standard_D1_v2")
+    os_disk_size_gb = try(coalesce(local.cfg.default_node_pool.os_disk_size_gb, null), 30)
 
-  default_node_pool_enable_auto_scaling = local.default_node_pool_enable_auto_scaling
-  default_node_pool_min_count           = local.default_node_pool_min_count
-  default_node_pool_max_count           = local.default_node_pool_max_count
-  default_node_pool_node_count          = local.default_node_pool_node_count
+    vnet_subnet_id = try(coalesce(local.cfg.network_plugin, null), "kubenet") == "azure" ? azurerm_subnet.current[0].id : null
+    max_pods       = local.cfg.max_pods
 
-  default_node_pool_only_critical_addons = local.default_node_pool_only_critical_addons
-  default_node_pool_vm_size              = local.default_node_pool_vm_size
-  default_node_pool_os_disk_size_gb      = local.default_node_pool_os_disk_size_gb
+    only_critical_addons_enabled = try(coalesce(local.cfg.default_node_pool.only_critical_addons, null), false)
 
-  disable_default_ingress  = local.disable_default_ingress
-  default_ingress_ip_zones = local.default_ingress_ip_zones
+    zones = try(coalesce(local.cfg.availability_zones, null), [])
 
-  enable_azure_policy_agent = local.enable_azure_policy_agent
+    upgrade_settings {
+      max_surge                     = try(coalesce(try(local.cfg.default_node_pool.upgrade_settings, null).max_surge, null), "10%")
+      drain_timeout_in_minutes      = try(coalesce(try(local.cfg.default_node_pool.upgrade_settings, null).drain_timeout_in_minutes, null), 0)
+      node_soak_duration_in_minutes = try(coalesce(try(local.cfg.default_node_pool.upgrade_settings, null).node_soak_duration_in_minutes, null), 0)
+    }
+  }
 
-  disable_managed_identities = local.disable_managed_identities
-  user_assigned_identity_id  = local.user_assigned_identity_id
+  network_profile {
+    network_plugin = try(coalesce(local.cfg.network_plugin, null), "kubenet")
+    network_policy = try(coalesce(local.cfg.network_policy, null), "calico")
 
-  kubernetes_version        = local.kubernetes_version
-  automatic_channel_upgrade = local.automatic_channel_upgrade
-  enable_log_analytics      = local.enable_log_analytics
+    service_cidr   = try(coalesce(local.cfg.service_cidr, null), "10.0.0.0/16")
+    dns_service_ip = try(coalesce(local.cfg.dns_service_ip, null), "10.0.0.10")
+    pod_cidr       = try(coalesce(local.cfg.network_plugin, null), "kubenet") == "azure" ? null : try(coalesce(local.cfg.pod_cidr, null), "10.244.0.0/16")
+  }
 
-  availability_zones = local.availability_zones
+  dynamic "identity" {
+    for_each = try(coalesce(local.cfg.disable_managed_identities, null), false) == true ? toset([]) : toset([1])
 
-  keda_enabled                    = local.keda_enabled
-  vertical_pod_autoscaler_enabled = local.vertical_pod_autoscaler_enabled
+    content {
+      type = local.cfg.user_assigned_identity_id == null ? "SystemAssigned" : "UserAssigned"
 
-  upgade_settings_max_surge                     = local.upgade_settings_max_surge
-  upgade_settings_drain_timeout_in_minutes      = local.upgade_settings_drain_timeout_in_minutes
-  upgade_settings_node_soak_duration_in_minutes = local.upgade_settings_node_soak_duration_in_minutes
+      identity_ids = local.cfg.user_assigned_identity_id == null ? null : [local.cfg.user_assigned_identity_id]
+    }
+  }
+
+  dynamic "service_principal" {
+    for_each = try(coalesce(local.cfg.disable_managed_identities, null), false) == true ? toset([1]) : toset([])
+
+    content {
+      client_id     = azuread_application.current[0].application_id
+      client_secret = azuread_service_principal_password.current[0].value
+    }
+  }
+
+  azure_policy_enabled = try(coalesce(local.cfg.enable_azure_policy_agent, null), false)
+
+  dynamic "oms_agent" {
+    for_each = try(coalesce(local.cfg.enable_log_analytics, null), true) ? toset([1]) : toset([])
+
+    content {
+      log_analytics_workspace_id = azurerm_log_analytics_workspace.current[0].id
+    }
+  }
+
+  dynamic "workload_autoscaler_profile" {
+    for_each = try(coalesce(local.cfg.keda_enabled, null), false) || try(coalesce(local.cfg.vertical_pod_autoscaler_enabled, null), false) ? toset([1]) : toset([])
+
+    content {
+      keda_enabled                    = try(coalesce(local.cfg.keda_enabled, null), false)
+      vertical_pod_autoscaler_enabled = try(coalesce(local.cfg.vertical_pod_autoscaler_enabled, null), false)
+    }
+  }
+
+  tags = merge(module.cluster_metadata.labels, try(local.cfg.additional_metadata_labels, {}))
 }

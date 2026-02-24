@@ -1,91 +1,151 @@
+module "configuration" {
+  source        = "../../common/configuration"
+  configuration = var.configuration
+  base_key      = var.configuration_base_key
+}
+
+locals {
+  cfg = module.configuration.merged[terraform.workspace]
+}
+
 module "cluster_metadata" {
   source = "../../common/metadata"
 
-  name_prefix = local.name_prefix
-  base_domain = local.base_domain
+  name_prefix = local.cfg.name_prefix
+  base_domain = local.cfg.base_domain
 
   provider_name   = "gcp"
-  provider_region = local.region
+  provider_region = local.cfg.region
 }
 
-module "cluster" {
-  source = "../_modules/gke"
+resource "google_container_cluster" "current" {
+  project = local.cfg.project_id
+  name    = module.cluster_metadata.name
 
-  project = local.project_id
+  deletion_protection = local.cfg.deletion_protection
 
-  deletion_protection = local.deletion_protection
+  location       = local.cfg.region
+  node_locations = try(coalesce(local.cfg.cluster_node_locations, null), [])
 
-  metadata_name   = module.cluster_metadata.name
-  metadata_fqdn   = module.cluster_metadata.fqdn
-  metadata_tags   = module.cluster_metadata.tags
-  metadata_labels = module.cluster_metadata.labels
+  min_master_version = local.cfg.cluster_min_master_version
 
-  location       = local.region
-  node_locations = local.cluster_node_locations
-
-  min_master_version = local.cluster_min_master_version
-  release_channel    = local.cluster_release_channel
-
-  daily_maintenance_window_start_time = local.cluster_daily_maintenance_window_start_time
-
-  maintenance_exclusion_start_time = local.cluster_maintenance_exclusion_start_time
-  maintenance_exclusion_end_time = local.cluster_maintenance_exclusion_end_time
-  maintenance_exclusion_name = local.cluster_maintenance_exclusion_name
-  maintenance_exclusion_scope = local.cluster_maintenance_exclusion_scope
-
-  remove_default_node_pool = local.remove_default_node_pool
-
-  initial_node_count = local.cluster_initial_node_count
-  min_node_count     = local.cluster_min_node_count
-  max_node_count     = local.cluster_max_node_count
-  location_policy    = local.cluster_node_location_policy
-
-  extra_oauth_scopes = local.cluster_extra_oauth_scopes
-
-  disk_size_gb = local.cluster_disk_size_gb
-  disk_type    = local.cluster_disk_type
-  image_type   = local.cluster_image_type
-  machine_type = local.cluster_machine_type
-
-  preemptible = local.cluster_preemptible
-
-  auto_repair = local.cluster_auto_repair
-
-  auto_upgrade = local.cluster_auto_upgrade
-
-  disable_default_ingress = local.disable_default_ingress
-
-  enable_private_nodes = local.enable_private_nodes
-  master_cidr_block    = local.master_cidr_block
-
-  cluster_ipv4_cidr_block  = local.cluster_ipv4_cidr_block
-  services_ipv4_cidr_block = local.services_ipv4_cidr_block
-
-  enable_cloud_nat                       = local.enable_cloud_nat
-  cloud_nat_endpoint_independent_mapping = local.cloud_nat_endpoint_independent_mapping
-  cloud_nat_ip_count                     = local.cloud_nat_ip_count
-
-  master_authorized_networks_config_cidr_blocks = local.master_authorized_networks_config_cidr_blocks
-
-  cloud_nat_min_ports_per_vm = local.cloud_nat_min_ports_per_vm
-
-  disable_workload_identity     = local.disable_workload_identity
-  node_workload_metadata_config = local.node_workload_metadata_config
-
-  cluster_database_encryption_key_name = local.cluster_database_encryption_key_name
-
-  enable_intranode_visibility = local.enable_intranode_visibility
-  enable_tpu                  = local.enable_tpu
-
-  router_advertise_config = {
-    groups    = local.router_advertise_config_groups
-    ip_ranges = { for ip in local.router_advertise_config_ip_ranges : ip => null }
-    mode      = local.router_advertise_config_mode
+  release_channel {
+    channel = try(coalesce(local.cfg.cluster_release_channel, null), "STABLE")
   }
-  router_asn = local.router_asn
 
-  logging_config_enable_components    = local.logging_config_enable_components
-  monitoring_config_enable_components = local.monitoring_config_enable_components
+  remove_default_node_pool = true
+  initial_node_count       = 1
 
-  enable_gcs_fuse_csi_driver = local.enable_gcs_fuse_csi_driver
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = false
+    }
+  }
+
+  network = google_compute_network.current.self_link
+
+  dynamic "workload_identity_config" {
+    for_each = try(coalesce(local.cfg.disable_workload_identity, null), false) == false ? toset([1]) : toset([])
+    content {
+      workload_pool = "${local.cfg.project_id}.svc.id.goog"
+    }
+  }
+
+  dynamic "database_encryption" {
+    for_each = local.cfg.cluster_database_encryption_key_name != null ? [1] : []
+    content {
+      state    = "ENCRYPTED"
+      key_name = local.cfg.cluster_database_encryption_key_name
+    }
+  }
+
+  #
+  #
+  # Addon config
+  addons_config {
+    http_load_balancing {
+      disabled = true
+    }
+
+    horizontal_pod_autoscaling {
+      disabled = false
+    }
+
+    network_policy_config {
+      disabled = false
+    }
+
+    dynamic "gcs_fuse_csi_driver_config" {
+      for_each = local.cfg.enable_gcs_fuse_csi_driver != null ? [1] : []
+
+      content {
+        enabled = local.cfg.enable_gcs_fuse_csi_driver
+      }
+    }
+  }
+
+  network_policy {
+    enabled = true
+  }
+
+  maintenance_policy {
+    daily_maintenance_window {
+      start_time = try(coalesce(local.cfg.cluster_daily_maintenance_window_start_time, null), "03:00")
+    }
+
+    dynamic "maintenance_exclusion" {
+      for_each = try(local.cfg.cluster_maintenance_exclusion.start_time, "") != "" ? [1] : []
+
+      content {
+        start_time     = try(local.cfg.cluster_maintenance_exclusion.start_time, "")
+        end_time       = try(local.cfg.cluster_maintenance_exclusion.end_time, "")
+        exclusion_name = try(local.cfg.cluster_maintenance_exclusion.name, "")
+
+        exclusion_options {
+          scope = try(local.cfg.cluster_maintenance_exclusion.scope, "")
+        }
+      }
+    }
+  }
+
+  dynamic "master_authorized_networks_config" {
+    for_each = local.cfg.master_authorized_networks_config_cidr_blocks == null ? [] : [1]
+
+    content {
+      dynamic "cidr_blocks" {
+        for_each = local.cfg.master_authorized_networks_config_cidr_blocks
+
+        content {
+          cidr_block   = cidr_blocks.value
+          display_name = "terraform-kubestack_${cidr_blocks.value}"
+        }
+      }
+    }
+  }
+
+  logging_config {
+    enable_components = try(coalesce(local.cfg.logging_config.enable_components, null), ["SYSTEM_COMPONENTS", "WORKLOADS"])
+  }
+
+  monitoring_config {
+    enable_components = try(coalesce(local.cfg.monitoring_config.enable_components, null), ["SYSTEM_COMPONENTS"])
+  }
+
+  private_cluster_config {
+    enable_private_nodes    = try(coalesce(local.cfg.enable_private_nodes, null), true)
+    enable_private_endpoint = try(coalesce(local.cfg.enable_private_endpoint, null), false)
+    master_ipv4_cidr_block  = try(coalesce(local.cfg.master_cidr_block, null), "172.16.0.32/28")
+  }
+
+  dynamic "ip_allocation_policy" {
+    for_each = try(coalesce(local.cfg.enable_private_nodes, null), true) ? [1] : []
+
+    content {
+      cluster_ipv4_cidr_block  = local.cfg.cluster_ipv4_cidr_block
+      services_ipv4_cidr_block = local.cfg.services_ipv4_cidr_block
+    }
+  }
+
+  enable_intranode_visibility = try(coalesce(local.cfg.enable_intranode_visibility, null), false)
+  enable_tpu                  = try(coalesce(local.cfg.enable_tpu, null), false)
 }

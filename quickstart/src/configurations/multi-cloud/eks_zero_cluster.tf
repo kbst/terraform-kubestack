@@ -21,17 +21,17 @@ module "eks_zero" {
       # e.g. kbst-apps-eu-west-1.aws.infra.example.com
       base_domain = ""
 
-      cluster_instance_type    = "t3.small"
-      cluster_desired_capacity = "1"
-      cluster_min_size         = "1"
-      cluster_max_size         = "3"
+      default_node_pool = {
+        instance_types   = ["t3.small"]
+        desired_capacity = 1
+        min_size         = 1
+        max_size         = 1
+      }
 
-      # Comma-separated list of zone names to deploy worker nodes in
       # EKS requires a min. of 2 zones
       # Must match region set in provider
-      # e.g. cluster_availability_zones = "eu-west-1a,eu-west-1b,eu-west-1c"
-      # FIXME: Use actual list when TF 0.12 finally supports heterogeneous maps
-      cluster_availability_zones = ""
+      # e.g. cluster_availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+      cluster_availability_zones = []
     }
 
     # Settings for Ops-cluster
@@ -39,8 +39,8 @@ module "eks_zero" {
       # Overwrite apps["cluster_availability_zones"] to have a smaller
       # ops cluster
       # EKS requires a min. of 2 zones
-      # e.g. cluster_availability_zones = "eu-west-1a,eu-west-1b"
-      cluster_availability_zones = ""
+      # e.g. cluster_availability_zones = ["eu-west-1a", "eu-west-1b"]
+      cluster_availability_zones = []
     }
   }
 }

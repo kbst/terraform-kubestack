@@ -62,7 +62,7 @@ validate: .init
 test: validate
 	docker exec \
 		test-container-$(GIT_SHA) \
-		entrypoint tofu apply --target module.aks_zero --target module.eks_zero --target module.gke_zero --input=false --auto-approve
+		entrypoint tofu apply --target module.aks_zero --target module.eks_zero --target module.gke_zero --target module.scw_zero --input=false --auto-approve
 	docker exec \
 		test-container-$(GIT_SHA) \
 		entrypoint tofu apply --target module.eks_zero_nginx --input=false --auto-approve
@@ -95,6 +95,7 @@ shell: .check-container
 		-e KBST_AUTH_AWS \
 		-e KBST_AUTH_AZ \
 		-e KBST_AUTH_GCLOUD \
+		-e KBST_AUTH_SCW \
 		-e HOME=/infra/tests/.user \
 		--workdir /infra/tests \
 		ghcr.io/kbst/terraform-kubestack/dev:test-$(GIT_SHA)-${DOCKER_TARGET} \

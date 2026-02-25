@@ -111,6 +111,9 @@ In case of the automation being unavailable, upgrades requiring manual steps or 
    # for GCP
    gcloud init
    gcloud auth application-default login
+
+   # for Scaleway
+   scw init
    ```
 
 1. Select desired environment

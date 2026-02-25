@@ -11,7 +11,8 @@ output "current_metadata" {
 }
 
 output "kubeconfig" {
-  value = local.kubeconfig
+  sensitive = true
+  value     = local.kubeconfig
 
   # when the node pool is destroyed before the k8s namespaces
   # the namespaces get stuck in terminating

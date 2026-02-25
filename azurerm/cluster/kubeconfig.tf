@@ -1,12 +1,35 @@
 locals {
-  template_vars = {
-    cluster_name     = azurerm_kubernetes_cluster.current.name
-    cluster_endpoint = azurerm_kubernetes_cluster.current.kube_config[0].host
-    cluster_ca       = azurerm_kubernetes_cluster.current.kube_config[0].cluster_ca_certificate
-    client_cert      = azurerm_kubernetes_cluster.current.kube_config[0].client_certificate
-    client_key       = azurerm_kubernetes_cluster.current.kube_config[0].client_key
-    path_cwd         = path.cwd
-  }
-
-  kubeconfig = templatefile("${path.module}/templates/kubeconfig.tpl", local.template_vars)
+  kubeconfig = yamlencode({
+    apiVersion = "v1"
+    kind       = "Config"
+    clusters = [
+      {
+        cluster = {
+          server                     = azurerm_kubernetes_cluster.current.kube_config[0].host
+          certificate-authority-data = azurerm_kubernetes_cluster.current.kube_config[0].cluster_ca_certificate
+        }
+        name = azurerm_kubernetes_cluster.current.name
+      }
+    ]
+    users = [
+      {
+        user = {
+          client-certificate-data = azurerm_kubernetes_cluster.current.kube_config[0].client_certificate
+          client-key-data         = azurerm_kubernetes_cluster.current.kube_config[0].client_key
+        }
+        name = azurerm_kubernetes_cluster.current.name
+      }
+    ]
+    contexts = [
+      {
+        context = {
+          cluster = azurerm_kubernetes_cluster.current.name
+          user    = azurerm_kubernetes_cluster.current.name
+        }
+        name = azurerm_kubernetes_cluster.current.name
+      }
+    ]
+    current-context = azurerm_kubernetes_cluster.current.name
+    preferences     = {}
+  })
 }

@@ -1,0 +1,10 @@
+FROM {{image_name}}:{{image_tag}}-kind
+
+ARG UID
+ARG GID
+
+RUN mkdir -p /infra/terraform.tfstate.d &&\
+    chown ${UID}:${GID} -R /infra
+
+COPY manifests /infra/manifests
+COPY *.tf *.tfvars /infra/

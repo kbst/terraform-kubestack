@@ -1,15 +1,11 @@
 terraform {
   required_providers {
-    kubernetes = {
-      source = "hashicorp/kubernetes"
+    scaleway = {
+      source = "scaleway/scaleway"
     }
 
     kustomization = {
       source = "kbst/kustomization"
-    }
-
-    scaleway = {
-      source = "scaleway/scaleway"
     }
   }
 

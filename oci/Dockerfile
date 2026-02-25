@@ -99,6 +99,23 @@ RUN /opt/google/bin/gcloud components install gke-gcloud-auth-plugin
 
 #
 #
+# Scaleway builder
+FROM builder AS scw-builder
+
+ARG TARGETARCH
+
+# https://github.com/scaleway/scaleway-cli/releases
+ARG SCALEWAY_CLI_VERSION=2.35.0
+
+RUN echo "SCALEWAY_CLI_VERSION: ${SCALEWAY_CLI_VERSION}" \
+    && curl -LO https://github.com/scaleway/scaleway-cli/releases/download/v${SCALEWAY_CLI_VERSION}/scaleway-cli_${SCALEWAY_CLI_VERSION}_linux_${TARGETARCH} \
+    && mv scaleway-cli_${SCALEWAY_CLI_VERSION}_linux_${TARGETARCH} /opt/bin/scw \
+    && chmod +x /opt/bin/scw \
+    && /opt/bin/scw version
+
+
+#
+#
 # Azure builder
 FROM builder AS azure-builder
 
@@ -233,6 +250,15 @@ ENV PATH=$PATH:/opt/azure/bin
 
 #
 #
+# Scaleway variant
+FROM final-base AS scw
+
+# Scaleway
+COPY --from=scw-builder /opt/bin/scw /opt/bin/scw
+
+
+#
+#
 # Default (multi-cloud) variant
 FROM final-base AS multi-cloud
 
@@ -247,3 +273,6 @@ ENV PATH=$PATH:/opt/google/bin
 # Azure
 COPY --from=azure-builder /opt/azure /opt/azure
 ENV PATH=$PATH:/opt/azure/bin
+
+# Scaleway
+COPY --from=scw-builder /opt/bin/scw /opt/bin/scw

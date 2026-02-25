@@ -31,10 +31,8 @@ ARG KUBECTL_VERSION=v1.31.3
 # https://github.com/kubernetes-sigs/kustomize/releases
 ARG KUSTOMIZE_VERSION=v5.5.0
 
-# https://www.terraform.io/downloads.html
-# 1.5.x is the last OSS Terraform
-# do not update major or minor!
-ARG TERRAFORM_VERSION=1.5.7
+# https://github.com/opentofu/opentofu/releases
+ARG OPENTOFU_VERSION=1.11.5
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && curl -LO https://dl.k8s.io/${KUBECTL_VERSION}/kubernetes-client-linux-${TARGETARCH}.tar.gz \
@@ -49,11 +47,12 @@ RUN echo "KUSTOMIZE_VERSION: ${KUSTOMIZE_VERSION}" \
     && mv kustomize /opt/bin/kustomize \
     && /opt/bin/kustomize version
 
-RUN echo "TERRAFORM_VERSION: ${TERRAFORM_VERSION}" \
-    && curl -LO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
-    && unzip terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip -d /opt/bin \
-    && chmod +x /opt/bin/terraform \
-    && /opt/bin/terraform version
+RUN echo "OPENTOFU_VERSION: ${OPENTOFU_VERSION}" \
+    && curl -LO https://github.com/opentofu/opentofu/releases/download/v${OPENTOFU_VERSION}/tofu_${OPENTOFU_VERSION}_linux_${TARGETARCH}.tar.gz \
+    && tar -xf tofu_${OPENTOFU_VERSION}_linux_${TARGETARCH}.tar.gz \
+    && mv tofu /opt/bin/tofu \
+    && chmod +x /opt/bin/tofu \
+    && /opt/bin/tofu version
 
 COPY oci/entrypoint oci/entrypoint_user /opt/bin/
 
@@ -157,11 +156,11 @@ COPY common /common
 
 # Run inheritance module tests
 RUN cd /common/configuration &&\
-    terraform test
+    tofu test
 
 # Run metadata module tests
 RUN cd /common/metadata &&\
-    terraform test
+    tofu test
 
 ARG GIT_SHA=master
 ARG GIT_REF=refs/heads/master
@@ -179,14 +178,14 @@ ENV GIT_SHA=${GIT_SHA} \
 RUN cd build_artifacts &&\
     pipenv run python dist.py dist
 
-# Run terraform init for each starter
+# Run tofu init for each starter
 RUN mkdir -p /terraform/plugin-cache
 ENV TF_PLUGIN_CACHE_DIR=/terraform/plugin-cache
 RUN set -e &&\
     for name in `ls /quickstart/_dist/`; do \
     if [ -d /quickstart/_dist/$name ]; then \
     cd /quickstart/_dist/$name &&\
-    terraform init --upgrade &&\
+    tofu init --upgrade &&\
     rm -rf .terraform; \
     fi; \
     done

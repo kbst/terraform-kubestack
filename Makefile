@@ -12,7 +12,7 @@ BUILD_CACHE_DIST := --cache-to type=registry,mode=max,ref=ghcr.io/kbst/terraform
 BUILD_OUTPUT := --output type=registry,push=${DOCKER_PUSH}
 BUILD_CACHE := --cache-to type=registry,mode=max,ref=ghcr.io/kbst/terraform-kubestack/dev:buildcache-${DOCKER_TARGET},push=${DOCKER_PUSH}
 else
-BUILD_PLATFORM := 
+BUILD_PLATFORM :=
 BUILD_OUTPUT := --output type=docker
 endif
 
@@ -57,24 +57,24 @@ build:
 validate: .init
 	docker exec \
 		test-container-$(GIT_SHA) \
-		entrypoint terraform validate
+		entrypoint tofu validate
 
 test: validate
 	docker exec \
 		test-container-$(GIT_SHA) \
-		entrypoint terraform apply --target module.aks_zero --target module.eks_zero --target module.gke_zero --input=false --auto-approve
+		entrypoint tofu apply --target module.aks_zero --target module.eks_zero --target module.gke_zero --input=false --auto-approve
 	docker exec \
 		test-container-$(GIT_SHA) \
-		entrypoint terraform apply --target module.eks_zero_nginx --input=false --auto-approve
+		entrypoint tofu apply --target module.eks_zero_nginx --input=false --auto-approve
 	docker exec \
 		test-container-$(GIT_SHA) \
-		entrypoint terraform apply --input=false --auto-approve
+		entrypoint tofu apply --input=false --auto-approve
 
 cleanup: .init
 	docker exec \
 		-ti \
 		test-container-$(GIT_SHA) \
-		entrypoint terraform destroy --input=false --auto-approve
+		entrypoint tofu destroy --input=false --auto-approve
 	$(MAKE) .stop-container
 
 shell: .check-container
@@ -106,7 +106,7 @@ shell: .check-container
 .init: .check-container
 	docker exec \
 		test-container-$(GIT_SHA) \
-		entrypoint terraform init
+		entrypoint tofu init
 	docker exec \
 		test-container-$(GIT_SHA) \
-		entrypoint terraform workspace select ops
+		entrypoint tofu workspace select ops

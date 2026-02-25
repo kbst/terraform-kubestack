@@ -184,31 +184,31 @@ jobs:
         # GKE: set cluster_node_locations
         sed -i 's/cluster_node_locations = \[\]/cluster_node_locations = ["europe-west1-b", "europe-west1-c", "europe-west1-d"]/g' gke_zero_cluster.tf || true
 
-    - name: "Terraform init"
+    - name: "OpenTofu init"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
           -v `pwd`:/infra \
           test-image:${{ github.sha }} \
-          terraform init
+          tofu init
 
-    - name: "Terraform workspace new ops"
+    - name: "OpenTofu workspace new ops"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
           -v `pwd`:/infra \
           test-image:${{ github.sha }} \
-          terraform workspace new ops
+          tofu workspace new ops
 
-    - name: "Terraform validate"
+    - name: "OpenTofu validate"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       run: |
         docker run --rm \
           -v `pwd`:/infra \
           test-image:${{ github.sha }} \
-          terraform validate
+          tofu validate
 
-    - name: "Terraform plan"
+    - name: "OpenTofu plan"
       working-directory: ./kubestack-starter-${{ matrix.starter }}
       env:
         KBST_AUTH_AWS: ${{ secrets.KBST_AUTH_AWS }}
@@ -222,7 +222,7 @@ jobs:
           -v `pwd`:/infra \
           -v /var/run/docker.sock:/var/run/docker.sock \
           test-image:${{ github.sha }} \
-          terraform plan --target module.aks_zero --target module.eks_zero --target module.gke_zero
+          tofu plan --target module.aks_zero --target module.eks_zero --target module.gke_zero
 
   publish-image:
     runs-on: ubuntu-latest

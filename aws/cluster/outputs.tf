@@ -11,5 +11,6 @@ output "current_metadata" {
 }
 
 output "kubeconfig" {
-  value = local.kubeconfig
+  sensitive = true
+  value     = local.kubeconfig
 }

@@ -15,7 +15,10 @@ resource "scaleway_vpc_private_network" "current" {
 
   vpc_id = scaleway_vpc.current.id
 
-  ipv4_subnet {
-    subnet = try(coalesce(local.cfg.private_network_subnet, null), "10.0.0.0/8")
+  dynamic "ipv4_subnet" {
+    for_each = local.cfg.private_network_subnet != null ? [1] : []
+    content {
+      subnet = local.cfg.private_network_subnet
+    }
   }
 }

@@ -172,7 +172,7 @@ Every module MUST use the following file layout. Do NOT consolidate these files 
 | `main.tf` | All modules | Configuration module call, metadata module call, and the module's primary resource (cluster or node-pool resource). |
 | `variables.tf` | All modules | All input variable definitions. |
 | `outputs.tf` | All modules | All output definitions. |
-| `moved.tf` | All modules | All `moved` blocks. No other content. |
+| `moved.tf` | When required | All `moved` blocks. No other content. Create this file only when the module has at least one `moved` block. Do not create an empty `moved.tf`. |
 | `versions.tf` | All modules | Provider requirements and minimum OpenTofu/Terraform version constraint. |
 | `network.tf` | Cluster modules | All network resources (VPC, subnets, route tables, gateways, and any other provider-required network constructs). |
 | `kubeconfig.tf` | Cluster modules | Kubeconfig local value. See Kubeconfig Generation section. |
@@ -189,7 +189,7 @@ Every module MUST use the following file layout. Do NOT consolidate these files 
 
 **`moved` block rule:**
 
-When a resource is renamed or moved, add a `moved` block to `moved.tf`. MUST NOT run `tofu state mv` (or `terraform state mv`) — Kubestack releases modules, not managed infrastructure, so any state operation would only affect `tests/` and would not be portable to downstream module users who manage their own state.
+When a resource is renamed or moved, add a `moved` block to `moved.tf`. Create `moved.tf` only when the module has at least one `moved` block — do NOT create an empty `moved.tf` as a placeholder. MUST NOT run `tofu state mv` (or `terraform state mv`) — Kubestack releases modules, not managed infrastructure, so any state operation would only affect `tests/` and would not be portable to downstream module users who manage their own state.
 
 If a rename or move cannot be expressed as a declarative `moved` block, it is a breaking change. Past the v1 release, breaking changes MUST be avoided. When a pre-v1 breaking change is unavoidable, document the required manual `tofu state mv` command as an explicit migration step in the release notes.
 

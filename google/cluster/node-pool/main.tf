@@ -8,6 +8,17 @@ locals {
   cfg = module.configuration.merged[terraform.workspace]
 
   disable_per_node_pool_service_account = local.cfg.service_account_email == null ? false : true
+
+  base_oauth_scopes = [
+    "https://www.googleapis.com/auth/devstorage.read_only",
+    "https://www.googleapis.com/auth/logging.write",
+    "https://www.googleapis.com/auth/monitoring",
+    "https://www.googleapis.com/auth/servicecontrol",
+    "https://www.googleapis.com/auth/service.management.readonly",
+    "https://www.googleapis.com/auth/trace.append",
+  ]
+
+  oauth_scopes = compact(concat(local.base_oauth_scopes, try(coalesce(local.cfg.extra_oauth_scopes, null), [])))
 }
 
 resource "google_container_node_pool" "current" {

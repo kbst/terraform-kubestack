@@ -19,8 +19,6 @@ When a divergence is resolved, remove its entry from this file.
 
 > **Divergence — `azurerm/cluster`:** Cluster API Authentication — the kubeconfig output uses a client certificate issued via `kube_admin_config` rather than a short-lived Azure AD / Entra ID token, violating the rule that static long-lived credentials must be disabled. Planned resolution: switch to Azure AD / Entra ID token-based authentication in the v1 release.
 
-> **Divergence — `azurerm/cluster`:** Networking — network resources are placed in `vnet.tf` instead of the required `network.tf`. Planned resolution: rename `vnet.tf` to `network.tf` in the v1 release.
-
 > **Divergence — `azurerm/cluster`:** Networking — the VNet and subnet are only created when `network_plugin = "azure"`; when the default `"kubenet"` plugin is used no dedicated network resources are provisioned by the module, violating the rule that every cluster module MUST create its own dedicated network resources. Planned resolution: always provision a VNet and subnet in the v1 release.
 
 > **Divergence — `azurerm/cluster`:** Networking — CIDR Defaults — `service_cidr`, `dns_service_ip`, and `pod_cidr` are given hardcoded Kubestack defaults (`10.0.0.0/16`, `10.0.0.10`, `10.244.0.0/16`) even though AKS accepts but does not require these arguments; the rule requires passing `null` to let the provider apply its own defaults. Planned resolution: remove the hardcoded defaults and pass `null` in the v1 release.
@@ -40,10 +38,6 @@ When a divergence is resolved, remove its entry from this file.
 > **Divergence — `azurerm/cluster`:** Cloud Provider Isolation — `azurerm_log_analytics_workspace` and `azurerm_log_analytics_solution` are provisioned and the OMS agent is enabled by default (`enable_log_analytics` defaults to `true`), violating the rule that cluster-level add-ons MUST be disabled by default unless required for self-healing or auto-scaling. Planned resolution: flip the default to `false` in the v1 release.
 
 > **Divergence — `azurerm/cluster`:** Cluster Module Outputs — the cluster module exposes `aks_vnet` and `default_ingress_ip` outputs beyond the four required outputs, without compelling provider-specific justification. Planned resolution: evaluate for removal in the v1 release.
-
-> **Divergence — `aws/cluster`:** Networking — network resources are placed in `vpc.tf` instead of the required `network.tf`. Planned resolution: rename `vpc.tf` to `network.tf` in the v1 release.
-
-> **Divergence — `aws/cluster/node-pool`:** Networking — network resources are placed in `vpc.tf` instead of the required `network.tf`. Planned resolution: rename `vpc.tf` to `network.tf` in the v1 release.
 
 > **Divergence — `aws/cluster`:** Networking — nodes are assigned public IPs by default (`map_public_ip_on_launch = true` is the default when `cluster_vpc_subnet_map_public_ip` is unset), violating the rule that nodes MUST be configured with private IPs only by default and egress MUST route through NAT gateways. Planned resolution: flip the default to private nodes with NAT gateway egress in the v1 release.
 
@@ -78,8 +72,6 @@ When a divergence is resolved, remove its entry from this file.
 > **Divergence — `google/cluster/node-pool`:** Node-Pool Module Outputs — the node-pool module exposes an `id` output beyond the single required `current_config` output, without a compelling provider-specific justification. Planned resolution: evaluate for removal in the v1 release.
 
 > **Divergence — `google/cluster`:** Required File Layout — `provider.tf` contains the data source `data.google_client_config.default`, which is used by both `kubeconfig.tf` and the kubernetes provider alias block in the same file; per the data source placement rule, a data source used by multiple resources belongs in `data_sources.tf`, not co-located with a provider block. Planned resolution: move the data source to `data_sources.tf` in the v1 release.
-
-> **Divergence — `scaleway/cluster` and `scaleway/cluster/node-pool`:** Required File Layout — neither module contains a `moved.tf` file, violating the rule that every module MUST have a `moved.tf`. Planned resolution: add empty `moved.tf` files in the v1 release.
 
 > **Divergence — `scaleway/cluster`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `scaleway_k8s_cluster` for required attributes (`region`, `cluster_version`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions in the v1 release.
 

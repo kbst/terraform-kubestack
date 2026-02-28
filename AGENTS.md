@@ -122,6 +122,8 @@ When a provider does not support a required behaviour (e.g. private nodes), appl
 
 - The `kubeconfig` output MUST be constructed from the host and credentials returned directly by the cluster resource. These credentials are valid for the duration of the Terraform run and are used by any Terraform provider that configures itself from the kubeconfig output (e.g. the `kbst/kustomization` or `kubernetes` provider). No additional credential exchange or IAM assumption step is performed by the module itself — CI/CD pipelines are expected to handle role assumption or workload identity federation before invoking Terraform.
 - Where a provider exposes a control to disable static local accounts or long-lived credential issuance on the cluster resource (e.g. `local_account_disabled` on AKS, `issue_client_certificate = false` on GKE), that control MUST be set to disable static credentials.
+- Cluster modules MUST NOT define a `kubernetes` or any other provider block inside the module. Providers MUST be configured by the caller. Defining a provider block inside a child module is an anti-pattern in OpenTofu/Terraform.
+- Cluster modules MUST NOT contain `kubernetes_*` resources. Any Kubernetes-API-level bootstrapping that a cluster requires (e.g. RBAC bindings, ConfigMaps) MUST be performed by the caller, not by the cluster module itself.
 
 #### Human User Authentication
 

@@ -92,6 +92,13 @@ When a provider does not support a required behaviour (e.g. private nodes), appl
 - Cluster-level add-ons MUST be disabled by default, unless they are required to support another core design principle such as self-healing or auto-scaling. The preferred approach is to install platform services via Kubestack platform service modules, which allows platform builders to compose a consistent platform across cloud providers.
 - Kubestack modules MAY expose opt-in configuration attributes to enable provider add-ons that are disabled by default. This allows users to enable them when needed without making them part of the opinionated baseline.
 
+### Monitoring and Logging
+
+- Cloud provider managed logging and monitoring MUST be enabled by default on every cluster module. This gives platform teams immediate observability into cluster and workload behaviour without any additional configuration.
+- Users MAY disable cloud provider logging and monitoring via configuration, using a configuration attribute whose name mirrors the upstream provider resource argument (e.g. `enabled_cluster_log_types` for EKS, `logging_config` / `monitoring_config` for GKE, `enable_log_analytics` for AKS). The expected use case for disabling these is when the platform team intends to deploy a unified, provider-independent observability stack via a Kubestack platform service module instead.
+- Where the provider exposes a choice of components to enable (e.g. GKE's `enable_components` list), the Kubestack default MUST include at minimum system-level components (control plane and node agent). Workload-level log collection SHOULD also be enabled by default.
+- Kubestack modules MUST NOT deploy additional log forwarding agents, sink configurations, or third-party monitoring agents beyond what is natively available on the cluster resource itself.
+
 ### Networking
 
 - Every cluster module MUST create its own dedicated network resources (VPC, subnets, route tables, gateways, and any other provider-required constructs). Sharing or accepting externally-created network resources is NOT supported.
@@ -115,6 +122,8 @@ When a provider does not support a required behaviour (e.g. private nodes), appl
 
 - The `kubeconfig` output MUST be constructed from the host and credentials returned directly by the cluster resource. These credentials are valid for the duration of the Terraform run and are used by any Terraform provider that configures itself from the kubeconfig output (e.g. the `kbst/kustomization` or `kubernetes` provider). No additional credential exchange or IAM assumption step is performed by the module itself — CI/CD pipelines are expected to handle role assumption or workload identity federation before invoking Terraform.
 - Where a provider exposes a control to disable static local accounts or long-lived credential issuance on the cluster resource (e.g. `local_account_disabled` on AKS, `issue_client_certificate = false` on GKE), that control MUST be set to disable static credentials.
+- Cluster modules MUST NOT define a `kubernetes` or any other provider block inside the module. Providers MUST be configured by the caller. Defining a provider block inside a child module is an anti-pattern in OpenTofu/Terraform.
+- Cluster modules MUST NOT contain `kubernetes_*` resources. Any Kubernetes-API-level bootstrapping that a cluster requires (e.g. RBAC bindings, ConfigMaps) MUST be performed by the caller, not by the cluster module itself.
 
 #### Human User Authentication
 

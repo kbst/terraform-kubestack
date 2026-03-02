@@ -9,8 +9,8 @@ module "scw_zero_node_pool" {
     apps = {
       name = "test1"
 
-      node_type   = "GP1-XS"
-      zones       = ["fr-par-1", "fr-par-2", "fr-par-3"]
+      node_type   = "PLAY2-MICRO"
+      zones       = ["nl-ams-1", "nl-ams-2", "nl-ams-3"]
       size        = 1
       min_size    = 1
       max_size    = 2

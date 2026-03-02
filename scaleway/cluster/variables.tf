@@ -46,6 +46,11 @@ variable "configuration" {
     # Private network
     private_network_subnet = optional(string)
 
+    # Public Gateway — only provisioned when public_ip_disabled is true (the default).
+    # Sets the gateway type for all per-zone public gateways created for NAT egress.
+    # Run `scw vpc public-gateway list-types` to see available types.
+    public_gateway_type = optional(string)
+
     # Extra tags added to all cloud resources in addition to the metadata tags
     extra_tags = optional(list(string))
 

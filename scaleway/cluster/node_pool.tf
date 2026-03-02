@@ -20,7 +20,7 @@ module "node_pool" {
       root_volume_type       = try(local.cfg.default_node_pool.root_volume_type, null)
       root_volume_size_in_gb = try(local.cfg.default_node_pool.root_volume_size_in_gb, null)
 
-      public_ip_disabled = try(coalesce(local.cfg.default_node_pool.public_ip_disabled, null), false)
+      public_ip_disabled = try(coalesce(local.cfg.default_node_pool.public_ip_disabled, null), true)
 
       upgrade_policy = try(local.cfg.default_node_pool.upgrade_policy, null)
 
@@ -31,4 +31,10 @@ module "node_pool" {
     }
   }
   configuration_base_key = terraform.workspace
+
+  # Scaleway rejects public_ip_disabled = true on a pool unless a Public
+  # Gateway is already attached to the private network and advertising a
+  # default route. Wait for all gateway networks to be fully operational
+  # before creating or updating any node pool.
+  depends_on = [scaleway_vpc_gateway_network.current]
 }

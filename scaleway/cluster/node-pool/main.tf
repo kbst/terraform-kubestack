@@ -39,7 +39,7 @@ resource "scaleway_k8s_pool" "current" {
   root_volume_type       = local.cfg.root_volume_type
   root_volume_size_in_gb = local.cfg.root_volume_size_in_gb
 
-  public_ip_disabled = try(coalesce(local.cfg.public_ip_disabled, null), false)
+  public_ip_disabled = try(coalesce(local.cfg.public_ip_disabled, null), true)
 
   wait_for_pool_ready = try(coalesce(local.cfg.wait_for_pool_ready, null), true)
 

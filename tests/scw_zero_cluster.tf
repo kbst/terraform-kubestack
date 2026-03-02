@@ -7,16 +7,16 @@ module "scw_zero" {
       name_prefix = "kbstacctest"
       base_domain = "infra.serverwolken.de"
 
-      region = "fr-par"
+      region = "nl-ams"
 
-      cluster_version = "1.32"
+      cluster_version = "1.34"
       cni             = "cilium"
 
       delete_additional_resources = false
 
       default_node_pool = {
-        node_type   = "GP1-XS"
-        zones       = ["fr-par-1", "fr-par-2", "fr-par-3"]
+        node_type   = "PLAY2-MICRO"
+        zones       = ["nl-ams-1", "nl-ams-2", "nl-ams-3"]
         size        = 1
         min_size    = 1
         max_size    = 2

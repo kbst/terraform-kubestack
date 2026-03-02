@@ -15,8 +15,6 @@ When a divergence is resolved, remove its entry from this file.
 
 ### Entries
 
-> **Divergence — All cluster and node-pool modules:** Node Pool Lifecycle — instance type and `min`/`max` node counts — existing modules set hardcoded defaults for instance type and `min`/`max` node counts, violating the rule that these must always be user-provided with no module default. Planned resolution: defaults will be removed.
-
 > **Divergence — `azurerm/cluster`:** Cluster API Authentication — the kubeconfig output uses a client certificate issued via `kube_admin_config` rather than a short-lived Azure AD / Entra ID token, violating the rule that static long-lived credentials must be disabled. Planned resolution: research current upstream default authentication - if defautl is something short lived, switch to that, otherwise keep the cert approach and document the exception.
 
 > **Divergence — `azurerm/cluster`:** Networking — the VNet and subnet are only created when `network_plugin = "azure"`; when the default `"kubenet"` plugin is used no dedicated network resources are provisioned by the module, violating the rule that every cluster module MUST create its own dedicated network resources. Planned resolution: switch the network_plugin default from deprecated kubenet to the current upstream recommendation.
@@ -24,10 +22,6 @@ When a divergence is resolved, remove its entry from this file.
 > **Divergence — `azurerm/cluster`:** Networking — CIDR Defaults — `service_cidr`, `dns_service_ip`, and `pod_cidr` are given hardcoded Kubestack defaults (`10.0.0.0/16`, `10.0.0.10`, `10.244.0.0/16`) even though AKS accepts but does not require these arguments; the rule requires passing `null` to let the provider apply its own defaults. Planned resolution: remove the hardcoded defaults and pass `null`.
 
 > **Divergence — `azurerm/cluster`:** Cross-Provider Developer Experience — there is no `region` configuration attribute; the Azure region is derived from `data.azurerm_resource_group.current.location` rather than being exposed as a required configuration attribute with a `precondition`. Planned resolution: keep the exception that AKS region is taken from the resource group and document it.
-
-> **Divergence — `azurerm/cluster`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `azurerm_kubernetes_cluster` for required attributes (`resource_group`, `availability_zones`, `vm_size`, `min_count`, `max_count`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions.
-
-> **Divergence — `azurerm/cluster/node-pool`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `azurerm_kubernetes_cluster_node_pool` for required attributes (`availability_zones`, `vm_size`, `min_count`, `max_count`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions.
 
 > **Divergence — `azurerm/cluster`:** Tagging and Labelling — the cluster module exposes `additional_metadata_labels` for user-supplied tags on cloud resources; the upstream `azurerm_kubernetes_cluster` resource argument is `tags`, so the configuration attribute should be named `tags` to mirror it. Planned resolution: rename to `tags`.
 
@@ -41,10 +35,6 @@ When a divergence is resolved, remove its entry from this file.
 
 > **Divergence — `aws/cluster`:** Cross-Provider Developer Experience — there is no `region` configuration attribute; the AWS region is sourced entirely from the provider configuration rather than being exposed as a required configuration attribute with a `precondition`. Planned resolution: document the special case that `region` for EKS is configured on the provider. The eks quickstart already shows how to alias the provider per cluster.
 
-> **Divergence — `aws/cluster`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `aws_eks_cluster` for required attributes (`cluster_availability_zones`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions.
-
-> **Divergence — `aws/cluster/node-pool`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `aws_eks_node_group` for required attributes (`availability_zones`, `instance_types`, `min_size`, `max_size`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions.
-
 > **Divergence — `aws/cluster`:** Tagging and Labelling — user-supplied cloud resource tags are only configurable via `additional_node_tags` nested inside `default_node_pool`, meaning there is no top-level `tags` attribute on the cluster configuration object and extra-node-pool resources (VPC, subnets, security groups, etc.) cannot receive user-supplied tags. Planned resolution: add a top-level `tags` attribute to the cluster configuration.
 
 > **Divergence — `aws/cluster/node-pool`:** Tagging and Labelling — the node-pool `labels` configuration attribute is not applied to the Kubernetes node object's `.metadata.labels`; EKS node group labels are set on the cloud API only, violating the rule that node labels MUST be applied to both the cloud API and the Kubernetes node object. Planned resolution: apply labels to both APIs.
@@ -57,23 +47,15 @@ When a divergence is resolved, remove its entry from this file.
 
 > **Divergence — `google/cluster/node-pool`:** Tagging and Labelling — the merge order in `node_config.labels` is `merge(cfg.labels, cluster_metadata.labels)`, placing metadata labels last so they override user-supplied labels, which is the inverse of the required precedence (metadata labels → user-supplied cloud resource labels → user-supplied node labels → mandatory provider labels). Planned resolution: fix the merge order.
 
-> **Divergence — `google/cluster`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `google_container_cluster` for required attributes (`region`, `project_id`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions.
-
-> **Divergence — `google/cluster/node-pool`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `google_container_node_pool` for required attributes (`location`, `machine_type`, `min_node_count`, `max_node_count`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions.
-
 > **Divergence — `google/cluster/node-pool`:** Node Pool Lifecycle — `google_container_node_pool` sets `initial_node_count` but has no `lifecycle { ignore_changes = [initial_node_count] }` block, violating the rule that the desired/initial node count must be owned by the autoscaler and not managed by OpenTofu/Terraform state. Planned resolution: add the `lifecycle` ignore block.
 
-> **Divergence — `google/cluster/node-pool`:** Node Pool Lifecycle — `machine_type` defaults to `""` (empty string) via `try(coalesce(local.cfg.machine_type, null), "")`, which the GCP provider interprets as a provider-level default, violating the rule that instance type must always be user-provided with no module default. Planned resolution: remove the empty-string default in the v1 release (covered by the existing "All cluster and node-pool modules" divergence but noted here for the specific empty-string mechanism).
+
 
 > **Divergence — `google/cluster`:** Cluster Module Outputs — the cluster module exposes a `default_ingress_ip` output beyond the four required outputs, without a compelling provider-specific justification. Planned resolution: keep for historical reasons to avoid braking change for existing users, document exception.
 
 > **Divergence — `google/cluster/node-pool`:** Node-Pool Module Outputs — the node-pool module exposes an `id` output beyond the single required `current_config` output, without a compelling provider-specific justification. Planned resolution: keep for historical reasons to avoid braking change for existing users, document exception.
 
 > **Divergence — `google/cluster`:** Required File Layout — `provider.tf` contains the data source `data.google_client_config.default`, which is used by both `kubeconfig.tf` and the kubernetes provider alias block in the same file; per the data source placement rule, a data source used by multiple resources belongs in `data_sources.tf`, not co-located with a provider block. Planned resolution: move the data source to `data_sources.tf`.
-
-> **Divergence — `scaleway/cluster`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `scaleway_k8s_cluster` for required attributes (`region`, `cluster_version`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions.
-
-> **Divergence — `scaleway/cluster/node-pool`:** Configuration Inheritance — `precondition` lifecycle blocks are absent from `scaleway_k8s_pool` for required attributes (`zones`, `node_type`, `min_size`, `max_size`), violating the rule that required attributes with no module default must be guarded by a precondition on the primary resource. Planned resolution: add preconditions.
 
 > **Divergence — `scaleway/cluster`:** Networking — nodes are assigned public IPs by default (`public_ip_disabled` defaults to `false` in `node_pool.tf`), violating the rule that nodes MUST be configured with private IPs only by default. Planned resolution: flip the default to `true` and add any additional resources that need to be created; if these additioanl resources are only required in one or the other case make them conditional.
 

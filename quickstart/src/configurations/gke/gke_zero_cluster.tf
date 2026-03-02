@@ -9,7 +9,7 @@ module "gke_zero" {
     # apps environment
     apps = {
       # The Google cloud project ID to use
-      project_id = ""
+      # project_id = "my-gcp-project"
 
       # Set name_prefix used to generate the cluster_name
       # [name_prefix]-[workspace]-[region]
@@ -26,13 +26,18 @@ module "gke_zero" {
       # Initial desired K8s version, will be upgraded automatically
       cluster_min_master_version = "1.22"
 
-      # Initial number of desired nodes per zone
+      # Default node pool configuration
       default_node_pool = {
-        initial_node_count = 1
+        # GCP machine type for default node pool nodes
+        # machine_type = "e2-medium"
+
+        # Min and max node counts for autoscaling
+        # min_node_count = 1
+        # max_node_count = 3
       }
 
       # The Google cloud region to deploy the clusters in
-      region = ""
+      # region = "europe-west1"
 
       # Comma-separated list of zone names to deploy worker nodes in.
       # Must match region above.

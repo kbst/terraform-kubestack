@@ -74,6 +74,13 @@ resource "aws_eks_cluster" "current" {
     aws_iam_role_policy_attachment.master_service_policy,
   ]
 
+  lifecycle {
+    precondition {
+      condition     = local.cfg.cluster_availability_zones != null
+      error_message = "missing required configuration attribute: cluster_availability_zones"
+    }
+  }
+
   version = local.cfg.cluster_version
 
   enabled_cluster_log_types = try(coalesce(local.cfg.enabled_cluster_log_types, null), ["api", "audit", "authenticator", "controllerManager", "scheduler"])

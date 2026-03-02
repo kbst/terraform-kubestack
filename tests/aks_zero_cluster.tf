@@ -8,6 +8,8 @@ module "aks_zero" {
       name_prefix    = "kbstacctest"
       base_domain    = "infra.serverwolken.de"
 
+      availability_zones = ["1", "2", "3"]
+
       default_node_pool = {
         vm_size   = "Standard_B2s"
         min_count = 1

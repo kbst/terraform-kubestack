@@ -17,7 +17,21 @@ module "aks_zero" {
       base_domain = ""
 
       # The Azure resource group to use
-      resource_group = ""
+      # resource_group = "my-resource-group"
+
+      # Availability zones to distribute the cluster across.
+      # Must be a list of zone numbers as strings.
+      # availability_zones = ["1", "2", "3"]
+
+      # Default node pool configuration
+      default_node_pool = {
+        # Azure VM size for the default node pool nodes.
+        # vm_size = "Standard_B2s"
+
+        # Minimum and maximum node count for autoscaling
+        min_count = 1
+        max_count = 1
+      }
     }
 
     # Settings for Ops-cluster

@@ -30,8 +30,7 @@ module "eks_zero" {
 
       # EKS requires a min. of 2 zones
       # Must match region set in provider
-      # e.g. cluster_availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-      cluster_availability_zones = []
+      # cluster_availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
     }
 
     # Settings for Ops-cluster
@@ -39,8 +38,7 @@ module "eks_zero" {
       # Overwrite apps["cluster_availability_zones"] to have a smaller
       # ops cluster
       # EKS requires a min. of 2 zones
-      # e.g. cluster_availability_zones = ["eu-west-1a", "eu-west-1b"]
-      cluster_availability_zones = []
+      # cluster_availability_zones = ["eu-west-1a", "eu-west-1b"]
     }
   }
 }

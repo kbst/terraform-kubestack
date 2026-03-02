@@ -27,11 +27,33 @@ resource "google_container_node_pool" "current" {
   cluster  = var.cluster.name
   location = local.cfg.location
 
+  lifecycle {
+    precondition {
+      condition     = local.cfg.location != null
+      error_message = "missing required configuration attribute: location"
+    }
+
+    precondition {
+      condition     = local.cfg.machine_type != null
+      error_message = "missing required configuration attribute: machine_type"
+    }
+
+    precondition {
+      condition     = local.cfg.min_node_count != null
+      error_message = "missing required configuration attribute: min_node_count"
+    }
+
+    precondition {
+      condition     = local.cfg.max_node_count != null
+      error_message = "missing required configuration attribute: max_node_count"
+    }
+  }
+
   initial_node_count = local.cfg.initial_node_count
 
   autoscaling {
-    min_node_count  = try(coalesce(local.cfg.min_node_count, null), 1)
-    max_node_count  = try(coalesce(local.cfg.max_node_count, null), 1)
+    min_node_count  = local.cfg.min_node_count
+    max_node_count  = local.cfg.max_node_count
     location_policy = try(coalesce(local.cfg.location_policy, null), "BALANCED")
   }
 
@@ -59,7 +81,7 @@ resource "google_container_node_pool" "current" {
     disk_type    = try(coalesce(local.cfg.disk_type, null), "pd-balanced")
 
     image_type   = try(coalesce(local.cfg.image_type, null), "COS_CONTAINERD")
-    machine_type = try(coalesce(local.cfg.machine_type, null), "")
+    machine_type = local.cfg.machine_type
     preemptible  = try(coalesce(local.cfg.preemptible, null), false)
 
     labels = merge(try(coalesce(local.cfg.labels, null), {}), var.cluster_metadata.labels)

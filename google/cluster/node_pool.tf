@@ -13,8 +13,8 @@ module "node_pool" {
       service_account_email = google_service_account.current.email
 
       initial_node_count = try(coalesce(local.cfg.default_node_pool.initial_node_count, null), 1)
-      min_node_count     = try(coalesce(local.cfg.default_node_pool.min_node_count, null), 1)
-      max_node_count     = try(coalesce(local.cfg.default_node_pool.max_node_count, null), 1)
+      min_node_count     = try(local.cfg.default_node_pool.min_node_count, null)
+      max_node_count     = try(local.cfg.default_node_pool.max_node_count, null)
       location_policy    = try(local.cfg.default_node_pool.node_location_policy, null)
 
       extra_oauth_scopes = try(coalesce(local.cfg.default_node_pool.extra_oauth_scopes, null), [])
@@ -22,7 +22,7 @@ module "node_pool" {
       disk_size_gb = try(coalesce(local.cfg.default_node_pool.disk_size_gb, null), 100)
       disk_type    = try(coalesce(local.cfg.default_node_pool.disk_type, null), "pd-standard")
       image_type   = try(coalesce(local.cfg.default_node_pool.image_type, null), "COS_containerd")
-      machine_type = try(coalesce(local.cfg.default_node_pool.machine_type, null), "")
+      machine_type = try(local.cfg.default_node_pool.machine_type, null)
 
       preemptible  = try(coalesce(local.cfg.default_node_pool.preemptible, null), false)
       auto_repair  = try(coalesce(local.cfg.default_node_pool.auto_repair, null), true)

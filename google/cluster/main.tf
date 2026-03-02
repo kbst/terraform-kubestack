@@ -22,6 +22,18 @@ resource "google_container_cluster" "current" {
   project = local.cfg.project_id
   name    = module.cluster_metadata.name
 
+  lifecycle {
+    precondition {
+      condition     = local.cfg.region != null
+      error_message = "missing required configuration attribute: region"
+    }
+
+    precondition {
+      condition     = local.cfg.project_id != null
+      error_message = "missing required configuration attribute: project_id"
+    }
+  }
+
   deletion_protection = local.cfg.deletion_protection
 
   location       = local.cfg.region

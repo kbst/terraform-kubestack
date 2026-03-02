@@ -17,7 +17,21 @@ module "aks_zero" {
       base_domain = ""
 
       # The Azure resource group to use
-      resource_group = ""
+      # resource_group = "my-resource-group"
+
+      # Availability zones to distribute the cluster and default node pool across.
+      # Azure zone numbers as strings.
+      # availability_zones = ["1", "2", "3"]
+
+      # Default node pool configuration
+      default_node_pool = {
+        # Azure VM size for default node pool nodes
+        # vm_size = "Standard_D2s_v3"
+
+        # Min and max node counts for autoscaling
+        min_count = 1
+        max_count = 1
+      }
 
       # CNI/Advanced networking configuration parameters.
       # Leave commented for default 'kubenet' networking

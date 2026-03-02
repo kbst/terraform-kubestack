@@ -9,10 +9,10 @@ module "node_pool" {
       name  = "default"
       zones = local.cfg.default_node_pool.zones
 
-      node_type   = try(coalesce(local.cfg.default_node_pool.node_type, null), "GP1-XS")
+      node_type   = try(local.cfg.default_node_pool.node_type, null)
       size        = try(coalesce(local.cfg.default_node_pool.size, null), 1)
-      min_size    = try(coalesce(local.cfg.default_node_pool.min_size, null), 1)
-      max_size    = try(coalesce(local.cfg.default_node_pool.max_size, null), 2)
+      min_size    = try(local.cfg.default_node_pool.min_size, null)
+      max_size    = try(local.cfg.default_node_pool.max_size, null)
       autoscaling = try(coalesce(local.cfg.default_node_pool.autoscaling, null), true)
       autohealing = try(coalesce(local.cfg.default_node_pool.autohealing, null), true)
 

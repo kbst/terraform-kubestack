@@ -8,6 +8,8 @@ module "aks_zero_node_pool" {
     apps = {
       node_pool_name = "test1"
 
+      availability_zones = ["1", "2", "3"]
+
       vm_size   = "Standard_B2s"
       min_count = 1
       max_count = 1

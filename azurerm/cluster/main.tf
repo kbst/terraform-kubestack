@@ -26,9 +26,37 @@ data "azurerm_resource_group" "current" {
 }
 
 resource "azurerm_kubernetes_cluster" "current" {
-  name                      = module.cluster_metadata.name
-  location                  = data.azurerm_resource_group.current.location
-  resource_group_name       = data.azurerm_resource_group.current.name
+  name                = module.cluster_metadata.name
+  location            = data.azurerm_resource_group.current.location
+  resource_group_name = data.azurerm_resource_group.current.name
+
+  lifecycle {
+    precondition {
+      condition     = local.cfg.resource_group != null
+      error_message = "missing required configuration attribute: resource_group"
+    }
+
+    precondition {
+      condition     = local.cfg.availability_zones != null
+      error_message = "missing required configuration attribute: availability_zones"
+    }
+
+    precondition {
+      condition     = try(local.cfg.default_node_pool.vm_size, null) != null
+      error_message = "missing required configuration attribute: default_node_pool.vm_size"
+    }
+
+    precondition {
+      condition     = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) == false || try(local.cfg.default_node_pool.min_count, null) != null
+      error_message = "missing required configuration attribute: default_node_pool.min_count"
+    }
+
+    precondition {
+      condition     = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) == false || try(local.cfg.default_node_pool.max_count, null) != null
+      error_message = "missing required configuration attribute: default_node_pool.max_count"
+    }
+  }
+
   dns_prefix                = try(coalesce(local.cfg.dns_prefix, null), "api")
   sku_tier                  = try(coalesce(local.cfg.sku_tier, null), "Free")
   kubernetes_version        = local.cfg.kubernetes_version
@@ -43,13 +71,13 @@ resource "azurerm_kubernetes_cluster" "current" {
     auto_scaling_enabled = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true)
 
     # set min and max count only if autoscaling is _enabled_
-    min_count = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) ? try(coalesce(local.cfg.default_node_pool.min_count, null), 1) : null
-    max_count = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) ? try(coalesce(local.cfg.default_node_pool.max_count, null), 1) : null
+    min_count = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) ? local.cfg.default_node_pool.min_count : null
+    max_count = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) ? local.cfg.default_node_pool.max_count : null
 
     # set node count only if auto scaling is _disabled_
     node_count = try(coalesce(local.cfg.default_node_pool.enable_auto_scaling, null), true) ? null : try(coalesce(local.cfg.default_node_pool.node_count, null), 1)
 
-    vm_size         = try(coalesce(local.cfg.default_node_pool.vm_size, null), "Standard_D1_v2")
+    vm_size         = local.cfg.default_node_pool.vm_size
     os_disk_size_gb = try(coalesce(local.cfg.default_node_pool.os_disk_size_gb, null), 30)
 
     vnet_subnet_id = try(coalesce(local.cfg.network_plugin, null), "kubenet") == "azure" ? azurerm_subnet.current[0].id : null
@@ -57,7 +85,7 @@ resource "azurerm_kubernetes_cluster" "current" {
 
     only_critical_addons_enabled = try(coalesce(local.cfg.default_node_pool.only_critical_addons, null), false)
 
-    zones = try(coalesce(local.cfg.availability_zones, null), [])
+    zones = local.cfg.availability_zones
 
     upgrade_settings {
       max_surge                     = try(coalesce(try(local.cfg.default_node_pool.upgrade_settings, null).max_surge, null), "10%")

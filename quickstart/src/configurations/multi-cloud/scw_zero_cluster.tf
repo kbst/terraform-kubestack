@@ -19,7 +19,7 @@ module "scw_zero" {
 
       # The Scaleway region to deploy the clusters in
       # e.g. "fr-par", "nl-ams", "pl-waw"
-      region = ""
+      # region = "fr-par"
 
       # Kubernetes version for the cluster
       # Use a minor version string to allow patch upgrades, e.g. "1.32"

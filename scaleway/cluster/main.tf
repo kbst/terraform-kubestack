@@ -22,7 +22,19 @@ resource "scaleway_k8s_cluster" "current" {
   name       = module.cluster_metadata.name
   project_id = local.cfg.project_id
   region     = local.cfg.region
-  tags       = concat(module.cluster_metadata.tags, try(coalesce(local.cfg.extra_tags, null), []))
+
+  lifecycle {
+    precondition {
+      condition     = local.cfg.region != null
+      error_message = "missing required configuration attribute: region"
+    }
+
+    precondition {
+      condition     = local.cfg.cluster_version != null
+      error_message = "missing required configuration attribute: cluster_version"
+    }
+  }
+  tags = concat(module.cluster_metadata.tags, try(coalesce(local.cfg.extra_tags, null), []))
 
   type    = "kapsule"
   version = local.cfg.cluster_version

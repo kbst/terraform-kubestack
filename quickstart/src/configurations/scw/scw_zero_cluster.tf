@@ -18,8 +18,8 @@ module "scw_zero" {
       base_domain = ""
 
       # The Scaleway region to deploy the cluster in
-      # e.g. "fr-par", "nl-ams", "pl-waw"
-      region = ""
+      # Uncomment and set to your target region, e.g:
+      # region = "fr-par"
 
       default_node_pool = {
         # Commercial node type — must be available in every zone listed below.
@@ -28,10 +28,10 @@ module "scw_zero" {
 
         # Availability zones to distribute the default node pool across.
         # One pool is created per zone. Must be explicitly specified.
-        # e.g. fr-par: ["fr-par-1", "fr-par-2", "fr-par-3"]
-        # e.g. nl-ams: ["nl-ams-1", "nl-ams-2", "nl-ams-3"]
-        # e.g. pl-waw: ["pl-waw-1", "pl-waw-2", "pl-waw-3"]
-        zones = []
+        # fr-par: zones = ["fr-par-1", "fr-par-2", "fr-par-3"]
+        # nl-ams: zones = ["nl-ams-1", "nl-ams-2", "nl-ams-3"]
+        # pl-waw: zones = ["pl-waw-1", "pl-waw-2", "pl-waw-3"]
+        # zones = ["fr-par-1", "fr-par-2", "fr-par-3"]
 
         min_size = 1
         max_size = 2

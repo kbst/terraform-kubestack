@@ -167,22 +167,49 @@ jobs:
         sed -i 's/base_domain = ""/base_domain = "infra.serverwolken.de"/g' *_cluster.tf
 
         # AKS: set resource_group
-        sed -i 's/resource_group = ""/resource_group = "terraform-kubestack-testing"/g' aks_zero_cluster.tf || true
+        sed -i 's/# resource_group = "my-resource-group"/resource_group = "terraform-kubestack-testing"/g' aks_zero_cluster.tf || true
+
+        # AKS: set availability_zones
+        sed -i 's/# availability_zones = \["1", "2", "3"\]/availability_zones = ["1", "2", "3"]/g' aks_zero_cluster.tf || true
+
+        # AKS: set vm_size (multi-cloud quickstart example)
+        sed -i 's/# vm_size = "Standard_B2s"/vm_size = "Standard_B2s"/g' aks_zero_cluster.tf || true
+
+        # AKS: set vm_size (aks quickstart example)
+        sed -i 's/# vm_size = "Standard_D2s_v3"/vm_size = "Standard_B2s"/g' aks_zero_cluster.tf || true
 
         # EKS: set region
         sed -i 's/region = ""/region = "eu-west-1"/g' eks_zero_providers.tf || true
 
-        # EKS: set cluster_availability_zones
-        sed -i 's/cluster_availability_zones = \[\]/cluster_availability_zones = ["eu-west-1a", "eu-west-1b"]/g' eks_zero_cluster.tf || true
+        # EKS: set cluster_availability_zones (apps)
+        sed -i 's/# cluster_availability_zones = \["eu-west-1a", "eu-west-1b", "eu-west-1c"\]/cluster_availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]/g' eks_zero_cluster.tf || true
+
+        # EKS: set cluster_availability_zones (ops)
+        sed -i 's/# cluster_availability_zones = \["eu-west-1a", "eu-west-1b"\]/cluster_availability_zones = ["eu-west-1a", "eu-west-1b"]/g' eks_zero_cluster.tf || true
 
         # GKE: set project_id
-        sed -i 's/project_id = ""/project_id = "terraform-kubestack-testing"/g' gke_zero_cluster.tf || true
+        sed -i 's/# project_id = "my-gcp-project"/project_id = "terraform-kubestack-testing"/g' gke_zero_cluster.tf || true
 
         # GKE: set region
-        sed -i 's/region = ""/region = "europe-west1"/g' gke_zero_cluster.tf || true
+        sed -i 's/# region = "europe-west1"/region = "europe-west1"/g' gke_zero_cluster.tf || true
 
         # GKE: set cluster_node_locations
         sed -i 's/cluster_node_locations = \[\]/cluster_node_locations = ["europe-west1-b", "europe-west1-c", "europe-west1-d"]/g' gke_zero_cluster.tf || true
+
+        # GKE: set machine_type
+        sed -i 's/# machine_type = "e2-medium"/machine_type = "e2-medium"/g' gke_zero_cluster.tf || true
+
+        # GKE: set min_node_count
+        sed -i 's/# min_node_count = 1/min_node_count = 1/g' gke_zero_cluster.tf || true
+
+        # GKE: set max_node_count
+        sed -i 's/# max_node_count = 3/max_node_count = 3/g' gke_zero_cluster.tf || true
+
+        # SCW: set region
+        sed -i 's/# region = "fr-par"/region = "fr-par"/g' scw_zero_cluster.tf || true
+
+        # SCW: set zones
+        sed -i 's/# zones = \["fr-par-1", "fr-par-2", "fr-par-3"\]/zones = ["fr-par-1", "fr-par-2", "fr-par-3"]/g' scw_zero_cluster.tf || true
 
     - name: "OpenTofu init"
       working-directory: ./kubestack-starter-${{ matrix.starter }}

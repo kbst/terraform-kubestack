@@ -25,6 +25,7 @@ Before considering any task complete, check each row of the table below and appl
 | Any module code or `tests/` configuration | Run `make validate`. |
 | Any divergence between implementation and rules discovered or resolved | Add or remove the entry in `DEVIATIONS.md`. |
 | Any permanent exception to the standard module contract added or removed | Add or remove the entry in `DEVIATIONS.md`. |
+| New required configuration attribute added to a module (guarded by a `lifecycle precondition`) | Add a commented-out example line for it in every affected quickstart file. Add a matching `sed` line to the **"Configure Kubestack"** step in `.github/workflows/main.yml`. See the Quickstart Placeholder and CI Injection Pattern section. |
 | New cloud provider added | Add provider-specific CLI build and dist targets to `oci/Dockerfile`, following the pattern of existing providers. Add auth instructions to the shared quickstart `README.md`. |
 | New quickstart added | Symlink shared files (`README.md`, `.gitignore`, `.user/`) to `quickstart/src/configurations/_shared/` instead of duplicating them. |
 
@@ -60,7 +61,7 @@ When a provider does not support a required behaviour (e.g. private nodes), appl
 
 - All environments inherit their configuration from the base environment. The base environment key defaults to `apps` (set via `configuration_base_key`). An environment-specific value always overrides the inherited base value.
 - The inheritance logic is implemented in the `common/configuration` module. All Kubestack modules MUST use it. See the Variables and Outputs section for the required usage pattern.
-- Because all `configuration` object attributes must be marked `optional(...)` to support inheritance, values that have no module default and must always be user-provided (region, zones, instance type, and `min`/`max` node counts — see Multi-Zone Resilience and Node Pool Lifecycle sections) cannot be enforced by the type system alone. For each such attribute, modules MUST add a `lifecycle` `precondition` block on the primary resource (the cluster resource in a cluster module, the node-pool resource in a node-pool module). The condition MUST check that `local.cfg.<attribute_name>` is not `null`. The error message MUST name the attribute and state that it is required, e.g.: `"<attribute_name> must be set — Kubestack does not provide a default for this value."`.
+- Because all `configuration` object attributes must be marked `optional(...)` to support inheritance, values that have no module default and must always be user-provided (region, zones, instance type, and `min`/`max` node counts — see Multi-Zone Resilience and Node Pool Lifecycle sections) cannot be enforced by the type system alone. For each such attribute, modules MUST add a `lifecycle` `precondition` block on the primary resource (the cluster resource in a cluster module, the node-pool resource in a node-pool module). The condition MUST check that `local.cfg.<attribute_name>` is not `null`. The error message MUST name the attribute and state that it is required, e.g.: `"missing required configuration attribute: <attribute_name>"`.
 
 ### Multi-Zone Resilience
 
@@ -399,4 +400,34 @@ The Kubestack framework is released as three asset types. Refer to the Mandatory
 |---|---|
 | **Versioned modules** | Consumed via `module` blocks using GitHub URLs. |
 | **Container image** | Base image for CI/CD pipelines and manual tasks, bundling cloud provider CLIs for IAM authentication and debugging, and Kustomize, OpenTofu/Terraform binaries at the correct version (`oci/Dockerfile`). |
-| **Quickstarts** | Example directory layouts for bootstrapping new user repositories. Quickstart examples MUST include `name_prefix`, `base_domain`, region, zones, instance type, and autoscaling `min`/`max` — all values that have no module default and must always be user-provided. Leave all other values absent to rely on module and provider defaults. Common files (`README.md`, `.gitignore`, `.user/`) are shared via symlinks pointing to `quickstart/src/configurations/_shared/`. |
+| **Quickstarts** | Example directory layouts for bootstrapping new user repositories. Quickstart examples MUST include `name_prefix`, `base_domain`, region, zones, instance type, and autoscaling `min`/`max` — all values that have no module default and must always be user-provided. Required attributes that are guarded by a `lifecycle precondition` MUST be represented as a commented-out example line (see Quickstart Placeholder and CI Injection Pattern below) so that users who forget to set them receive the helpful precondition error message rather than a cryptic provider error. Leave all other values absent to rely on module and provider defaults. Common files (`README.md`, `.gitignore`, `.user/`) are shared via symlinks pointing to `quickstart/src/configurations/_shared/`. |
+
+### Quickstart Placeholder and CI Injection Pattern
+
+Attributes guarded by a `lifecycle precondition` — those with no module default that must always be user-provided — MUST be represented in quickstart files as a **commented-out example line**, not as an active assignment with an empty value. This ensures that a user who clones a quickstart and runs `tofu plan` without filling in required values receives the helpful precondition error message (e.g. `missing required configuration attribute: region`) rather than a cryptic provider-level error caused by an empty string or empty list being passed through.
+
+**Quickstart file convention for precondition-guarded attributes:**
+
+```hcl
+# region = "eu-west-1"
+```
+
+Because the key is absent (commented out), OpenTofu evaluates it as `null`, which triggers the precondition. The comment serves as inline documentation showing the user exactly what format the value must take.
+
+**Non-precondition-guarded required values** (e.g. `name_prefix`, `base_domain`) continue to use an active assignment with an empty string placeholder (`= ""`), because they are not null-checked by a precondition and the empty value is intentional as a prompt to the user.
+
+**CI injection:** The CI pipeline injects real values before running `tofu validate` and `tofu plan` using `sed` substitution in the **"Configure Kubestack"** step of `.github/workflows/main.yml`. For commented-out example lines the `sed` command removes the leading `# ` to activate the line:
+
+```bash
+# SCW: set region
+sed -i 's/# region = "fr-par"/region = "fr-par"/g' scw_zero_cluster.tf || true
+```
+
+**Rules:**
+
+- Every precondition-guarded attribute MUST have a commented-out example line in every affected quickstart file, using a realistic placeholder value that matches the expected format.
+- Every such commented-out line MUST have a corresponding `sed` line in the **"Configure Kubestack"** CI step that activates it by removing the `# ` prefix, following the comment convention `# <PROVIDER>: set <attribute_name>`.
+- The `|| true` suffix on `sed` commands targeting provider-specific files (e.g. `aks_zero_cluster.tf`) is required so that the step does not fail when that file is absent in a single-provider quickstart.
+- When a new precondition-guarded attribute is added to a module, you MUST:
+  1. Add a commented-out example line for it in every affected quickstart file.
+  2. Add a matching `sed` line to the **"Configure Kubestack"** step in `.github/workflows/main.yml`.

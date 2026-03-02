@@ -11,12 +11,13 @@ module "node_pool" {
     (terraform.workspace) = {
       name = "default"
 
+      availability_zones  = try(local.cfg.cluster_availability_zones, null)
       instance_types      = try(local.cfg.default_node_pool.instance_types, null)
       ami_type            = try(local.cfg.default_node_pool.ami_type, null)
       ami_release_version = try(local.cfg.default_node_pool.ami_release_version, null)
       desired_capacity    = try(coalesce(local.cfg.default_node_pool.desired_capacity, null), 1)
-      min_size            = try(coalesce(local.cfg.default_node_pool.min_size, null), 1)
-      max_size            = try(coalesce(local.cfg.default_node_pool.max_size, null), 1)
+      min_size            = try(local.cfg.default_node_pool.min_size, null)
+      max_size            = try(local.cfg.default_node_pool.max_size, null)
       disk_size           = try(coalesce(local.cfg.default_node_pool.root_device_volume_size, null), 20)
 
       metadata_options = try(local.cfg.default_node_pool.metadata_options, null)
@@ -32,4 +33,3 @@ module "node_pool" {
 
   depends_on = [kubernetes_config_map.current]
 }
-

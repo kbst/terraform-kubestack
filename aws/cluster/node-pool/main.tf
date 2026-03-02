@@ -15,6 +15,32 @@ resource "aws_eks_node_group" "nodes" {
   cluster_name    = var.cluster.name
   node_group_name = local.cfg.name
   node_role_arn   = data.aws_iam_role.node.arn
+
+  lifecycle {
+    # when autoscaler is enabled, desired_size needs to be ignored
+    ignore_changes = [scaling_config[0].desired_size]
+
+    precondition {
+      condition     = local.cfg.availability_zones != null
+      error_message = "missing required configuration attribute: availability_zones"
+    }
+
+    precondition {
+      condition     = local.cfg.instance_types != null
+      error_message = "missing required configuration attribute: instance_types"
+    }
+
+    precondition {
+      condition     = local.cfg.min_size != null
+      error_message = "missing required configuration attribute: min_size"
+    }
+
+    precondition {
+      condition     = local.cfg.max_size != null
+      error_message = "missing required configuration attribute: max_size"
+    }
+  }
+
   subnet_ids = coalesce(
     # first prio, user specified subnet ids
     try(coalesce(var.cluster_default_node_pool_subnet_ids, local.cfg.vpc_subnet_ids), null),
@@ -61,12 +87,5 @@ resource "aws_eks_node_group" "nodes" {
       value  = taint.value.value
       effect = taint.value.effect
     }
-  }
-
-  # when autoscaler is enabled, desired_size needs to be ignored
-  # better would be to handle this in the resource and not require
-  # desired_size, min_size and max_size in scaling_config
-  lifecycle {
-    ignore_changes = [scaling_config[0].desired_size]
   }
 }

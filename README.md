@@ -57,7 +57,7 @@ If you have any questions while following the tutorial, join the [#kubestack](ht
 ## Contributing
 
 This repository holds Terraform modules in directories matching the respective provider name, e.g. [`aws`](./aws), [`azurerm`](./azurerm), [`google`](./google). Additionally [`common`](./common) holds the modules that are used for all providers.
-Most notably the [`metadata`](./common/metadata) module that ensures a consistent naming scheme and the `cluster_services` module which integrates Kustomize into the Terraform apply.
+Most notably the [`metadata`](./common/metadata) module that ensures a consistent naming scheme and the `kustomization/overlay` module which integrates Kustomize into the Terraform apply for platform features.
 
 Each cloud provider specific module directory always has a `cluster` and `_modules` directories.
 The cluster module is user facing and once Kubestack is out of beta the goal is to not change the module interface unless the major version changes.
@@ -85,5 +85,3 @@ One super simple way to contribute to the success of this project is to give it 
   * Kubestack CLI `kbst` - The CLI helps you scaffold the Terraform code that defines the clusters, node pools or services of your platform. The CLI works on local files only, you can see any change it makes with git status.
 * [kbst/terraform-provider-kustomization](https://github.com/kbst/terraform-provider-kustomization)  
   * Kustomize Terraform Provider - A Kubestack maintained Terraform provider for Kustomize, available in the [Terraform registry](https://registry.terraform.io/providers/kbst/kustomization/latest).
-* [kbst/catalog](https://github.com/kbst/catalog)  
-  * Catalog of Terraform modules for Kubernetes platforms - The [Kubestack Terraform modules](https://www.kubestack.com/catalog/) make it easy for platform engineering teams to deliver common platform features in production ready configurations.

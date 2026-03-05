@@ -28,10 +28,23 @@ Before considering any task complete, check each row of the table below and appl
 | New required configuration attribute added to a module (guarded by a `lifecycle precondition`) | Add a commented-out example line for it in every affected quickstart file. Add a matching `sed` line to the **"Configure Kubestack"** step in `.github/workflows/main.yml`. See the Quickstart Placeholder and CI Injection Pattern section. |
 | New cloud provider added | Add provider-specific CLI build and dist targets to `oci/Dockerfile`, following the pattern of existing providers. Add auth instructions to the shared quickstart `README.md`. |
 | New quickstart added | Symlink shared files (`README.md`, `.gitignore`, `.user/`) to `quickstart/src/configurations/_shared/` instead of duplicating them. |
+| Any Markdown file edited or created under `quickstart/src/configurations/_shared/` | Apply the one-sentence-per-line rule to every prose paragraph touched. Do not reformat code blocks, tables, or list items. |
+
+## Markdown Style
+
+All Markdown files under `quickstart/src/configurations/_shared/` — currently `README.md` and `AGENTS.md` — MUST follow the one-sentence-per-line rule:
+
+- Each sentence in a prose paragraph occupies its own line.
+- A blank line still separates paragraphs.
+- The rule does NOT apply to code blocks, tables, blockquotes, or list items — only to prose sentences inside regular paragraphs.
+
+This makes sentence-level changes produce single-line diffs, which makes pull request reviews easier to read.
+
+When editing either file, reformat any prose paragraph you touch to follow this rule, even if the surrounding paragraphs predate the rule and have not yet been updated.
 
 ## About Kubestack
 
-Kubestack is an OpenTofu/Terraform framework for platform engineering teams building Kubernetes-based platforms. It provides re-usable modules to manage clusters, node pools, and platform services from a unified configuration using a GitOps workflow.
+Kubestack is an OpenTofu/Terraform framework for platform engineering teams building Kubernetes-based platforms. It provides re-usable modules to manage clusters, node pools, and platform features from a unified configuration using a GitOps workflow.
 
 ### Core Design Philosophy
 
@@ -40,7 +53,7 @@ These principles govern all design decisions. Keep them in mind when resolving a
 - **Inheritance-based configuration** — all environments derive from a single base configuration, preventing drift.
 - **Separated infrastructure and application environments** — infrastructure changes never block application deployments.
 - **Shared-nothing architecture** — every environment has its own fully independent set of cluster and node pool resources. Nothing is shared between environments or across clusters.
-- **Platform unification** — provider-specific managed clusters become a consistent platform by installing platform services via Kubestack platform service modules, delivering the same capabilities regardless of the underlying cloud provider.
+- **Platform unification** — provider-specific managed clusters become a consistent platform by installing platform features via Kubestack platform feature modules, delivering the same capabilities regardless of the underlying cloud provider.
 - **GitOps workflow and automation** — proposed changes are previewed with `tofu plan` against any environment via pull request automation, then applied with `tofu apply` across environments in promotion order from least critical to most critical.
 
 ### Module Types
@@ -49,7 +62,7 @@ These principles govern all design decisions. Keep them in mind when resolving a
 |---|---|
 | **Cluster modules** | Provision a managed Kubernetes cluster from a cloud provider along with all required infrastructure (VPC, IAM, etc.). |
 | **Node-pool modules** | Configure and manage node pools attached to a cluster. Live as a submodule inside the cluster module directory. |
-| **Platform service modules** | Install cluster-level services that must exist before applications can be deployed. |
+| **Platform feature modules** | Install cluster-level services that must exist before applications can be deployed. |
 
 ## Design Principles
 
@@ -90,13 +103,13 @@ When a provider does not support a required behaviour (e.g. private nodes), appl
 
 - Provider-specific multi-region or multi-cloud features MUST be disabled.
 - Kubestack assumes exactly **one region and cloud provider per cluster**. Multi-region or multi-cloud in Kubestack means creating multiple clusters from the same infrastructure-as-code repository.
-- Cluster-level add-ons MUST be disabled by default, unless they are required to support another core design principle such as self-healing or auto-scaling. The preferred approach is to install platform services via Kubestack platform service modules, which allows platform builders to compose a consistent platform across cloud providers.
+- Cluster-level add-ons MUST be disabled by default, unless they are required to support another core design principle such as self-healing or auto-scaling. The preferred approach is to install platform features via Kubestack platform feature modules, which allows platform builders to compose a consistent platform across cloud providers.
 - Kubestack modules MAY expose opt-in configuration attributes to enable provider add-ons that are disabled by default. This allows users to enable them when needed without making them part of the opinionated baseline.
 
 ### Monitoring and Logging
 
 - Cloud provider managed logging and monitoring MUST be enabled by default on every cluster module. This gives platform teams immediate observability into cluster and workload behaviour without any additional configuration.
-- Users MAY disable cloud provider logging and monitoring via configuration, using a configuration attribute whose name mirrors the upstream provider resource argument (e.g. `enabled_cluster_log_types` for EKS, `logging_config` / `monitoring_config` for GKE, `enable_log_analytics` for AKS). The expected use case for disabling these is when the platform team intends to deploy a unified, provider-independent observability stack via a Kubestack platform service module instead.
+- Users MAY disable cloud provider logging and monitoring via configuration, using a configuration attribute whose name mirrors the upstream provider resource argument (e.g. `enabled_cluster_log_types` for EKS, `logging_config` / `monitoring_config` for GKE, `enable_log_analytics` for AKS). The expected use case for disabling these is when the platform team intends to deploy a unified, provider-independent observability stack via a Kubestack platform feature module instead.
 - Where the provider exposes a choice of components to enable (e.g. GKE's `enable_components` list), the Kubestack default MUST include at minimum system-level components (control plane and node agent). Workload-level log collection SHOULD also be enabled by default.
 - Kubestack modules MUST NOT deploy additional log forwarding agents, sink configurations, or third-party monitoring agents beyond what is natively available on the cluster resource itself.
 
@@ -109,7 +122,7 @@ When a provider does not support a required behaviour (e.g. private nodes), appl
 - Nodes MUST be configured with private IPs only by default. Cluster egress MUST be routed through NAT gateways (or the provider-equivalent) so that nodes can reach the internet without being directly reachable from it. Users MAY opt out by enabling public IPs on nodes via configuration.
 - The cluster control plane API endpoint MUST be publicly accessible by default, so that users can interact with the cluster without requiring VPN or private connectivity. Modules MUST expose a configuration option for users to restrict or fully privatise the API endpoint where the provider supports it.
 - Modules MUST NOT implement any cloud provider-specific network connectivity features such as VPC peering or dedicated interconnects.
-- Cross-cluster and external connectivity SHOULD be implemented by installing a service mesh via a Kubestack platform service module, preferring a provider-independent solution over provider-proprietary options.
+- Cross-cluster and external connectivity SHOULD be implemented by installing a service mesh via a Kubestack platform feature module, preferring a provider-independent solution over provider-proprietary options.
 
 #### CIDR Defaults
 
@@ -129,8 +142,8 @@ When a provider does not support a required behaviour (e.g. private nodes), appl
 #### Human User Authentication
 
 - Kubestack modules do not manage human user kubeconfigs. Human users authenticate by running the cloud provider's CLI to obtain a kubeconfig via IAM. Whether this IAM authentication approach is used only for admin break-glass access or for all platform users is a decision for the platform builder.
-- Modules MUST NOT provision any cluster-level RBAC bindings for named human users. User identity and RBAC are the responsibility of platform service modules or the platform operator.
-- For platform builders who want to unify end-user authentication across providers behind a single IdP, installing an authentication proxy (e.g. TremoloSecurity/kube-oidc-proxy, vmware/pinniped) as a Kubestack platform service module is the recommended approach. This is optional and at the platform builder's discretion.
+- Modules MUST NOT provision any cluster-level RBAC bindings for named human users. User identity and RBAC are the responsibility of platform feature modules or the platform operator.
+- For platform builders who want to unify end-user authentication across providers behind a single IdP, installing an authentication proxy (e.g. TremoloSecurity/kube-oidc-proxy, vmware/pinniped) as a Kubestack platform feature module is the recommended approach. This is optional and at the platform builder's discretion.
 
 #### Workload Identity
 

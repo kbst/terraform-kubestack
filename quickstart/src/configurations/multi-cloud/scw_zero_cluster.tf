@@ -22,8 +22,8 @@ module "scw_zero" {
       # region = "fr-par"
 
       # Kubernetes version for the cluster
-      # Use a minor version string to allow patch upgrades, e.g. "1.32"
-      cluster_version = "1.32"
+      # Use a minor version string to allow patch upgrades, e.g. "1.35"
+      cluster_version = "1.35"
 
       # Container Network Interface plugin
       # Options: "cilium", "calico", "weave", "flannel", "kilo"
@@ -38,6 +38,13 @@ module "scw_zero" {
       default_node_pool = {
         # Commercial node type — see `scw k8s node-pool list-available-types`
         node_type = "DEV1-M"
+
+        # Availability zones to distribute the default node pool across.
+        # One pool is created per zone. Must be explicitly specified.
+        # fr-par: zones = ["fr-par-1", "fr-par-2", "fr-par-3"]
+        # nl-ams: zones = ["nl-ams-1", "nl-ams-2", "nl-ams-3"]
+        # pl-waw: zones = ["pl-waw-1", "pl-waw-2", "pl-waw-3"]
+        # zones = ["fr-par-1", "fr-par-2", "fr-par-3"]
 
         # Initial number of nodes in the pool
         size = 1

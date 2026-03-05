@@ -57,9 +57,25 @@ if [ -x "$(command -v gcloud)" ]; then
   fi
 fi
 
+#
+#
+# Scaleway auth
+# only if scw cli is installed
+if [ -x "$(command -v scw)" ]; then
+  SCW_CONFIG_PATH=~/.config/scw
+  mkdir -p $SCW_CONFIG_PATH
+
+  # handle base64 encoded SCW credentials
+  if [ ! -z "$KBST_AUTH_SCW" ]; then
+    echo "$KBST_AUTH_SCW" | base64 --decode > $SCW_CONFIG_PATH/config.yaml
+    scw config validate
+  fi
+fi
+
 # do not have KBST_AUTH_* env vars set in runtime env
 unset KBST_AUTH_AWS
 unset KBST_AUTH_AZ
 unset KBST_AUTH_GCLOUD
+unset KBST_AUTH_SCW
 
 exec "$@"

@@ -173,6 +173,7 @@ Node-pool modules MUST additionally expose a configuration attribute for Kuberne
 - Region, zones, instance type, and `min`/`max` node counts MUST be exposed as required configuration attributes in every module, using provider-specific attribute names. Modules MUST NOT set defaults for these values.
 - All configuration attribute names SHOULD mirror the respective provider resource attribute names.
 - Provider resource blocks containing nested arguments SHOULD be reflected as nested configuration object attributes.
+- Scope-defining attributes — including but not limited to account, project, organization, subscription, and region — MUST always be specified explicitly in code, either on the provider block or as a module configuration attribute, following the best practice for the respective cloud provider. They MUST NOT be left implicit so that they are inferred from CLI defaults, environment variables, or the active authentication context. This ensures the intended scope of every cluster is unambiguous, auditable, and reproducible regardless of the local environment running the plan.
 
 ## Repository and Module Layout
 

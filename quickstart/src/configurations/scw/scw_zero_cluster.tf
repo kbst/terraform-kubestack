@@ -21,6 +21,10 @@ module "scw_zero" {
       # Uncomment and set to your target region, e.g:
       # region = "fr-par"
 
+      # Kubernetes version for the cluster
+      # Use a minor version string to allow patch upgrades, e.g. "1.35"
+      cluster_version = "1.35"
+
       default_node_pool = {
         # Commercial node type — must be available in every zone listed below.
         # Run `scw k8s node-pool list-available-types` to list types per zone.

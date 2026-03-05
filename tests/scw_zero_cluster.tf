@@ -9,7 +9,7 @@ module "scw_zero" {
 
       region = "nl-ams"
 
-      cluster_version = "1.34"
+      cluster_version = "1.35"
       cni             = "cilium"
 
       delete_additional_resources = false

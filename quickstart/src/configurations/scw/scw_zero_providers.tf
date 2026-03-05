@@ -1,7 +1,14 @@
 provider "scaleway" {
-  # region is read from SCW_DEFAULT_REGION environment variable
-  # or can be set explicitly, e.g.:
-  # region = "fr-par"
+  # The Scaleway provider requires organization_id and project_id to be set
+  # explicitly so the target scope is captured in IaC rather than inferred
+  # from the CLI config or SCW_DEFAULT_ORGANIZATION_ID / SCW_DEFAULT_PROJECT_ID
+  # environment variables.
+  organization_id = ""
+  project_id      = ""
+
+  # Region is also required. Set it to match the region configured in the
+  # cluster module, e.g. "fr-par", "nl-ams", "pl-waw".
+  region = ""
 }
 
 provider "kustomization" {

@@ -1,6 +1,14 @@
+provider "google" {
+  alias = "gke_zero"
+}
+
 provider "kustomization" {
   alias          = "gke_zero"
   kubeconfig_raw = module.gke_zero.kubeconfig
+}
+
+locals {
+  gke_zero_kubeconfig = yamldecode(module.gke_zero.kubeconfig)
 }
 
 provider "kubernetes" {

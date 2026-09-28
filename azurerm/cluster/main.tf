@@ -64,6 +64,10 @@ resource "azurerm_kubernetes_cluster" "current" {
 
   role_based_access_control_enabled = true
 
+  node_provisioning_profile {
+    mode = "Manual"
+  }
+
   default_node_pool {
     name = try(coalesce(local.cfg.default_node_pool.name, null), "default")
     type = try(coalesce(local.cfg.default_node_pool.type, null), "VirtualMachineScaleSets")

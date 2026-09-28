@@ -8,10 +8,20 @@ terraform {
       source = "kbst/kustomization"
     }
 
+    aws = {
+      source = "hashicorp/aws"
+    }
+
+    azurerm = {
+      source = "hashicorp/azurerm"
+    }
+
+    google = {
+      source = "hashicorp/google"
+    }
+
     scaleway = {
       source = "scaleway/scaleway"
     }
   }
-
-  required_version = ">= 0.15"
 }

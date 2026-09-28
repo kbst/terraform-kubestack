@@ -1,4 +1,8 @@
 module "aks_zero" {
+  providers = {
+    azurerm = azurerm.aks_zero
+  }
+
   source = "../azurerm/cluster"
 
   configuration = {

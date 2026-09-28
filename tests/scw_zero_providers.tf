@@ -1,5 +1,7 @@
 provider "scaleway" {
-  region = "fr-par"
+  alias = "scw_zero"
+
+  region = "nl-ams"
 }
 
 provider "kustomization" {

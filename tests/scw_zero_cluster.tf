@@ -1,4 +1,8 @@
 module "scw_zero" {
+  providers = {
+    scaleway = scaleway.scw_zero
+  }
+
   source = "../scaleway/cluster"
 
   configuration = {

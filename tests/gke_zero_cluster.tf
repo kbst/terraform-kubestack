@@ -6,7 +6,7 @@ data "google_container_engine_versions" "gke_zero" {
 
 module "gke_zero" {
   providers = {
-    kubernetes = kubernetes.gke_zero
+    google = google.gke_zero
   }
 
   source = "../google/cluster"

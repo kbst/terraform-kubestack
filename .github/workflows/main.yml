@@ -144,7 +144,7 @@ jobs:
         if [[ $GITHUB_REF = refs/tags/v* ]]
         then
           VERSION=$(echo $GITHUB_REF | sed -e "s#^refs/tags/##")
-          IMAGE_NAME=kubestack/framework
+          IMAGE_NAME=docker.io/kubestack/framework
         fi
         TARGET_IMAGE=$IMAGE_NAME:$VERSION
         if [[ ${{ matrix.target }} != multi-cloud ]]

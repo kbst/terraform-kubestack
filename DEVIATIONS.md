@@ -33,7 +33,7 @@ When a divergence is resolved, remove its entry from this file.
 
 > **Divergence — `aws/cluster`:** Networking — nodes are assigned public IPs by default (`map_public_ip_on_launch = true` is the default when `cluster_vpc_subnet_map_public_ip` is unset), violating the rule that nodes MUST be configured with private IPs only by default and egress MUST route through NAT gateways. Planned resolution: flip the default to private nodes with NAT gateway egress.
 
-> **Divergence — `aws/cluster`:** Cross-Provider Developer Experience — there is no `region` configuration attribute; the AWS region is sourced entirely from the provider configuration rather than being exposed as a required configuration attribute with a `precondition`. Planned resolution: document the special case that `region` for EKS is configured on the provider. The eks quickstart already shows how to alias the provider per cluster.
+> **Divergence — `aws/cluster`:** Cross-Provider Developer Experience — there is no `region` configuration attribute; the AWS region is sourced entirely from the provider configuration rather than being exposed as a required configuration attribute with a `precondition`. Planned resolution: document the special case that `region` for EKS is configured on the provider, which requires aliasing the provider per cluster.
 
 > **Divergence — `aws/cluster`:** Tagging and Labelling — user-supplied cloud resource tags are only configurable via `additional_node_tags` nested inside `default_node_pool`, meaning there is no top-level `tags` attribute on the cluster configuration object and extra-node-pool resources (VPC, subnets, security groups, etc.) cannot receive user-supplied tags. Planned resolution: add a top-level `tags` attribute to the cluster configuration.
 

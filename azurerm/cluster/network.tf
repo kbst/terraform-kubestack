@@ -15,5 +15,11 @@ resource "azurerm_subnet" "current" {
   resource_group_name  = data.azurerm_resource_group.current.name
   virtual_network_name = azurerm_virtual_network.current[0].name
 
-  service_endpoints = length(try(coalesce(local.cfg.subnet_service_endpoints, null), [])) > 0 ? try(coalesce(local.cfg.subnet_service_endpoints, null), []) : null
+  dynamic "service_endpoint" {
+    for_each = toset(try(coalesce(local.cfg.subnet_service_endpoints, null), []))
+
+    content {
+      service = service_endpoint.value
+    }
+  }
 }

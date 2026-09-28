@@ -1,4 +1,8 @@
 module "aks_zero_node_pool" {
+  providers = {
+    azurerm = azurerm.aks_zero
+  }
+
   source = "../azurerm/cluster/node-pool"
 
   cluster = module.aks_zero.cluster

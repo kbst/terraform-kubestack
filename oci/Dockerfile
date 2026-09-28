@@ -1,8 +1,8 @@
 #
 #
 # Image versions
-ARG BASE_BUILDER=python:3.13
-ARG BASE_IMAGE=python:3.13-slim
+ARG BASE_BUILDER=python:3.14
+ARG BASE_IMAGE=python:3.14-slim
 
 
 #
@@ -26,13 +26,13 @@ FROM builder AS common-builder
 ARG TARGETARCH
 
 # https://github.com/kubernetes/kubernetes/releases
-ARG KUBECTL_VERSION=v1.31.3
+ARG KUBECTL_VERSION=v1.37.1
 
 # https://github.com/kubernetes-sigs/kustomize/releases
-ARG KUSTOMIZE_VERSION=v5.5.0
+ARG KUSTOMIZE_VERSION=v5.8.1
 
 # https://github.com/opentofu/opentofu/releases
-ARG OPENTOFU_VERSION=1.11.5
+ARG OPENTOFU_VERSION=1.12.6
 
 RUN echo "KUBECTL_VERSION: ${KUBECTL_VERSION}" \
     && curl -LO https://dl.k8s.io/${KUBECTL_VERSION}/kubernetes-client-linux-${TARGETARCH}.tar.gz \
@@ -65,7 +65,7 @@ FROM builder AS aws-builder
 ARG TARGETARCH
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
-ARG AWS_CLI_VERSION=2.22.12
+ARG AWS_CLI_VERSION=2.37.4
 
 RUN mkdir -p /opt/aws/bin
 
@@ -85,7 +85,7 @@ FROM builder AS gcp-builder
 ARG TARGETARCH
 
 # https://cloud.google.com/sdk/docs/release-notes
-ARG GOOGLE_CLOUD_SDK_VERSION=502.0.0
+ARG GOOGLE_CLOUD_SDK_VERSION=586.0.0
 
 RUN echo "GOOGLE_CLOUD_SDK_VERSION: ${GOOGLE_CLOUD_SDK_VERSION}" \
     && arch=`echo ${TARGETARCH} | sed -e 's/amd64/x86_64/' -e 's/arm64/arm/'` \
@@ -105,7 +105,7 @@ FROM builder AS scw-builder
 ARG TARGETARCH
 
 # https://github.com/scaleway/scaleway-cli/releases
-ARG SCALEWAY_CLI_VERSION=2.35.0
+ARG SCALEWAY_CLI_VERSION=2.63.0
 
 RUN echo "SCALEWAY_CLI_VERSION: ${SCALEWAY_CLI_VERSION}" \
     && curl -LO https://github.com/scaleway/scaleway-cli/releases/download/v${SCALEWAY_CLI_VERSION}/scaleway-cli_${SCALEWAY_CLI_VERSION}_linux_${TARGETARCH} \
@@ -120,7 +120,7 @@ RUN echo "SCALEWAY_CLI_VERSION: ${SCALEWAY_CLI_VERSION}" \
 FROM builder AS azure-builder
 
 # https://docs.microsoft.com/en-us/cli/azure/release-notes-azure-cli?tabs=azure-cli
-ARG AZURE_CLI_VERSION=2.67.0
+ARG AZURE_CLI_VERSION=2.90.0
 
 RUN apt-get update && apt-get install -y \
     libffi-dev
@@ -162,60 +162,6 @@ WORKDIR /infra
 
 ENTRYPOINT ["/opt/bin/entrypoint"]
 CMD ["bash"]
-
-
-#
-#
-# Build starters and provider cache
-FROM final-base AS dist-helper-build
-
-COPY common /common
-
-# Run inheritance module tests
-RUN cd /common/configuration &&\
-    tofu test
-
-# Run metadata module tests
-RUN cd /common/metadata &&\
-    tofu test
-
-ARG GIT_SHA=master
-ARG GIT_REF=refs/heads/master
-
-COPY quickstart /quickstart
-WORKDIR /quickstart
-
-# Build starters
-RUN cd build_artifacts &&\
-    pip install --no-cache-dir pipenv &&\
-    pipenv install
-
-ENV GIT_SHA=${GIT_SHA} \
-    GIT_REF=${GIT_REF}
-RUN cd build_artifacts &&\
-    pipenv run python dist.py dist
-
-# Run tofu init for each starter
-RUN mkdir -p /terraform/plugin-cache
-ENV TF_PLUGIN_CACHE_DIR=/terraform/plugin-cache
-RUN set -e &&\
-    for name in `ls /quickstart/_dist/`; do \
-    if [ -d /quickstart/_dist/$name ]; then \
-    cd /quickstart/_dist/$name &&\
-    tofu init --upgrade &&\
-    rm -rf .terraform; \
-    fi; \
-    done
-
-RUN cd build_artifacts &&\
-    pipenv run python dist.py compress
-
-#
-#
-# Dist artifacts
-FROM alpine AS dist-helper
-
-COPY --from=dist-helper-build /quickstart/_dist /quickstart/_dist
 
 
 #

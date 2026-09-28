@@ -1,4 +1,8 @@
 module "gke_zero_node_pool" {
+  providers = {
+    google = google.gke_zero
+  }
+
   source = "../google/cluster/node-pool"
 
   cluster          = module.gke_zero.cluster

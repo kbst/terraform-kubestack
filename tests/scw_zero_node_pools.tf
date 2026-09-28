@@ -1,4 +1,8 @@
 module "scw_zero_node_pool" {
+  providers = {
+    scaleway = scaleway.scw_zero
+  }
+
   source = "../scaleway/cluster/node-pool"
 
   cluster          = module.scw_zero.cluster

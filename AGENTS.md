@@ -1,7 +1,7 @@
 # Kubestack AGENTS.md — Framework Development
 
 > **This file governs framework development.**
-> For framework _usage_, see the AGENTS.md included with each quickstart.
+> For framework _usage_, see the Kubestack skill at https://www.kubestack.com/SKILL.md.
 
 ## Critical Constraints — Read First
 
@@ -11,7 +11,6 @@ These rules have no exceptions and MUST be applied before taking any other actio
 - **NEVER** run OpenTofu/Terraform commands (`tofu`, `terraform`) directly. Always use the Makefile targets.
 - **ALWAYS** run `make validate` after making any change to module code or test configuration. It is safe to run at any time.
 - **ALWAYS** update `tests/` when any module interface changes (new variables, removed variables, changed types).
-- **ALWAYS** update the relevant quickstart examples when any module interface changes.
 - **ALWAYS** update `DEVIATIONS.md` when adding a provider-specific exception or documenting a divergence between implementation and rules. See the Tracking Divergences and Exceptions section.
 
 ## Mandatory Update Obligations
@@ -20,27 +19,12 @@ Before considering any task complete, check each row of the table below and appl
 
 | What changed | Obligations |
 |---|---|
-| Any module interface (variable added, removed, renamed, or type changed) | Update `tests/` to reflect the new interface. Update all affected quickstart examples. Run `make validate`. |
+| Any module interface (variable added, removed, renamed, or type changed) | Update `tests/` to reflect the new interface. Run `make validate`. |
 | `common/configuration` or `common/metadata` | Run the module's unit tests (`make validate` does not cover these). See the Unit Tests for Common Modules section. |
 | Any module code or `tests/` configuration | Run `make validate`. |
 | Any divergence between implementation and rules discovered or resolved | Add or remove the entry in `DEVIATIONS.md`. |
 | Any permanent exception to the standard module contract added or removed | Add or remove the entry in `DEVIATIONS.md`. |
-| New required configuration attribute added to a module (guarded by a `lifecycle precondition`) | Add a commented-out example line for it in every affected quickstart file. Add a matching `sed` line to the **"Configure Kubestack"** step in `.github/workflows/main.yml`. See the Quickstart Placeholder and CI Injection Pattern section. |
-| New cloud provider added | Add provider-specific CLI build and dist targets to `oci/Dockerfile`, following the pattern of existing providers. Add auth instructions to the shared quickstart `README.md`. |
-| New quickstart added | Symlink shared files (`README.md`, `.gitignore`, `.user/`) to `quickstart/src/configurations/_shared/` instead of duplicating them. |
-| Any Markdown file edited or created under `quickstart/src/configurations/_shared/` | Apply the one-sentence-per-line rule to every prose paragraph touched. Do not reformat code blocks, tables, or list items. |
-
-## Markdown Style
-
-All Markdown files under `quickstart/src/configurations/_shared/` — currently `README.md` and `AGENTS.md` — MUST follow the one-sentence-per-line rule:
-
-- Each sentence in a prose paragraph occupies its own line.
-- A blank line still separates paragraphs.
-- The rule does NOT apply to code blocks, tables, blockquotes, or list items — only to prose sentences inside regular paragraphs.
-
-This makes sentence-level changes produce single-line diffs, which makes pull request reviews easier to read.
-
-When editing either file, reformat any prose paragraph you touch to follow this rule, even if the surrounding paragraphs predate the rule and have not yet been updated.
+| New cloud provider added | Add provider-specific CLI builder and variant build targets to `oci/Dockerfile`, following the pattern of existing providers. |
 
 ## About Kubestack
 
@@ -392,6 +376,14 @@ make validate
 
 This target is always safe to run. A task is not complete until `make validate` passes.
 
+### Plan — Read-Only Integration Check
+
+```
+make plan
+```
+
+Runs a `tofu plan` of the four cluster modules in `tests/` against the real cloud providers. It does not create, change, or destroy any infrastructure, but it authenticates against the cloud providers. When run locally, it uses the state backend configured in `tests/state.tf`. CI runs it on every push via the `test` job in `.github/workflows/main.yml`, which deletes `tests/state.tf` first so the plan runs against a fresh local state, because the CI credentials cannot read the state bucket. Unlike `make test`, it does not require explicit user instruction.
+
 ### Unit Tests for Common Modules
 
 `make validate` does not cover the `common/` modules. After any change to `common/configuration` or `common/metadata`, run the affected module's unit tests directly:
@@ -401,6 +393,10 @@ make -C common/configuration test
 make -C common/metadata test
 ```
 
+To run them without a local OpenTofu/Terraform installation, `make unittests` runs the same tests inside the container image.
+
+CI runs these unit tests in the `test` job in `.github/workflows/main.yml` on every push.
+
 ### Integration Test Configuration
 
 - The multi-cloud test platform configuration lives in `tests/`.
@@ -408,40 +404,9 @@ make -C common/metadata test
 
 ## Dist Assets
 
-The Kubestack framework is released as three asset types. Refer to the Mandatory Update Obligations section at the top of this file for a complete list of when each asset must be updated.
+The Kubestack framework is released as two asset types. Refer to the Mandatory Update Obligations section at the top of this file for a complete list of when each asset must be updated.
 
 | Asset | Description |
 |---|---|
 | **Versioned modules** | Consumed via `module` blocks using GitHub URLs. |
 | **Container image** | Base image for CI/CD pipelines and manual tasks, bundling cloud provider CLIs for IAM authentication and debugging, and Kustomize, OpenTofu/Terraform binaries at the correct version (`oci/Dockerfile`). |
-| **Quickstarts** | Example directory layouts for bootstrapping new user repositories. Quickstart examples MUST include `name_prefix`, `base_domain`, region, zones, instance type, and autoscaling `min`/`max` — all values that have no module default and must always be user-provided. Required attributes that are guarded by a `lifecycle precondition` MUST be represented as a commented-out example line (see Quickstart Placeholder and CI Injection Pattern below) so that users who forget to set them receive the helpful precondition error message rather than a cryptic provider error. Leave all other values absent to rely on module and provider defaults. Common files (`README.md`, `.gitignore`, `.user/`) are shared via symlinks pointing to `quickstart/src/configurations/_shared/`. |
-
-### Quickstart Placeholder and CI Injection Pattern
-
-Attributes guarded by a `lifecycle precondition` — those with no module default that must always be user-provided — MUST be represented in quickstart files as a **commented-out example line**, not as an active assignment with an empty value. This ensures that a user who clones a quickstart and runs `tofu plan` without filling in required values receives the helpful precondition error message (e.g. `missing required configuration attribute: region`) rather than a cryptic provider-level error caused by an empty string or empty list being passed through.
-
-**Quickstart file convention for precondition-guarded attributes:**
-
-```hcl
-# region = "eu-west-1"
-```
-
-Because the key is absent (commented out), OpenTofu evaluates it as `null`, which triggers the precondition. The comment serves as inline documentation showing the user exactly what format the value must take.
-
-**Non-precondition-guarded required values** (e.g. `name_prefix`, `base_domain`) continue to use an active assignment with an empty string placeholder (`= ""`), because they are not null-checked by a precondition and the empty value is intentional as a prompt to the user.
-
-**CI injection:** The CI pipeline injects real values before running `tofu validate` and `tofu plan` using `sed` substitution in the **"Configure Kubestack"** step of `.github/workflows/main.yml`. For commented-out example lines the `sed` command removes the leading `# ` to activate the line:
-
-```bash
-# SCW: set region
-sed -i 's/# region = "fr-par"/region = "fr-par"/g' scw_zero_cluster.tf || true
-```
-
-**Rules:**
-
-- Every precondition-guarded attribute MUST have a commented-out example line in every affected quickstart file, using a realistic placeholder value that matches the expected format.
-- Every such commented-out line MUST have a corresponding `sed` line in the **"Configure Kubestack"** CI step that activates it by removing the `# ` prefix, following the comment convention `# <PROVIDER>: set <attribute_name>`.
-- The `|| true` suffix on `sed` commands targeting provider-specific files (e.g. `aks_zero_cluster.tf`) is required so that the step does not fail when that file is absent in a single-provider quickstart.
-- When a new precondition-guarded attribute is added to a module, you MUST:
-  1. Add a commented-out example line for it in every affected quickstart file.
-  2. Add a matching `sed` line to the **"Configure Kubestack"** step in `.github/workflows/main.yml`.

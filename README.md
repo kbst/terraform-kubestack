@@ -63,8 +63,6 @@ Each cloud provider specific module directory always has a `cluster` and `_modul
 The cluster module is user facing and once Kubestack is out of beta the goal is to not change the module interface unless the major version changes.
 The cluster module then internally uses the module in `_modules` that holds the actual implementation.
 
-The [`quickstart`](./quickstart) directory is home to the source for the zip files that are used to bootstrap the user repositories when following the tutorial.
-
 The [`tests`](./tests) directory holds a set of happy path tests.
 
 Contributions to the Kubestack framework are welcome and encouraged. Before contributing, please read the [Contributing](./CONTRIBUTING.md) and [Code of Conduct](./CODE_OF_CONDUCT.md) Guidelines.

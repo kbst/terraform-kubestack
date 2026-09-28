@@ -5,10 +5,6 @@
 *.tfstate
 *.tfstate.*
 
-# Ignore build and dist
-_build/
-_dist/
-
 # No version locking for tests,
 # we want them to blow up in case
 # of issues

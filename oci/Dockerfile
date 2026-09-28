@@ -166,60 +166,6 @@ CMD ["bash"]
 
 #
 #
-# Build starters and provider cache
-FROM final-base AS dist-helper-build
-
-COPY common /common
-
-# Run inheritance module tests
-RUN cd /common/configuration &&\
-    tofu test
-
-# Run metadata module tests
-RUN cd /common/metadata &&\
-    tofu test
-
-ARG GIT_SHA=master
-ARG GIT_REF=refs/heads/master
-
-COPY quickstart /quickstart
-WORKDIR /quickstart
-
-# Build starters
-RUN cd build_artifacts &&\
-    pip install --no-cache-dir pipenv &&\
-    pipenv install
-
-ENV GIT_SHA=${GIT_SHA} \
-    GIT_REF=${GIT_REF}
-RUN cd build_artifacts &&\
-    pipenv run python dist.py dist
-
-# Run tofu init for each starter
-RUN mkdir -p /terraform/plugin-cache
-ENV TF_PLUGIN_CACHE_DIR=/terraform/plugin-cache
-RUN set -e &&\
-    for name in `ls /quickstart/_dist/`; do \
-    if [ -d /quickstart/_dist/$name ]; then \
-    cd /quickstart/_dist/$name &&\
-    tofu init --upgrade &&\
-    rm -rf .terraform; \
-    fi; \
-    done
-
-RUN cd build_artifacts &&\
-    pipenv run python dist.py compress
-
-#
-#
-# Dist artifacts
-FROM alpine AS dist-helper
-
-COPY --from=dist-helper-build /quickstart/_dist /quickstart/_dist
-
-
-#
-#
 # AWS variant
 FROM final-base AS eks
 

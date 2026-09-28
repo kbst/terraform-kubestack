@@ -1,4 +1,4 @@
-_all: dist build
+_all: build
 
 GIT_REF ?= $(shell echo "refs/heads/"`git rev-parse --abbrev-ref HEAD`)
 GIT_SHA ?= $(shell echo `git rev-parse --verify HEAD^{commit}`)
@@ -8,37 +8,12 @@ DOCKER_TARGET ?= multi-cloud
 
 ifeq ("${DOCKER_PUSH}", "true")
 BUILD_PLATFORM := --platform linux/arm64,linux/amd64
-BUILD_CACHE_DIST := --cache-to type=registry,mode=max,ref=ghcr.io/kbst/terraform-kubestack/dev:buildcache-dist-helper,push=${DOCKER_PUSH}
 BUILD_OUTPUT := --output type=registry,push=${DOCKER_PUSH}
 BUILD_CACHE := --cache-to type=registry,mode=max,ref=ghcr.io/kbst/terraform-kubestack/dev:buildcache-${DOCKER_TARGET},push=${DOCKER_PUSH}
 else
 BUILD_PLATFORM :=
 BUILD_OUTPUT := --output type=docker
 endif
-
-dist:
-	rm -rf quickstart/_dist
-
-	docker buildx build \
-		--build-arg GIT_REF=${GIT_REF} \
-		--build-arg GIT_SHA=${GIT_SHA} \
-		--file oci/Dockerfile \
-		--output type=docker \
-		--cache-from type=registry,ref=ghcr.io/kbst/terraform-kubestack/dev:buildcache-dist-helper \
-		${BUILD_CACHE_DIST} \
-		--progress plain \
-		-t dist-helper:latest \
-		--target dist-helper \
-		.
-
-	docker run \
-		--detach \
-		--name dist-helper \
-		--rm dist-helper:latest \
-		sleep 600
-
-	docker cp dist-helper:/quickstart/_dist quickstart/_dist
-	docker stop dist-helper
 
 build:
 	docker buildx build \
@@ -59,13 +34,25 @@ validate: .init
 		test-container-$(GIT_SHA) \
 		entrypoint tofu validate
 
+plan: .init
+	docker exec \
+		test-container-$(GIT_SHA) \
+		entrypoint tofu plan --target module.aks_zero --target module.eks_zero --target module.gke_zero --target module.scw_zero --input=false
+
+unittests: .check-container
+	docker exec \
+		-w /infra/common/configuration \
+		test-container-$(GIT_SHA) \
+		entrypoint tofu test
+	docker exec \
+		-w /infra/common/metadata \
+		test-container-$(GIT_SHA) \
+		entrypoint tofu test
+
 test: validate
 	docker exec \
 		test-container-$(GIT_SHA) \
 		entrypoint tofu apply --target module.aks_zero --target module.eks_zero --target module.gke_zero --target module.scw_zero --input=false --auto-approve
-	docker exec \
-		test-container-$(GIT_SHA) \
-		entrypoint tofu apply --target module.eks_zero_nginx --input=false --auto-approve
 	docker exec \
 		test-container-$(GIT_SHA) \
 		entrypoint tofu apply --input=false --auto-approve
@@ -110,4 +97,4 @@ shell: .check-container
 		entrypoint tofu init
 	docker exec \
 		test-container-$(GIT_SHA) \
-		entrypoint tofu workspace select ops
+		entrypoint tofu workspace select -or-create ops

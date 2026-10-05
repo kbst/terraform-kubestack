@@ -16,6 +16,13 @@ variable "configuration" {
 
     public_ip_disabled = optional(bool)
 
+    # Unblocks outgoing SMTP traffic (ports 25, 465 and 587) for nodes with
+    # public IPs by attaching a dedicated security group per zone with the
+    # Scaleway SMTP block disabled. No effect when public_ip_disabled is true
+    # (the default), as private nodes egress through the cluster's public
+    # gateways, which the cluster module configures.
+    enable_smtp = optional(bool)
+
     zones = optional(list(string))
 
     wait_for_pool_ready = optional(bool)

@@ -21,6 +21,9 @@ module "scw_zero_node_pool" {
       autoscaling = true
       autohealing = true
 
+      public_ip_disabled = false
+      enable_smtp        = true
+
       node_taints = [
         {
           key    = "dedicated"

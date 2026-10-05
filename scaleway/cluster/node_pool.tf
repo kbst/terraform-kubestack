@@ -22,6 +22,8 @@ module "node_pool" {
 
       public_ip_disabled = try(coalesce(local.cfg.default_node_pool.public_ip_disabled, null), true)
 
+      enable_smtp = try(local.cfg.enable_smtp, null)
+
       upgrade_policy = try(local.cfg.default_node_pool.upgrade_policy, null)
 
       kubelet_args = try(local.cfg.default_node_pool.kubelet_args, null)

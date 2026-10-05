@@ -52,6 +52,10 @@ resource "scaleway_vpc_public_gateway" "current" {
   type  = try(coalesce(local.cfg.public_gateway_type, null), "VPC-GW-S")
   ip_id = scaleway_vpc_public_gateway_ip.current[each.value].id
 
+  # All private nodes of all node pools egress through these gateways,
+  # unblocking SMTP here covers the NAT path.
+  enable_smtp = try(coalesce(local.cfg.enable_smtp, null), false)
+
   tags = concat(module.cluster_metadata.tags, try(coalesce(local.cfg.extra_tags, null), []))
 }
 

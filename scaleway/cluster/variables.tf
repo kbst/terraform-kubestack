@@ -51,6 +51,11 @@ variable "configuration" {
     # Run `scw vpc public-gateway list-types` to see available types.
     public_gateway_type = optional(string)
 
+    # Scaleway blocks outgoing SMTP traffic (ports 25, 465 and 587) by default.
+    # When true, the block is lifted on the per-zone public gateways used for
+    # NAT egress and, for node pools with public IPs, on their security groups.
+    enable_smtp = optional(bool)
+
     # Extra tags added to all cloud resources in addition to the metadata tags
     extra_tags = optional(list(string))
 

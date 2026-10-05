@@ -18,6 +18,8 @@ module "scw_zero" {
 
       delete_additional_resources = false
 
+      enable_smtp = true
+
       default_node_pool = {
         node_type   = "PLAY2-MICRO"
         zones       = ["nl-ams-1", "nl-ams-2", "nl-ams-3"]

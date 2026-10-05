@@ -17,6 +17,13 @@ locals {
     try(coalesce(local.cfg.tags, null), []),
     local.taint_tags
   )
+
+  # Scaleway blocks outgoing SMTP traffic on public IPs by default and only
+  # exposes the unblock switch on the security group attached to the
+  # instances. Pools with public IPs and SMTP enabled therefore get a
+  # dedicated security group per zone. Private nodes do not need one, their
+  # egress is unblocked on the cluster's public gateways instead.
+  smtp_enabled = try(coalesce(local.cfg.enable_smtp, null), false) && !try(coalesce(local.cfg.public_ip_disabled, null), true)
 }
 
 resource "scaleway_k8s_pool" "current" {
@@ -40,6 +47,8 @@ resource "scaleway_k8s_pool" "current" {
   root_volume_size_in_gb = local.cfg.root_volume_size_in_gb
 
   public_ip_disabled = try(coalesce(local.cfg.public_ip_disabled, null), true)
+
+  security_group_id = local.smtp_enabled ? scaleway_instance_security_group.smtp[each.value].id : null
 
   wait_for_pool_ready = try(coalesce(local.cfg.wait_for_pool_ready, null), true)
 
